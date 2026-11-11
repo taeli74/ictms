@@ -460,8 +460,8 @@ function refresh(){
   render();
 }
 function go(v,p){route={v,...(p||{})};renderNav();render();window.scrollTo(0,0);}
-const NAVALL={dash:['현황','grid'],sites:['사이트','building'],insp:['점검','check'],issues:['이슈','alert'],reports:['리포트','doc'],settings:['설정','gear']};
-const navKeys=()=>roleKey==='manager'?['dash','sites','issues','reports']:roleKey==='engineer'?['dash','sites','insp','issues','reports']:['dash','sites','insp','issues','reports','settings'];
+const NAVALL={dash:['홈','grid'],sites:['사이트','building'],insp:['점검','check'],issues:['이슈','alert'],reports:['리포트','doc'],settings:['설정','gear']};
+const navKeys=()=>roleKey==='manager'?['reports','dash','issues']:roleKey==='engineer'?['insp','reports','dash','issues']:['insp','reports','dash','issues','settings'];
 const ICON={grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
  building:'<path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16"/><path d="M14 10h5a1 1 0 0 1 1 1v10"/><path d="M8 8h2M8 12h2M8 16h2M3 21h18"/>',
  check:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 14l2 2 4-4"/>',alert:'<path d="M12 3 2.5 20h19z"/><path d="M12 10v4M12 17.5v.01"/>',doc:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'};
@@ -470,13 +470,13 @@ function svg(n){const e=document.createElementNS('http://www.w3.org/2000/svg','s
 function setRole(t){$('#role').textContent=t;}
 function logo(inv){const e=document.createElementNS('http://www.w3.org/2000/svg','svg');e.setAttribute('viewBox','0 0 32 32');e.innerHTML='<rect x="1" y="5" width="30" height="22" rx="6" fill="'+(inv?'#fff':'#111')+'"/><g fill="'+(inv?'#111':'#fff')+'"><rect x="6" y="10" width="4" height="6" rx="1"/><rect x="12" y="10" width="4" height="6" rx="1"/><rect x="18" y="10" width="4" height="6" rx="1"/><rect x="24" y="10" width="2" height="6" rx="1" opacity=".5"/></g><rect x="6" y="20" width="20" height="2" rx="1" fill="'+(inv?'#111':'#fff')+'" opacity=".6"/>';return e;}
 function renderNav(){
-  const grp={dash:'dash',sites:'sites',siteview:'sites',siteedit:'sites',insp:'insp',sheet:'insp',issues:'issues',issue:'issues',reports:'reports',report:'reports',settings:'settings'}[route.v];
+  const grp={dash:'dash',sites:'settings',siteview:roleKey==='supervisor'?'settings':'dash',siteedit:'settings',insp:'insp',sheet:'insp',issues:'issues',issue:'issues',reports:'reports',report:'reports',settings:'settings'}[route.v];
   $('#nav').replaceChildren(...navKeys().map(k=>{const [t,ic]=NAVALL[k],n=k==='issues'?openIssues().length:0;
     return h('button',{class:'tab'+(grp===k?' on':''),'aria-current':grp===k?'page':null,onclick:async()=>{await flush();go(k);}},svg(ic),h('span',{},t),n?h('em',{class:'cnt'},n):null);}));
   document.body.classList.toggle('focus',route.v==='sheet');
   document.body.classList.toggle('wide',['report','siteedit','settings'].includes(route.v));
 }
-const HEAD={dash:['현황','사이트별 점검 기한과 미조치 이슈'],sites:['사이트','점검 대상 건축물과 설비 현황'],insp:['점검','반기별 유지보수관리 점검, 연 1회 성능점검'],issues:['이슈 리포트','부적합 항목의 개선 조치 관리'],reports:['점검 리포트','제출된 점검 이력 조회와 출력'],me:['내 계정','권한과 점검자 정보'],settings:['환경설정','점검업체·점검자 등록 관리']};
+const HEAD={dash:['홈','사이트별 점검 기한과 미조치 이슈'],sites:['사이트','점검 대상 건축물과 설비 현황'],insp:['점검','반기별 유지보수관리 점검, 연 1회 성능점검'],issues:['이슈 리포트','부적합 항목의 개선 조치 관리'],reports:['점검 리포트','제출된 점검 이력 조회와 출력'],me:['내 계정','권한과 점검자 정보'],settings:['환경설정','점검업체·점검자 등록 관리']};
 function render(){
   const app=$('#app');app.replaceChildren();
   if(!Object.values(loaded).every(Boolean)){app.append(h('div',{class:'card muted'},'불러오는 중…'));return;}
@@ -610,6 +610,7 @@ function acctBlock(refType,ref,role){
     h('button',{onclick:save},a?'계정 저장':'계정 만들기'),a?twoStep('계정 삭제',()=>db.collection('accounts').doc(a.id).delete()):null,msg);}
 const dropAccts=(refType,id)=>accounts.filter(a=>a.refType===refType&&a.refId===id).forEach(a=>db.collection('accounts').doc(a.id).delete());
 function vSettings(app){
+  app.append(h('h3',{style:'margin:4px 6px 8px'},'사이트 (고객사 건물)'));vSites(app);
   if(!ROLE.admin){go('dash');return;}
   const wr=(col,r)=>{const {id,...b}=r;b.updatedAt=new Date().toISOString();setSave('저장 중…');return db.collection(col).doc(id).set(b).then(()=>setSave('저장됨 '+hhmm())).catch(e=>setSave('저장 실패: '+(e.code||e.message)));};
   const deb=(col,r)=>{let t;return()=>{clearTimeout(t);setSave('저장 대기…');t=setTimeout(()=>wr(col,r),600);};};
@@ -711,7 +712,7 @@ function vDash(app){
     h('div',{class:'stats'},stat('제출된 점검',sub),ROLE.write?stat('작성 중',dr,dr?'warn':''):null,stat('미조치 이슈',oi,oi?'ng':'ok'))));
   app.append(h('div',{class:'sechead'},h('h3',{},'사이트별 점검 기한'),h('span',{},'완공일 기준 · 유지보수 반기 1회, 성능점검 연 1회')));
   if(!sites.length)app.append(h('div',{class:'card empty'},h('b',{},'등록된 사이트가 없습니다'),ROLE.write?h('div',{},'사이트 탭에서 첫 사이트를 등록하세요.'):h('div',{},'점검 업체가 사이트를 등록하면 여기에 표시됩니다.'),
-    ROLE.write?h('div',{style:'margin-top:12px'},h('button',{class:'pri',onclick:()=>go('sites')},'사이트로 이동')):null));
+    ROLE.write?h('div',{style:'margin-top:12px'},h('button',{class:'pri',onclick:()=>go('settings')},'설정에서 사이트 등록')):null));
   else app.append(h('div',{class:'sitegrid'},...sites.map(s=>{const last=insps.filter(i=>i.siteId===s.id&&i.status==='submitted').sort((a,b)=>b.date.localeCompare(a.date))[0],oi2=openIssues(s.id).length;
     return h('div',{class:'sitecard',role:'button',tabindex:0,onclick:()=>go('siteview',{id:s.id}),onkeydown:e=>{if(e.key==='Enter')go('siteview',{id:s.id});}},
       h('div',{},h('h4',{},s.name),h('div',{class:'muted'},[s.client,s.address].filter(Boolean).join(' · ')||'-')),
@@ -739,8 +740,9 @@ function vSites(app){
   app.append(card);
 }
 function vSiteView(app){
-  const s=sites.find(x=>x.id===route.id);if(!s){go('sites');return;}
-  app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go('sites')},'← 목록'),h('div',{class:'grow'}),
+  const BK=roleKey==='supervisor'?'settings':roleKey==='engineer'?'insp':'dash';
+  const s=sites.find(x=>x.id===route.id);if(!s){go(BK);return;}
+  app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go(BK)},'← 뒤로'),h('div',{class:'grow'}),
     ROLE.write?h('button',{onclick:()=>{siteDraft=clone(s);go('siteedit');}},'정보·설비 수정'):null,
     ROLE.write?h('button',{class:'pri',onclick:()=>newInspDialog(s.id)},'+ 새 점검'):null));
   app.append(h('div',{class:'card'},h('h3',{},s.name),
@@ -767,8 +769,8 @@ function bind(obj,key,opt={}){
   el.value=obj[key]==null?'':obj[key];el.addEventListener('input',()=>{obj[key]=el.value;if(opt.on)opt.on();});if(opt.dis)el.disabled=true;return el;}
 function fld(label,el,w){return h('div',{class:'grow',style:w?'flex:'+w:''},h('label',{class:'f'},label),el);}
 function vSiteEdit(app){
-  const s=siteDraft;if(!s){go('sites');return;}
-  app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go(s.isNew?'sites':'siteview',{id:s.id})},'← 취소'),h('div',{class:'grow'}),
+  const s=siteDraft;if(!s){go('settings');return;}
+  app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go(s.isNew?'settings':'siteview',{id:s.id})},'← 취소'),h('div',{class:'grow'}),
     h('button',{class:'pri',id:'sitesave',onclick:saveSite},'저장')));
   app.append(h('div',{class:'card'},h('h3',{},'사이트 기본 정보'),
     h('div',{class:'row'},fld('건축물 상호(명칭) *',bind(s,'name')),fld('고객(발주처)',clients.length?selBox(s,'clientId',clients.slice().sort(byName).map(k=>[k.id,k.name||'(이름 없음)']),'고객 선택',()=>{const k=clients.find(x=>x.id===s.clientId);if(k){s.client=k.name;if(!s.mgr)s.mgr=k.mgr||'';if(!s.mgrTel)s.mgrTel=k.tel||'';}}):bind(s,'client',{ph:'환경설정에서 고객을 먼저 등록하세요'}))),
@@ -795,14 +797,26 @@ function alert2(msg){const n=h('div',{class:'note err'},msg);const a=$('#app');a
 
 /* ---------- 점검 목록/생성 ---------- */
 function vInsp(app){
-  const list=visInsps();
-  app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('div',{class:'grow muted'},ROLE.write?'점검 '+list.length+'건 (작성 중 포함)':'제출된 점검 '+list.length+'건'),
-    ROLE.write?h('button',{class:'pri',onclick:()=>newInspDialog()},'+ 새 점검 시작'):null));
-  const c=h('div',{class:'card'});if(!list.length)c.append(h('div',{class:'muted'},'점검 기록이 없습니다.'));list.forEach(i=>c.append(inspRow(i)));app.append(c);
+  const list=visInsps().sort((a,b)=>(b.date||'').localeCompare(a.date||'')),drafts=list.filter(i=>i.status!=='submitted'),done=list.filter(i=>i.status==='submitted');
+  if(drafts.length){const c=h('div',{class:'card'},h('h3',{},'작성 중인 점검 ('+drafts.length+')'));drafts.forEach(i=>c.append(inspRow(i)));app.append(c);}
+  const last={};done.slice().reverse().forEach(i=>(i.locs||[]).forEach(l=>{last[l.id]=i.date;}));
+  const box=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검할 위치'),ROLE.write?h('button',{onclick:()=>newInspDialog()},'+ 위치 여러 곳 선택'):null));
+  if(!sites.length)box.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 사이트가 없습니다. 설정에서 사이트와 점검 위치를 등록하세요.'));
+  sites.slice().sort((a,b)=>a.name.localeCompare(b.name,'ko')).forEach(s=>{const ls=locsOfSite(s.id);
+    const sec=h('div',{style:'margin-top:14px'},h('div',{class:'row sb'},h('b',{},s.name),h('span',{class:'muted sm'},[s.client,(d=>d?(d.done?'이번 기한 점검 완료':'다음 점검 D'+(d.dday>=0?'-':'+')+Math.abs(d.dday)+' ('+d.next+')'):'')(dueInfo(s,'maint'))].filter(Boolean).join(' · '))));
+    if(!ls.length)sec.append(h('div',{class:'lrow',style:'display:flex;align-items:center;gap:10px'},h('div',{class:'grow muted'},'등록된 위치 없음 · 사이트 전체 영역 '+(s.areas||[]).length+'개'),
+      ROLE.write?h('button',{class:'pri',onclick:()=>newInspDialog(s.id)},'점검'):null));
+    ls.forEach(l=>sec.append(h('div',{class:'lrow',style:'display:flex;align-items:center;gap:10px;flex-wrap:wrap'},
+      h('div',{class:'grow'},h('b',{style:'font-weight:400'},l.name||'(이름 없음)'),h('div',{class:'muted sm'},'영역 '+(l.areas||[]).length+'개 · '+(l.gps||'GPS 미등록'))),
+      last[l.id]?h('span',{class:'pill ok'},'최근 '+last[l.id]):h('span',{class:'pill'},'미점검'),
+      ROLE.write?h('button',{class:'pri',onclick:()=>newInspDialog(s.id,l.id)},'점검'):null)));
+    box.append(sec);});
+  app.append(box);
+  if(done.length){const c=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'최근 제출'),h('button',{onclick:()=>go('reports')},'리포트 전체')));done.slice(0,5).forEach(i=>c.append(inspRow(i)));app.append(c);}
 }
-function newInspDialog(siteId){
+function newInspDialog(siteId,locId){
   const a=$('#app');a.replaceChildren();
-  const d={siteId:siteId||(sites[0]&&sites[0].id)||'',type:'maint',date:today(),personId:ME.personId,name:ME.name,org:ME.org,grade:ME.grade,witness:'',locIds:null};
+  const d={siteId:siteId||(sites[0]&&sites[0].id)||'',type:'maint',date:today(),personId:ME.personId,name:ME.name,org:ME.org,grade:ME.grade,witness:'',locIds:locId?[locId]:null};
   const ss=h('select',{},...sites.map(s=>h('option',{value:s.id},s.name)));ss.value=d.siteId;
   const lbox=h('div');
   const drawLocs=()=>{const ls=locsOfSite(d.siteId);if(d.locIds===null)d.locIds=ls.map(l=>l.id);lbox.replaceChildren();
@@ -865,7 +879,7 @@ function vSheet(app){
   if(!cur){go('insp');return;}
   const c=cnt(cur),pct=c.total?Math.round(c.done/c.total*100):0;
   app.append(h('div',{class:'card'},h('div',{class:'row'},
-    h('button',{onclick:async()=>{await flush();go('insp');}},'나가기'),h('div',{class:'grow'}),h('span',{class:'muted',id:'savestate'},'')),
+    h('button',{onclick:async()=>{await flush();go('insp');}},'나가기'),h('button',{onclick:async()=>{await flush();go('siteview',{id:cur.siteId});}},'사이트 정보'),h('div',{class:'grow'}),h('span',{class:'muted',id:'savestate'},'')),
     h('div',{style:'margin-top:12px'},h('b',{style:'font-size:17px'},siteName(cur.siteId)),h('div',{class:'row',style:'gap:8px;margin-top:4px'},h('span',{class:'pill pri'},TYPES[cur.type]),h('span',{class:'muted'},cur.date+' · '+cur.engineer.name+(cur.engineer.org?' · '+cur.engineer.org:'')))),
     h('div',{class:'row',style:'margin-top:8px'},h('div',{class:'grow'},h('div',{class:'bar'},h('i',{style:'width:'+pct+'%'}))),h('span',{class:'muted'},c.done+' / '+c.total+' 항목'))));
   if(sheet.mode==='areas')areasView(app);else stepView(app);
