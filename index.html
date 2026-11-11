@@ -228,6 +228,18 @@ body.gated .shell{display:none}
 #gate .note{background:#2a2a28;color:#eee;border-color:#3a3a38}#gate .note.err{background:#fff;color:#111}
 #gate .muted{color:#9a9a97}
 /* 위치 */
+.navbrand{display:none}
+@media (min-width:1000px){
+ body .stage,body.wide .stage{max-width:none;margin:0 0 0 240px}
+ .stage main{max-width:1120px;margin:0 auto;padding:10px 40px 60px}
+ .top{padding:16px 40px 10px}.top .brand{display:none}.top .tag2{margin-left:auto}
+ .tabs{left:0;top:0;bottom:0;right:auto;transform:none;width:240px;border-radius:0;flex-direction:column;justify-content:flex-start;align-items:stretch;gap:4px;padding:22px 14px 24px;box-shadow:none;overflow-y:auto}
+ .navbrand{display:flex;flex-direction:column;gap:2px;color:#fff;padding:2px 10px 22px}.navbrand svg{width:34px;height:34px;margin-bottom:8px}.navbrand b{font-weight:400;font-size:18px;letter-spacing:-.02em}.navbrand small{color:#a8a8a5;font-size:12.5px}
+ .tab{flex:none;flex-direction:row;justify-content:flex-start;gap:14px;font-size:15px;padding:13px 16px;border-radius:16px;min-height:0}
+ .tab span{font-size:15px}.tab .ic{width:22px;height:22px}.tab:hover:not(.on){background:#222;color:#fff}
+ .tab .cnt{position:static;margin:0 0 0 auto;transform:none}
+ .stick{bottom:0}.pagehead{margin-top:10px}
+}
 .stick{bottom:calc(78px + env(safe-area-inset-bottom))}.stat.lnk{cursor:pointer}.stat.lnk:hover{border-color:#111}.stats.s3{grid-template-columns:repeat(3,1fr);margin-bottom:14px}
 .lsum .lk{cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .lsum{width:100%;border-collapse:collapse;font-size:14px}.lsum th{text-align:left;font-weight:400;color:var(--mut);font-size:12px;padding:6px 8px;border-bottom:1px solid var(--line)}
@@ -485,6 +497,7 @@ function renderNav(){
   const grp={dash:'dash',sites:'settings',siteview:roleKey==='supervisor'?'settings':'dash',siteedit:'settings',insp:'insp',sheet:'insp',issues:'issues',issue:'issues',reports:'reports',report:'reports',settings:'settings'}[route.v];
   $('#nav').replaceChildren(...navKeys().map(k=>{const [t,ic]=NAVALL[k],n=k==='issues'?openIssues().length:0;
     return h('button',{class:'tab'+(grp===k?' on':''),'aria-current':grp===k?'page':null,onclick:()=>navTo(k)},svg(ic),h('span',{},t),n?h('em',{class:'cnt'},n):null);}));
+  $('#nav').prepend(h('div',{class:'navbrand'},logo(true),h('b',{},'Easy ICT Master'),h('small',{},'정보통신 유지보수 관리')));
   document.body.classList.toggle('focus',route.v==='sheet');
   document.body.classList.toggle('wide',['report','siteedit','settings'].includes(route.v));
 }
