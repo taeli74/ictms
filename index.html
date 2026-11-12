@@ -872,18 +872,43 @@ function vSiteEdit(app){
     h('div',{class:'row'},fld('건축물 상호(명칭) *',bind(s,'name')),fld('고객(발주처)',clients.length?selBox(s,'clientId',clients.slice().sort(byName).map(k=>[k.id,k.name||'(이름 없음)']),'고객 선택',()=>{const k=clients.find(x=>x.id===s.clientId);if(k){s.client=k.name;if(!s.mgr)s.mgr=k.mgr||'';if(!s.mgrTel)s.mgrTel=k.tel||'';}}):bind(s,'client',{ph:'환경설정에서 고객을 먼저 등록하세요'}))),
     h('div',{class:'row',style:'margin-top:8px'},fld('현장 주소',bind(s,'address'),2),fld('완공일(사용승인일)',bind(s,'completed',{type:'date'})),fld('연면적(㎡)',bind(s,'area',{type:'number'}))),
     h('div',{class:'row',style:'margin-top:8px'},fld('관리주체 담당자',bind(s,'mgr')),fld('연락처',bind(s,'mgrTel')))));
+  s.contacts=s.contacts||[];s.equip=s.equip||[];s.staff=s.staff||{};
+  app.append(h('div',{class:'card'},h('h3',{},'건축물 정보·점검 계획 자료 (보고서의 현장 개요, 점검 계획, 인력·장비에 사용)'),
+    h('div',{class:'row'},fld('건축물 용도',bind(s,'use',{ph:'예: 공동주택, 업무시설'})),fld('지상 층수',bind(s,'floorsUp',{type:'number'})),fld('지하 층수',bind(s,'floorsDown',{type:'number'}))),
+    h('div',{class:'row',style:'margin-top:8px'},fld('추가 안전수칙 (현장 특성, 선택)',bind(s,'safetyExtra',{area:true,ph:'예: 옥상 작업 시 2인 1조, 기계실 출입 전 관리실 통보'}),2)),
+    h('h4',{style:'margin:14px 0 4px'},'비상연락망 (관리주체·제조사·유지보수업체·유관기관)'),
+    listEditor(s.contacts,[['g','구분(예: 관리주체, CCTV 업체)',1.2],['name','이름/업체명',1.2],['tel','연락처',1.2]],'+ 연락처 추가'),
+    h('h4',{style:'margin:14px 0 4px'},'점검 계측장비 현황'),
+    listEditor(s.equip,[['n','장비명',1.5],['q','수량',0.6],['u','사용 설비·용도',2]],'+ 장비 추가'),
+    staffBox(s)));
   const box=h('div',{class:'card'},h('h3',{},'점검 대상 영역 (별지 제1호 [v] 표시)'));
   const facBox=h('div');
   const drawFac=()=>{facBox.replaceChildren(h('h3',{style:'margin:14px 0 6px'},'구성 설비 현황 (설비명·규격·수량·제조사·설치위치·설치연도)'));
     (s.areas||[]).slice().sort((a,b)=>a-b).forEach(no=>{const rows=s.fac[no]=s.fac[no]||[];
       const d=h('details',{style:'border:1px solid var(--line);border-radius:8px;padding:8px;margin-bottom:6px'},h('summary',{style:'cursor:pointer;font-weight:600'},areaOf(no).name+' ('+rows.length+')'));
       const tb=h('div');const draw=()=>{tb.replaceChildren(...rows.map((r,i)=>h('div',{class:'row',style:'margin:6px 0;border-bottom:1px dashed var(--line);padding-bottom:6px'},
-        fld('설비명',bind(r,'n'),2),fld('규격',bind(r,'m')),fld('수량',bind(r,'q')),fld('제조사',bind(r,'k')),fld('설치위치',bind(r,'l')),fld('연도',bind(r,'y')),
-        h('button',{class:'dng',onclick:()=>{rows.splice(i,1);draw();}},'삭제'))),h('button',{onclick:()=>{rows.push({n:'',m:'',q:'',k:'',l:'',y:''});draw();}},'+ 설비 추가'));};
+        fld('설비명',bind(r,'n'),2),fld('규격(모델)',bind(r,'m')),fld('수량',bind(r,'q')),fld('제조사',bind(r,'k')),fld('설치위치',bind(r,'l')),fld('연도',bind(r,'y')),fld('내구연한(년)',bind(r,'life')),
+        h('button',{class:'dng',onclick:()=>{rows.splice(i,1);draw();}},'삭제'))),h('button',{onclick:()=>{rows.push({n:'',m:'',q:'',k:'',l:'',y:'',life:''});draw();}},'+ 설비 추가'));};
       draw();d.append(tb);facBox.append(d);});};
   box.append(areaTable(s,drawFac),facBox);
   app.append(box);drawFac();
 }
+
+function listEditor(arr,cols,addLabel){const box=h('div');
+  const draw=()=>{box.replaceChildren(...arr.map((r,i)=>h('div',{class:'row',style:'margin:6px 0'},...cols.map(c=>fld(c[1],bind(r,c[0]),c[2]||1)),h('button',{class:'dng',onclick:()=>{arr.splice(i,1);draw();}},'삭제'))),
+    h('button',{onclick:()=>{const o={};cols.forEach(c=>o[c[0]]='');arr.push(o);draw();}},addLabel));};draw();return box;}
+/* 별표 3 표 1 투입인원 산정기준(해설서 예시에 수록된 15개 설비) — 나머지는 사이트에서 직접 입력 */
+const STAFF_BASE={1:.29,2:.58,3:.17,4:.24,5:.06,6:.10,7:.89,8:.52,9:.50,10:1.85,12:.52,13:2.45,17:.81,33:1.66,34:.12};
+const COEF=[[5000,1.15],[10000,1.30],[15000,1.45],[20000,1.60],[25000,1.75],[30000,1.90],[35000,2.05],[40000,2.20],[45000,2.35],[50000,2.50],[55000,2.65],[60000,2.80]];
+function coefOf(a){a=+a||0;let c=null;COEF.forEach(([lo,v])=>{if(a>=lo)c=v;});return c;}
+function qualOf(a){a=+a||0;return a>=60000?'특급기술자':a>=30000?'고급기술자 이상':a>=15000?'중급기술자 이상':a>=5000?'초급기술자 이상':'';}
+function baseOf(s,no){const o=(s.staff||{})[no];if(o!==undefined&&o!=='')return +o;return STAFF_BASE[no]!==undefined?STAFF_BASE[no]:null;}
+function staffBox(s){const d=h('details',{style:'margin-top:14px;border:1px solid var(--line);border-radius:8px;padding:8px'},h('summary',{style:'cursor:pointer;font-weight:600'},'투입인원 기준인원 보정 (별표 3 표 1 값이 없는 설비)'));
+  d.addEventListener('toggle',()=>{if(!d.open)return;d.querySelectorAll('.stf').forEach(x=>x.remove());
+    const miss=(s.areas||[]).filter(no=>STAFF_BASE[no]===undefined);
+    d.append(h('div',{class:'stf muted sm',style:'margin:6px 0'},miss.length?'아래 설비는 기준인원 기본값이 없습니다. 「정보통신설비 유지보수·관리기준」 별표 3 표 1의 값을 입력하세요.':'선택한 모든 설비에 기본값이 있습니다.'),
+      ...miss.map(no=>h('div',{class:'stf row',style:'margin:4px 0'},h('div',{class:'grow'},areaOf(no).name),h('div',{style:'width:120px'},bind(s.staff,no,{type:'number',ph:'기준인원'})))));});
+  return d;}
 async function saveSite(){
   const s=siteDraft;if(!s.name.trim()){alert2('상호(명칭)를 입력하세요.');return;}
   const {isNew,...body}=s;body.areas=(body.areas||[]).slice().sort((a,b)=>a-b);body.updatedAt=new Date().toISOString();if(isNew)body.createdAt=body.updatedAt;
@@ -1016,6 +1041,7 @@ function areasView(app){
     app.append(h('div',{class:'loc'+(g.s.done?' done':''),id:'loc-'+l.id},head,body));});
   const miss=tot.t-tot.d;
   const noMemo=Object.entries(cur.res).filter(([k,v])=>v.r==='ng'&&!(v.n||'').trim()).length;
+  app.append(repInfoCard());
   app.append(h('div',{class:'card'},h('h3',{},'종합 의견'),
     h('div',{class:'row'},cur.type==='perf'?h('div',{class:'grow',style:'min-width:200px'},fld('입회자(관리주체)',bind(cur,'witness',{on:touch}))):null,
       h('div',{class:'grow',style:'min-width:240px'},bind(cur,'summary',{area:true,on:touch,ph:'전체 점검에 대한 종합 의견'}))),
@@ -1089,6 +1115,21 @@ async function shrink(file,max=1600){
     c.getContext('2d').drawImage(b,0,0,c.width,c.height);return await new Promise(r=>c.toBlob(x=>r(x||file),'image/jpeg',0.82));}catch(e){return file;}
 }
 /* 제출 → 이슈 생성 */
+function repInfoCard(){
+  cur.co=cur.co||{name:'',rep:'',reg:'',techNo:''};cur.per=cur.per||{from:cur.date||'',to:cur.date||''};cur.rev=cur.rev||{match:{},need:'',plan:['','','','',''],special:''};
+  const rv=cur.rev,box=h('details',{class:'card',open:false},h('summary',{style:'cursor:pointer;font-weight:700'},'보고서 작성 정보 (점검기간·업체·'+(cur.type==='perf'?'시스템 검토사항·성능개선 계획':'특기사항')+')'));
+  box.append(h('div',{class:'row',style:'margin-top:10px'},fld('점검 시작일',bind(cur.per,'from',{type:'date',on:touch})),fld('점검 종료일',bind(cur.per,'to',{type:'date',on:touch}))),
+    h('div',{class:'row',style:'margin-top:8px'},fld('점검업체 상호',bind(cur.co,'name',{on:touch})),fld('대표자',bind(cur.co,'rep',{on:touch})),fld('등록번호',bind(cur.co,'reg',{on:touch})),fld('기술자 수첩발급번호',bind(cur.co,'techNo',{on:touch}))));
+  if(cur.type==='perf'){
+    const nos=[...new Set(unitsOf(cur).map(U=>U.no))];
+    box.append(h('h4',{style:'margin:14px 0 4px'},'시스템 검토: 현황표 제조사·모델번호와 현장 설치 설비의 일치 여부'),
+      ...nos.map(no=>{const sel=h('select',{onchange:()=>{rv.match[no]=sel.value;touch();}},...[['','선택'],['o','○ 일치'],['x','× 불일치'],['-','― 해당없음']].map(([v,l])=>h('option',{value:v},l)));sel.value=rv.match[no]||'';
+        return h('div',{class:'row',style:'margin:4px 0'},h('div',{class:'grow'},areaOf(no).name),sel);}),
+      h('div',{style:'margin-top:10px'},fld('성능개선 필요성 의견',bind(rv,'need',{area:true,on:touch,ph:'노후·부적합 설비의 개선 필요 여부와 사유'}))),
+      h('h4',{style:'margin:14px 0 4px'},'성능개선 5개년 계획 (점검·보수·교체)'),
+      ...rv.plan.map((_,k)=>h('div',{class:'row',style:'margin:4px 0'},h('div',{style:'width:54px'},(k+1)+'년차'),h('div',{class:'grow'},bind(rv.plan,k,{on:touch,ph:'예: 정기점검, 노후 카메라 3대 교체'})))));}
+  box.append(h('div',{style:'margin-top:10px'},fld('특기사항 (점검결과 내역서)',bind(rv,'special',{area:true,on:touch,ph:'점검 중 특이사항'}))));
+  return box;}
 async function submitInsp(){
   const btn=event&&event.target;if(btn)btn.disabled=true;
   try{
@@ -1150,7 +1191,7 @@ function model(i){
   const areas=unitsOf(i).map(U=>{const no=U.no,a=areaOf(no),meta=(i.meta||{})[U.u]||{};
     const rows=itemsOf(no,i.type).map((it,k)=>{const st=(i.res||{})[U.u+'-'+k]||{},is=st.r==='ng'?issueOf(U.u+'-'+k):null;
       let note=st.n||'';if(is&&is.status==='done')note+=(note?' / ':'')+'조치완료 '+(is.actionDate||'')+(is.action?' ('+is.action+')':'');else if(is)note+=(note?' / ':'')+'['+ISTAT[is.status][0]+']';
-      return{cat:it.cat,t:it.t,r:st.r||'',note,fixed:!!(is&&is.status==='done'),photos:st.p||[]};});
+      return{cat:it.cat,t:it.t,r:st.r||'',note,fixed:!!(is&&is.status==='done'),act:(is&&is.action)?is.action+(is.actionDate?' ('+is.actionDate+')':''):'',photos:st.p||[]};});
     const ng=rows.filter(r=>r.r==='ng'&&!r.fixed).length,ok=rows.filter(r=>r.r==='ok'||(r.r==='ng'&&r.fixed)).length;
     return{no,u:U.u,loc:U.loc,locName:locName(i,U.loc),code:a.code,name:a.name,meta,rows,overall:ng?'ng':ok?'ok':rows.length&&rows.every(r=>r.r==='na')?'na':''};});
   const c={ok:0,ng:0,fixed:0,na:0};areas.forEach(a=>a.rows.forEach(r=>{if(r.r==='ok')c.ok++;if(r.r==='ng'){c.ng++;if(r.fixed)c.fixed++;}if(r.r==='na')c.na++;}));
@@ -1168,6 +1209,77 @@ function vReport(app){
   app.append(reportHtml(i,m));
 }
 const symEl=r=>h('span',{class:'sym-'+(r||'na')},SYM[r]||'');
+
+/* ---------- 해설서 보고서 서식 블록 (HTML·Word 공통) ---------- */
+const SAFE_MGR=['위험성, 점검요령 등에 대한 교육을 주기적으로 실시한다.','안전통로 확보 및 유지, 점검 등 지속적으로 관리한다.','유해·위험한 시설 및 장소에 안전보건 표지를 설치 또는 부착한다.','통행로 주변 기계, 기구의 위험부분에 덮개 등의 안전조치를 실시한다.','안전인증 보호구 선정, 지급 및 착용 여부를 수시로 확인·관리한다.','작업 전 현장점검 및 정리정돈, 작업복장 점검을 실시한다.'];
+const SAFE_GEN=['안전보호구를 착용한다.','작업 전 작업 방법과 순서를 명확히 하고 안전교육을 시행한다.','점검 및 정리정돈, 안전, 보건 사항을 준수한다.','사업장 내 통행 시 안전통로를 이용하고 통로 내 위험상황을 보고한다.'];
+const SAFE_HIGH=['이동식 사다리 작업 시 측면 작업 및 사다리 최상부 작업을 하지 않는다. 사다리와 수평면의 설치 각도는 75도를 유지한다.','일자형 사다리 상단은 걸쳐진 지점부터 60㎝ 이상 올라가게 고정한다. A형 사다리는 벌어지거나 미끄러지지 않도록 2인 1조 또는 고정한다.','폭우, 폭설 등 악천후로 위험이 예상될 경우 작업을 하지 않는다.','추락 위험이 있을 경우 작업발판 설치 또는 안전대 착용 등 추락 방지 조치 후 작업한다.','낙하·비래 위험이 있을 경우 출입금지 및 낙하물방지망 등 안전조치 후 작업한다.'];
+const SAFE_MAN=['맨홀 내 유해가스, 산소 부족 등을 확인하고 환기 후 작업한다.','맨홀 뚜껑을 열기 전 작업표시판을 전·후방에 설치하고 전용공구를 사용한다.','맨홀 내 작업 시 환풍기 등 안전시설을 갖추고 맨홀 밖에 감시자를 배치한다.','맨홀 뚜껑을 닫을 때에는 맨홀 내 사람, 화기, 공기구, 자재의 유무를 재확인한다.'];
+const EMG=[['위기 형태·상황','정보통신설비 작동 중 정전 등 장애 발생'],['보고·전파','신속보고(지휘·상황 보고) → 시설계, 방재실, 상황실, 관리실 전파 → 필요 시 건축물 내부 안내방송'],['초동조치','연결 기기 전원 공급 상태 파악, UPS 작동상태 확인, 인터페이스 유닛 작동상태 확인, 비상연락망 가동(제조사 등), 현장 지휘체계 마련'],['대응조치','시스템 운용 매뉴얼 및 이상 상황 조치 방법 확인, 유지보수 업체 긴급 연락'],['종료','처리 상황보고, 상황종료 판단자료 제공'],['후속조치','장애 원인 분석, 재발방지 대책 마련']];
+const TROUBLE=[['서버·프로그램 접속 오류','네트워크 연결 상태(랜 카드·케이블·스위치·라우터) 확인 → 서버 프로그램 정상 실행 여부 확인 → 필요 시 서버 종료 후 재실행'],['성능 저하','비정상적인 CPU·메모리 사용량 확인, 해당 시 시스템 재시작'],['하드웨어 장애','하드디스크 상태·저장 용량 확인, 해당 부품 점검·교체'],['매뉴얼에 없는 장애','제조사 및 설치업체에 연락 후 조치 (설비별 제조사 운용 매뉴얼 참조)']];
+const na=v=>(v===null||v===undefined||v==='')?'':String(v);
+function dayCount(i){const p=i.per||{};if(!p.from||!p.to)return '';const d=Math.round((new Date(p.to)-new Date(p.from))/864e5)+1;return d>0?d:'';}
+function siteBlocks(i,m){const s=m.site,e=i.engineer||{},co=i.co||{},p=i.per||{};
+  const fl=(s.floorsUp||s.floorsDown)?('지상 '+na(s.floorsUp||0)+'층 / 지하 '+na(s.floorsDown||0)+'층'):'';
+  const rows=[['건축물 용도',na(s.use),'연면적',s.area?Number(s.area).toLocaleString()+'㎡':''],['건축물 구조(층수)',fl,'관리주체 연락처',na(s.mgrTel)],
+    ['점검 기간',p.from?(p.from+(p.to&&p.to!==p.from?' ~ '+p.to:'')+(dayCount(i)?' (총 '+dayCount(i)+'일)':'')):'','점검 구분',TYPES[i.type]+' ('+(i.type==='perf'?'연 1회 이상':'반기 1회 이상')+')'],
+    ['점검업체',na(co.name)+(co.rep?' / 대표 '+co.rep:'')+(co.reg?' / 등록 '+co.reg:''),'참여 기술자',na(e.name)+(e.grade?' ('+e.grade+')':'')+(co.techNo?' / 수첩 '+co.techNo:'')]];
+  return[{t:'kv',rows}];}
+function planBlocks(i,m,nx){const s=m.site,B=[],sel=m.areas;
+  B.push({t:'h',x:nx()+'. 점검 계획'});
+  B.push({t:'h4',x:'가. 점검 일정'});
+  B.push({t:'tbl',head:['점검종류','주기','금회 점검일','비고'],rows:[['유지보수·관리 점검','반기 1회 이상 (별지 제2호)',i.type==='maint'?i.date:'','기록·보존 5년'],['성능점검','연 1회 이상 (별지 제3호)',i.type==='perf'?i.date:'','점검표 시·군·구청장 요청 시 제출']]});
+  B.push({t:'h4',x:'나. 산업재해방지 대책'});
+  const sf=[['관리주체 준수사항',SAFE_MGR],['일반작업 안전수칙',SAFE_GEN],['고소작업 안전수칙',SAFE_HIGH],['맨홀작업 안전수칙',SAFE_MAN]];
+  const rows=sf.map(([g,a])=>[g,a.map(x=>'- '+x).join('\n')]);if(s.safetyExtra)rows.push(['현장 추가 안전수칙',s.safetyExtra]);
+  B.push({t:'tbl',head:['구분','내용'],rows});
+  B.push({t:'h4',x:'다. 긴급상황 매뉴얼'});
+  B.push({t:'tbl',head:['단계','대응 절차'],rows:EMG});
+  const mk={};sel.forEach(a=>{const rs=(s.fac||{})[a.no]||[];const ks=[...new Set(rs.map(r=>(r.k||'').trim()).filter(Boolean))];if(ks.length)mk[a.name]=ks.join(', ');});
+  const ct=(s.contacts||[]).filter(c=>c.g||c.name||c.tel).map(c=>[c.g,c.name,c.tel]);
+  const cr=[...ct,...Object.entries(mk).map(([n,k])=>[n+' 제조사',k,'(현황표 기준)']),['경찰서','','112'],['소방서','','119']];
+  B.push({t:'p',x:'비상연락망'});B.push({t:'tbl',head:['구분','이름/업체명','연락처'],rows:cr});
+  B.push({t:'h4',x:'라. 정보통신설비 사고 또는 이상상황 발생 시 조치 방법'});
+  B.push({t:'tbl',head:['이상 상황','조치 방법'],rows:TROUBLE});
+  const iss=m.iss.filter(x=>x.note||x.title);
+  B.push({t:'h4',x:'마. 사고 재발방지 대책'});
+  B.push(iss.length?{t:'tbl',head:['영역','부적합 내용','재발방지·개선 조치'],rows:iss.map(x=>[ai(x),x.title+(x.note?' — '+x.note:''),x.action||'(미조치)'])}:{t:'p',x:'금회 점검에서 확인된 사고·부적합 이력 없음.'});
+  B.push({t:'h',x:nx()+'. 인력 투입 계획 및 장비 현황'});
+  const co=coefOf(s.area),nos=sel.map(a=>a.no).filter((v,k,arr)=>arr.indexOf(v)===k).sort((a,b)=>a-b);let tot=0,miss=0;
+  const sr=nos.map(no=>{const b=baseOf(s,no);if(b===null)miss++;else tot+=b;return[no,areaOf(no).name,'식 1',b===null?'(미입력)':b.toFixed(2)];});
+  B.push({t:'h4',x:'가. 인력 투입 계획 — 투입인원 산정기준 (정보통신설비 유지보수·관리기준 별표 3 표 1·2)'});
+  B.push({t:'tbl',head:['No','대상 정보통신설비','단위·수량','기준인원(인)'],rows:[...sr,['','합계','',tot.toFixed(2)]]});
+  B.push({t:'p',x:'연면적 '+(s.area?Number(s.area).toLocaleString()+'㎡':'(미입력)')+' 조정계수 '+(co===null?'(5천㎡ 미만 또는 미입력: 해당 없음)':co.toFixed(2))+' → 투입인원 산정값 '+(co===null?tot.toFixed(2):(tot*co).toFixed(3))+'인'+(miss?'  ※ 기준인원이 미입력인 설비 '+miss+'개는 합계에서 제외됨 (사이트 정보에서 입력)':'')});
+  B.push({t:'p',x:'유지보수·관리자 선임기준(정보통신공사업법 시행규칙 별표): '+(qualOf(s.area)?'연면적 '+Number(s.area).toLocaleString()+'㎡ → 정보통신기술자 중 '+qualOf(s.area)+' 1명':'연면적 5천㎡ 미만 또는 미입력 — 선임 대상 아님(용도별 건축물 해당 여부는 별도 확인)')+'. ※ 관리주체의 요청 및 상황에 따라 투입 인력 변동 가능.'});
+  B.push({t:'h4',x:'나. 장비 현황 (계측장비)'});
+  const eq=(s.equip||[]).filter(x=>x.n);
+  B.push(eq.length?{t:'tbl',head:['장비명','수량','사용 설비·용도'],rows:eq.map(x=>[x.n,x.q,x.u])}:{t:'p',x:'등록된 계측장비 없음 (사이트 정보 > 점검 계측장비 현황에서 등록).'});
+  return B;}
+function resultBlocks(i,m,nx){const B=[],e=i.engineer||{},rv=i.rev||{match:{},plan:[]},s=m.site;
+  B.push({t:'h',x:nx()+'. 점검결과 내역서'});
+  B.push({t:'tbl',head:['No','설비(시스템)','점검 결과','부적합 항목 수','부적합 내역'],rows:m.areas.map(a=>{const ng=a.rows.filter(r=>r.r==='ng');return[a.code,a.name+(a.locName?' ('+a.locName+')':''),SYM[a.overall]||'',ng.length,ng.map(r=>r.t+(r.fixed?' [조치완료]':'')).join('\n')];})});
+  const sp=[i.summary,rv.special].filter(Boolean).join('\n');
+  B.push({t:'kv',rows:[['특기사항',sp||'-','작성일자',i.date],['점검자 직위(등급)',na(e.grade),'점검자 성명',na(e.name)+'  (서명)']]});
+  if(i.type!=='perf')return B;
+  B.push({t:'h',x:nx()+'. 성능점검 시스템 검토사항'});
+  const oper=a=>a.overall==='ok'?'정상':a.overall==='ng'?'이상(부적합 있음)':a.overall==='na'?'해당없음':'미점검';
+  const MM={o:'○',x:'×','-':'―'};
+  B.push({t:'tbl',head:['설비(시스템)','작동 상태','제조사·모델번호 일치 (현황표 ↔ 현장)'],rows:m.areas.map(a=>[a.name,oper(a),MM[rv.match[a.no]]||'(미검토)'])});
+  const yr=+(i.date||'').slice(0,4),lr=[];
+  m.areas.forEach(a=>((s.fac||{})[a.no]||[]).forEach(f=>{const y=+f.y,L=+f.life;lr.push([a.name+(f.n?' / '+f.n:''),f.m||'',f.y||'',f.life||'',y?(yr-y)+'년':'',(y&&L)?Math.round((yr-y)/L*100)+'%':'']);}));
+  B.push({t:'h4',x:'내용연수 노후도'});
+  B.push(lr.length?{t:'tbl',head:['설비','모델번호','설치연도','내구연한','사용연수','노후도(사용/내구)'],rows:lr}:{t:'p',x:'구성 설비 현황이 없어 산출 불가 (사이트 정보에 설비·설치연도·내구연한 입력).'});
+  B.push({t:'h4',x:'부적합·개선사항'});
+  B.push(m.iss.length?{t:'tbl',head:['영역','부적합 내용','개선 내용','상태'],rows:m.iss.map(x=>[ai(x),x.title+(x.note?' — '+x.note:''),x.action||'',ISTAT[x.status][0]])}:{t:'p',x:'부적합 사항 없음.'});
+  B.push({t:'h',x:nx()+'. 성능개선 계획'});
+  B.push({t:'kv',rows:[['성능개선 필요성',rv.need||'-','','']]});
+  B.push({t:'tbl',head:['연차','점검·보수·교체 계획'],rows:[0,1,2,3,4].map(k=>[(k+1)+'년차',(rv.plan||[])[k]||''])});
+  return B;}
+function blkHtml(R,B){B.forEach(b=>{
+  if(b.t==='h')R.append(h('h3',{},b.x));else if(b.t==='h4')R.append(h('h4',{},b.x));else if(b.t==='p')R.append(h('div',{style:'white-space:pre-wrap;font-size:13px;margin:4px 0'},b.x));
+  else if(b.t==='tbl')R.append(h('table',{},h('tr',{},...b.head.map(x=>h('th',{},x))),...b.rows.map(r=>h('tr',{},...r.map(v=>h('td',{style:'white-space:pre-wrap'},na(v)))))));
+  else if(b.t==='kv')R.append(h('table',{},...b.rows.map(r=>h('tr',{},h('th',{},r[0]),h('td',{style:'white-space:pre-wrap'},na(r[1])),...(r[2]?[h('th',{},r[2]),h('td',{},na(r[3]))]:[h('td',{colspan:2},'')]) ))));});}
+async function reportDocxBlocks(){}
 function reportHtml(i,m){
   const e=i.engineer||{},R=h('div',{class:'rpt'});
   R.append(h('h2',{},'정보통신설비 '+TYPES[i.type]+' 결과 보고서'),h('div',{class:'sub'},FORMNO[i.type]+' 기준 · 정보통신공사업법 제37조의2·3'));
@@ -1175,6 +1287,7 @@ function reportHtml(i,m){
     h('tr',{},h('th',{},'현장주소'),h('td',{},m.site.address||''),h('th',{},'관리주체'),h('td',{},(m.site.client||'')+(m.site.mgr?' / '+m.site.mgr:''))),
     h('tr',{},h('th',{},'점검자'),h('td',{},e.name+(e.grade?' ('+e.grade+')':'')),h('th',{},'소속'),h('td',{},e.org||'')),
     h('tr',{},h('th',{},'GPS'),h('td',{},gpsText(i)),h('th',{},i.type==='perf'?'입회자':'제출일'),h('td',{},i.type==='perf'?(i.witness||''):((i.submittedAt||'').slice(0,10))))));
+  R.append(h('h4',{},'현장 개요'));blkHtml(R,siteBlocks(i,m));
   R.append(h('h3',{},'1. 점검 결과 요약'),h('table',{},h('tr',{},...['적합','부적합','(조치완료)','해당없음'].map(t=>h('th',{class:'c'},t))),
     h('tr',{},...[m.c.ok,m.c.ng,m.c.fixed,m.c.na].map(v=>h('td',{class:'c'},String(v))))));
   if(m.locs.length)R.append(h('h4',{},'점검 위치별 결과'),h('table',{},h('tr',{},...['위치','GPS','영역','적합','부적합','해당없음','상태','위치 의견'].map(x=>h('th',{},x))),
@@ -1185,13 +1298,18 @@ function reportHtml(i,m){
   R.append(h('table',{},h('tr',{},...['No','대상설비','점검대상','결과'].flatMap(x=>[h('th',{class:'c'},x)]).concat(['No','대상설비','점검대상','결과'].map(x=>h('th',{class:'c'},x)))),
     ...Array.from({length:17},(_,r)=>h('tr',{},...[AREAS[r],AREAS[r+17]].flatMap(a=>{if(!a)return[h('td'),h('td'),h('td'),h('td')];const ar=ovrOf(m,a.no);
       return[h('td',{class:'c'},a.code),h('td',{},a.name),h('td',{class:'c'},sel.has(a.no)?'[v]':'[ ]'),h('td',{class:'c'},ar?symEl(ar.overall):'')];})))));
+  R.append(h('div',{style:'font-size:13px;margin:4px 0;text-align:right'},'작성일자: '+i.date+'    작성자: '+(e.name||'')+' (서명)'));
   let sec=3;const fac=Object.entries(m.site.fac||{}).filter(([no,rows])=>sel.has(+no)&&rows.length);
   if(fac.length){R.append(h('h3',{},(sec++)+'. 설비 구성 현황'));fac.forEach(([no,rows])=>R.append(h('h4',{},areaOf(+no).name),h('table',{},h('tr',{},...['설비명','규격','수량','제조사','설치위치','연도'].map(x=>h('th',{},x))),...rows.map(r=>h('tr',{},h('td',{},r.n),h('td',{},r.m),h('td',{},r.q),h('td',{},r.k),h('td',{},r.l),h('td',{},r.y))))));}
+  blkHtml(R,planBlocks(i,m,()=>sec++));
   R.append(h('h3',{},(sec++)+'. 설비별 '+TYPES[i.type]+'표 ('+FORMNO[i.type]+')'));
   m.areas.forEach(a=>{R.append(h('h4',{},a.code+' '+a.name+(a.locName?' — '+a.locName:'')),
-    h('table',{},h('tr',{},h('th',{},'점검자'),h('td',{},e.name),h('th',{},'설치업체'),h('td',{},a.meta.inst||''),h('th',{},'설치위치'),h('td',{},a.meta.loc||''))),
+    h('table',{},h('tr',{},h('th',{},i.type==='perf'?'점검자(소속)':'점검자'),h('td',{},e.name+(i.type==='perf'&&e.org?' ('+e.org+')':'')),h('th',{},i.type==='perf'?'관리주체(입회자)':'설치업체'),h('td',{},i.type==='perf'?(m.site.client||'')+(i.witness?' ('+i.witness+')':''):(a.meta.inst||'')),h('th',{},'설치위치'),h('td',{},a.meta.loc||''))),
     h('table',{style:'margin-top:-1px'},h('tr',{},...(i.type==='maint'?[h('th',{style:'width:44px'},'구분')]:[]),h('th',{},'점검내용'),h('th',{class:'c',style:'width:52px'},'결과'),h('th',{},'비고')),
-      ...a.rows.map(r=>h('tr',{},...(i.type==='maint'?[h('td',{class:'c'},r.cat)]:[]),h('td',{},r.t),h('td',{class:'c'},symEl(r.r)),h('td',{},r.note)))));});
+      ...a.rows.map(r=>h('tr',{},...(i.type==='maint'?[h('td',{class:'c'},r.cat)]:[]),h('td',{},r.t),h('td',{class:'c'},symEl(r.r)),h('td',{},r.note)))));
+    const ngr=a.rows.filter(r=>r.r==='ng');
+    if(ngr.length)R.append(h('table',{style:'margin-top:-1px'},h('tr',{},h('th',{style:'width:50%'},'부적합사항'),h('th',{},'조치사항')),...ngr.map(r=>h('tr',{},h('td',{},r.t+(r.note?' — '+r.note:'')),h('td',{},r.act||'(미조치)')))));});
+  blkHtml(R,resultBlocks(i,m,()=>sec++));
   const photos=[];m.areas.forEach(a=>a.rows.forEach(r=>r.photos.forEach(p=>photos.push({id:p,cap:(a.locName?a.locName+' / ':'')+a.name+' / '+r.t+(r.r==='ng'?' (부적합)':'')}))));
   if(m.iss.length){R.append(h('h3',{},(sec++)+'. 이슈(부적합) 조치 현황'),h('table',{},h('tr',{},...['영역','항목','부적합 사유','조치 상태','조치일','개선 내용'].map(x=>h('th',{},x))),
     ...m.iss.map(x=>h('tr',{},h('td',{},ai(x)),h('td',{},x.title),h('td',{},x.note),h('td',{},ISTAT[x.status][0]),h('td',{},x.actionDate||''),h('td',{},x.action||'')))));
@@ -1221,18 +1339,26 @@ async function downloadDocx(i,m){
       [cell('현장주소',{head:1}),cell(m.site.address),cell('관리주체',{head:1}),cell((m.site.client||'')+(m.site.mgr?' / '+m.site.mgr:''))],
       [cell('점검자',{head:1}),cell(e.name+(e.grade?' ('+e.grade+')':'')),cell('소속',{head:1}),cell(e.org)],
       [cell('GPS',{head:1}),cell(gpsText(i)),cell(i.type==='perf'?'입회자':'제출일',{head:1}),cell(i.type==='perf'?i.witness:(i.submittedAt||'').slice(0,10))]]));
+    const blk=B=>B.forEach(b=>{if(b.t==='h')K.push(H(b.x));else if(b.t==='h4')K.push(para(b.x,{run:{bold:true},before:100}));else if(b.t==='p')K.push(para(b.x,{before:40}));
+      else if(b.t==='tbl')K.push(tbl([b.head.map(t=>cell(t,{head:1})),...b.rows.map(r=>r.map(v=>cell(na(v))))]));
+      else if(b.t==='kv')K.push(tbl(b.rows.map(r=>[cell(r[0],{head:1,w:18}),cell(na(r[1]),{w:32}),cell(r[2]||'',{head:!!r[2],w:18}),cell(na(r[3]),{w:32})])));});
+    K.push(para('현장 개요',{run:{bold:true},before:100}));blk(siteBlocks(i,m));
     K.push(H('1. 점검 결과 요약'),tbl([['적합','부적합','(조치완료)','해당없음'].map(t=>cell(t,{head:1,c:1})),[m.c.ok,m.c.ng,m.c.fixed,m.c.na].map(v=>cell(v,{c:1}))]));
     if(m.locs.length)K.push(para('점검 위치별 결과',{run:{bold:true},before:120}),tbl([['위치','GPS','영역','적합','부적합','해당없음','상태','의견'].map(t=>cell(t,{head:1,c:1})),...m.locs.map(l=>[l.name,(l.gpsNow?l.gpsNow+' (현장 기록)':l.gps)||'-',l.n,l.ok,l.ng,l.na,l.done?'완료':'미완료',l.summary||''].map(v=>cell(v)))]));
     if(i.summary)K.push(para('종합 의견: '+i.summary,{before:80}));
     K.push(H('2. 유지보수관리 및 성능점검 대상 현황표 (별지 제1호서식)'));const sel=new Set(i.areas||[]);
     K.push(tbl([['No','대상설비','점검대상','결과'].map(t=>cell(t,{head:1,c:1})),...AREAS.map(a=>{const ar=ovrOf(m,a.no);return[cell(a.code,{c:1,w:8}),cell(a.name,{w:62}),cell(sel.has(a.no)?'[v]':'[ ]',{c:1,w:15}),cell(ar?SYM[ar.overall]:'',{c:1,w:15,color:ar?col[ar.overall]:undefined})];})]));
+    K.push(para('작성일자: '+i.date+'    작성자: '+(e.name||'')+' (서명)',{align:D.AlignmentType.RIGHT,before:60}));
     let sec=3;const fac=Object.entries(m.site.fac||{}).filter(([no,r])=>sel.has(+no)&&r.length);
     if(fac.length){K.push(H((sec++)+'. 설비 구성 현황'));fac.forEach(([no,rows])=>{K.push(para(areaOf(+no).name,{run:{bold:true},before:80}),tbl([['설비명','규격','수량','제조사','설치위치','연도'].map(t=>cell(t,{head:1})),...rows.map(r=>[r.n,r.m,r.q,r.k,r.l,r.y].map(v=>cell(v)))]));});}
+    blk(planBlocks(i,m,()=>sec++));
     K.push(H((sec++)+'. 설비별 '+TYPES[i.type]+'표 ('+FORMNO[i.type]+')'));
     m.areas.forEach(a=>{K.push(para(a.code+' '+a.name+(a.locName?' — '+a.locName:''),{run:{bold:true,size:20},before:140}),
-      tbl([[cell('점검자',{head:1,w:12}),cell(e.name,{w:20}),cell('설치업체',{head:1,w:12}),cell(a.meta.inst,{w:24}),cell('설치위치',{head:1,w:12}),cell(a.meta.loc,{w:20})]]),
+      tbl([[cell(i.type==='perf'?'점검자(소속)':'점검자',{head:1,w:12}),cell(e.name+(i.type==='perf'&&e.org?' ('+e.org+')':''),{w:20}),cell(i.type==='perf'?'관리주체(입회자)':'설치업체',{head:1,w:12}),cell(i.type==='perf'?(m.site.client||'')+(i.witness?' ('+i.witness+')':''):a.meta.inst,{w:24}),cell('설치위치',{head:1,w:12}),cell(a.meta.loc,{w:20})]]),
       tbl([[...(i.type==='maint'?[cell('구분',{head:1,c:1,w:8})]:[]),cell('점검내용',{head:1,w:i.type==='maint'?52:60}),cell('결과',{head:1,c:1,w:8}),cell('비고',{head:1,w:32})],
-        ...a.rows.map(r=>[...(i.type==='maint'?[cell(r.cat,{c:1})]:[]),cell(r.t),cell(SYM[r.r],{c:1,color:col[r.r]}),cell(r.note)])]));});
+        ...a.rows.map(r=>[...(i.type==='maint'?[cell(r.cat,{c:1})]:[]),cell(r.t),cell(SYM[r.r],{c:1,color:col[r.r]}),cell(r.note)])]));
+      const ngr=a.rows.filter(r=>r.r==='ng');if(ngr.length)K.push(tbl([[cell('부적합사항',{head:1,w:50}),cell('조치사항',{head:1,w:50})],...ngr.map(r=>[cell(r.t+(r.note?' — '+r.note:'')),cell(r.act||'(미조치)')])]));});
+    blk(resultBlocks(i,m,()=>sec++));
     if(m.iss.length){K.push(H((sec++)+'. 이슈(부적합) 조치 현황'),tbl([['영역','항목','부적합 사유','상태','조치일','개선 내용'].map(t=>cell(t,{head:1})),...m.iss.map(x=>[ai(x),x.title,x.note,ISTAT[x.status][0],x.actionDate,x.action].map(v=>cell(v)))]));}
     const R=reportHtml(i,m),photos=R._photos||[];
     if(photos.length){K.push(H((sec++)+'. 현황 사진'));const imgs=await Promise.all(photos.map(p=>loadImg(p.id).catch(()=>null)));
