@@ -177,6 +177,13 @@ body{font-family:"Paperlogy","Apple SD Gothic Neo","Malgun Gothic",system-ui,san
 body.wide .stage{max-width:1040px}
 .top{display:flex;position:sticky;top:0;z-index:30;background:rgba(243,243,242,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#111;padding:14px 18px 10px;align-items:center}
 .top .brand{color:#111;padding:0;gap:9px}.top .brand b{font-size:17px}.top .brand svg{width:30px;height:30px}
+.wl{display:none}@media(min-width:1000px){.ml{display:none}.wl{display:inline}}
+@media(min-width:1000px){body.ord .navbrand{order:-1}body.ord .k-dash{order:1}body.ord .k-reports{order:2}body.ord .k-issues{order:3}body.ord .k-insp{order:4}body.ord .k-settings{order:5}body.ord .k-cables{order:6}}
+.rel{padding:16px}.relstat{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:12px 0;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.relstat div{display:flex;flex-direction:column;align-items:center;gap:2px}.relstat b{font-size:20px;font-weight:500}.relstat span{font-size:11px;color:#777}
+.relco{margin:10px 0 0 12px;padding-left:12px;border-left:2px solid #111}.relrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:8px 6px;border-top:1px dashed var(--line);cursor:pointer;font-size:13.5px}.relrow:hover{background:#f6f6f4}
+@media(max-width:600px){.relstat{grid-template-columns:repeat(3,1fr)}}
+@keyframes flash{0%{background:#fff3c4}100%{background:transparent}}.item.flash,.sitecard.flash{animation:flash 2.4s}
+.top .lo{margin-left:8px;background:transparent;color:#111;border:1px solid #111;border-radius:99px;min-height:34px;padding:0 12px;font-size:12.5px}body.gated #logout{display:none}
 .top .tag2{margin-left:auto;background:#111;color:#fff;border:0;border-radius:99px;min-height:34px;padding:0 14px;font-size:12.5px}
 main{max-width:none;padding:8px 18px 130px}body.focus main{padding-bottom:30px}
 .pagehead{margin:6px 0 18px}.pagehead h2{font-size:28px;letter-spacing:-.035em}.pagehead p{font-size:14px}
@@ -294,7 +301,7 @@ input[type=text],input[type=date],input[type=number],input[type=password],textar
 </head>
 <body>
 <div id="gate" hidden></div>
-<div class="shell"><div class="stage"><header class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="5" width="30" height="22" rx="6" fill="#111"/><g fill="#fff"><rect x="6" y="10" width="4" height="6" rx="1"/><rect x="12" y="10" width="4" height="6" rx="1"/><rect x="18" y="10" width="4" height="6" rx="1"/><rect x="24" y="10" width="2" height="6" rx="1" opacity=".5"/></g><rect x="6" y="20" width="20" height="2" rx="1" fill="#fff" opacity=".6"/></svg><b>Easy ICT Master</b></div><button class="tag2" id="role" type="button">연결 중…</button></header>
+<div class="shell"><div class="stage"><header class="top"><div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="5" width="30" height="22" rx="6" fill="#111"/><g fill="#fff"><rect x="6" y="10" width="4" height="6" rx="1"/><rect x="12" y="10" width="4" height="6" rx="1"/><rect x="18" y="10" width="4" height="6" rx="1"/><rect x="24" y="10" width="2" height="6" rx="1" opacity=".5"/></g><rect x="6" y="20" width="20" height="2" rx="1" fill="#fff" opacity=".6"/></svg><b>Easy ICT Master</b></div><button class="tag2" id="role" type="button">연결 중…</button><button class="lo" id="logout" type="button">로그아웃</button></header>
 <main id="app"><div class="card muted">불러오는 중…</div></main></div>
 <nav class="tabs" id="nav" aria-label="주 메뉴"></nav></div>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
@@ -438,7 +445,11 @@ const siteName=id=>(sites.find(s=>s.id===id)||{}).name||'(삭제된 현장)';
 let db=null,assets=null,downloads=null,user=null;
 const ROLE={write:false,admin:false};
 let sites=[],insps=[],issues=[],companies=[],people=[],clients=[],accounts=[],memos=[],locations=[];
-const raw={sites:[],insps:[],issues:[]};
+const raw={sites:[],insps:[],issues:[],clients:[],locs:[],cos:[]};
+let DEPLOY={mode:'cloud',clientId:''};try{DEPLOY=Object.assign(DEPLOY,JSON.parse(lsGet('deploy')||'{}'));}catch(e){}
+const deployOn=()=>!!(acct&&acct.role==='admin'&&DEPLOY.mode==='onprem'&&DEPLOY.clientId);
+const setDeploy=d=>{DEPLOY=d;lsSet('deploy',JSON.stringify(d));applyScope();renderNav();render();};
+const myCo=()=>{if(!acct||acct.role!=='engineer')return '';if(acct.refType==='company')return acct.refId;if(acct.refType==='person')return(people.find(p=>p.id===acct.refId)||{}).companyId||'';return '';};
 const loaded={cc:false,cb:false,s:false,i:false,x:false,c:false,p:false,k:false,a:false,m:false,l:false};
 const CAP={write:false};let acct=null;
 const ROLES={manager:{ko:'고객',en:'Client',d:'발주한 사이트의 점검 이력·이슈·리포트를 열람합니다.',ic:'eye'},
@@ -446,9 +457,15 @@ const ROLES={manager:{ko:'고객',en:'Client',d:'발주한 사이트의 점검 �
   supervisor:{ko:'통합관리자',en:'Admin',d:'고객·점검업체·점검자·계정을 등록하고 전체를 관리합니다.',ic:'shield'}};
 let roleKey='manager',entered=false;
 function applyScope(){
+  const co=myCo();
   if(acct&&acct.role==='client'){const ids=new Set(raw.sites.filter(x=>x.clientId===acct.refId).map(x=>x.id));
-    sites=raw.sites.filter(x=>ids.has(x.id));insps=raw.insps.filter(x=>ids.has(x.siteId));issues=raw.issues.filter(x=>ids.has(x.siteId));}
-  else{sites=raw.sites;insps=raw.insps;issues=raw.issues;}}
+    sites=raw.sites.filter(x=>ids.has(x.id));insps=raw.insps.filter(x=>ids.has(x.siteId));issues=raw.issues.filter(x=>ids.has(x.siteId));clients=raw.clients.filter(k=>k.id===acct.refId);locations=raw.locs.filter(l=>ids.has(l.siteId));companies=raw.cos.filter(c=>c.clientId===acct.refId);}
+  else if(co){const ids=new Set(raw.sites.filter(x=>x.ownerId===co).map(x=>x.id));
+    sites=raw.sites.filter(x=>ids.has(x.id));insps=raw.insps.filter(x=>ids.has(x.siteId));issues=raw.issues.filter(x=>ids.has(x.siteId));clients=raw.clients.filter(k=>k.ownerId===co||sites.some(x=>x.clientId===k.id));locations=raw.locs.filter(l=>ids.has(l.siteId));companies=raw.cos;}
+  else if(deployOn()){const ids=new Set(raw.sites.filter(x=>x.clientId===DEPLOY.clientId).map(x=>x.id)),k=raw.clients.find(x=>x.id===DEPLOY.clientId)||{};
+    sites=raw.sites.filter(x=>ids.has(x.id));insps=raw.insps.filter(x=>ids.has(x.siteId));issues=raw.issues.filter(x=>ids.has(x.siteId));clients=raw.clients.filter(x=>x.id===DEPLOY.clientId);locations=raw.locs.filter(l=>ids.has(l.siteId));
+    const cs=new Set(sites.map(x=>x.ownerId).filter(Boolean));if(k.ownerId)cs.add(k.ownerId);companies=raw.cos.filter(c=>c.clientId===DEPLOY.clientId||cs.has(c.id));}
+  else{sites=raw.sites;insps=raw.insps;issues=raw.issues;clients=raw.clients;locations=raw.locs;companies=raw.cos;}}
 async function sha(pw,salt){const t=salt+':'+pw;
   try{const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,'0')).join('');}
   catch(e){let v=5381;for(const c of t)v=((v<<5)+v+c.charCodeAt(0))|0;return 'f'+(v>>>0).toString(16);}}
@@ -465,7 +482,8 @@ let cables=[],cabchecks=[];let route={v:'dash'};let cur=null;               // c
 let sheet={mode:'areas',area:null,idx:-1};
 let siteDraft=null;
 
-const visInsps=()=>insps.filter(i=>ROLE.write||i.status==='submitted').sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||'').localeCompare(a.createdAt||''));
+const canDraft=i=>ROLE.write&&(!acct||acct.role!=='client'||i.createdBy===acct.id);
+const visInsps=()=>insps.filter(i=>i.status==='submitted'||canDraft(i)).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||'').localeCompare(a.createdAt||''));
 function dueInfo(site,type){
   if(!site.completed) return null;
   const step=type==='maint'?6:12; let k=0,start=site.completed;
@@ -482,10 +500,11 @@ async function init(){
   if(!db){entered=true;setRole('로그인 필요');$('#app').replaceChildren(h('div',{class:'card'},'저장소에 연결할 수 없습니다. claude.ai에 로그인한 상태로 링크를 여세요.'));return;}
   CAP.write=user?user.can('data.write')!==false:false;
   $('#role').addEventListener('click',()=>{if(!entered)return;navTo('me');});
+  $('#logout').addEventListener('click',()=>{if(entered)logout();});
   const sub=(name,key,assign,soft)=>db.collection(name).onSnapshot(s=>{assign(s.docs.map(d=>({id:d.id,...d.data()})));loaded[key]=true;refresh();},
      e=>{if(soft){assign([]);loaded[key]=true;refresh();return;}$('#app').replaceChildren(h('div',{class:'card err'},'데이터를 불러오지 못했습니다 ('+e.code+')'));});
   sub('sites','s',v=>{raw.sites=v;applyScope();});sub('inspections','i',v=>{raw.insps=v;applyScope();});sub('issues','x',v=>{raw.issues=v;applyScope();});
-  sub('companies','c',v=>companies=v,true);sub('people','p',v=>people=v,true);sub('clients','k',v=>clients=v,true);sub('accounts','a',v=>accounts=v,true);sub('memos','m',v=>memos=v,true);sub('locations','l',v=>locations=v,true);sub('cables','cb',v=>cables=v,true);sub('cabchecks','cc',v=>cabchecks=v,true);
+  sub('companies','c',v=>{raw.cos=v;applyScope();},true);sub('people','p',v=>{people=v;applyScope();},true);sub('clients','k',v=>{raw.clients=v;applyScope();},true);sub('accounts','a',v=>accounts=v,true);sub('memos','m',v=>memos=v,true);sub('locations','l',v=>{raw.locs=v;applyScope();},true);sub('cables','cb',v=>cables=v,true);sub('cabchecks','cc',v=>cabchecks=v,true);
   renderGate();
 }
 function refresh(){
@@ -505,7 +524,7 @@ async function navTo(k,p){
 }
 function go(v,p){route={v,...(p||{})};renderNav();render();window.scrollTo(0,0);}
 const NAVALL={dash:['홈','grid'],sites:['사이트','building'],insp:['점검','check'],issues:['이슈','alert'],reports:['리포트','doc'],settings:['설정','gear'],cables:['케이블','cable']};
-const navKeys=()=>roleKey==='manager'?['reports','dash','issues','cables']:roleKey==='engineer'?['insp','reports','dash','issues','cables']:['insp','reports','dash','issues','settings','cables'];
+const navKeys=()=>roleKey==='manager'?['insp','reports','dash','issues','settings','cables']:roleKey==='engineer'?['insp','reports','dash','issues','settings']:['insp','reports','dash','issues','settings','cables'];
 const ICON={cable:'<path d="M4 8h4v8H4zM16 8h4v8h-4z"/><path d="M8 12h8"/><path d="M4 4v2M8 4v2M16 4v2M20 4v2"/>',
  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
  building:'<path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16"/><path d="M14 10h5a1 1 0 0 1 1 1v10"/><path d="M8 8h2M8 12h2M8 16h2M3 21h18"/>',
@@ -517,18 +536,21 @@ function logo(inv){const e=document.createElementNS('http://www.w3.org/2000/svg'
 function renderNav(){
   const grp={dash:'dash',sites:'settings',siteview:roleKey==='supervisor'?'settings':'dash',siteedit:'settings',insp:'insp',sheet:'insp',issues:'issues',issue:'issues',reports:'reports',report:'reports',settings:'settings',cables:'cables',cable:'cables'}[route.v];
   $('#nav').replaceChildren(...navKeys().map(k=>{const [t,ic]=NAVALL[k],n=k==='issues'?openIssues().length:0;
-    return h('button',{class:'tab'+(grp===k?' on':''),'aria-current':grp===k?'page':null,onclick:()=>navTo(k)},svg(ic),h('span',{},t),k==='cables'?h('em',{class:'beta'},'Beta'):null,n?h('em',{class:'cnt'},n):null);}));
+    return h('button',{class:'tab k-'+k+(grp===k?' on':''),'aria-current':grp===k?'page':null,onclick:()=>navTo(k)},svg(ic),(k==='dash'&&roleKey!=='engineer')?h('span',{},h('span',{class:'ml'},t),h('span',{class:'wl'},'대시보드')):h('span',{},t),k==='cables'?h('em',{class:'beta'},'Beta'):null,n?h('em',{class:'cnt'},n):null);}));
   $('#nav').prepend(h('div',{class:'navbrand'},logo(true),h('b',{},'Easy ICT Master'),h('small',{},'정보통신 유지보수 관리')));
   document.body.classList.toggle('focus',route.v==='sheet');
+  document.body.classList.toggle('ord',roleKey!=='engineer');
   document.body.classList.toggle('wide',['report','siteedit','settings','cables'].includes(route.v));
 }
-const HEAD={dash:['홈','사이트별 점검 기한과 미조치 이슈'],sites:['사이트','점검 대상 건축물과 설비 현황'],insp:['점검','반기별 유지보수관리 점검, 연 1회 성능점검'],issues:['이슈 리포트','부적합 항목의 개선 조치 관리'],reports:['점검 리포트','제출된 점검 이력 조회와 출력'],cables:['케이블 관리 (Beta)','케이블 정보 등록과 QR 확인'],me:['내 계정','권한과 점검자 정보'],settings:['환경설정','점검업체·점검자 등록 관리']};
+const HEAD={dash:['홈','사이트별 점검 기한과 미조치 이슈'],sites:['사이트','점검 대상 건축물과 설비 현황'],insp:['점검','반기별 유지보수관리 점검, 연 1회 성능점검'],issues:['이슈 리포트','부적합 항목의 개선 조치 관리'],reports:['점검 리포트','제출된 점검 이력 조회와 출력'],cables:['케이블 관리 (Beta)','케이블 정보 등록과 QR 확인'],me:['내 계정','권한과 점검자 정보'],settings:['환경설정','고객·점검 사이트·점검 위치 관리']};
 function render(){
   const app=$('#app');app.replaceChildren();
   if(!Object.values(loaded).every(Boolean)){app.append(h('div',{class:'card muted'},'불러오는 중…'));return;}
   if(acct&&acct.role!=='client'&&!CAP.write)app.append(h('div',{class:'note err'},'이 링크의 공유 권한이 보기 전용이라 저장·등록이 되지 않습니다. 소유자에게 "기여" 이상 권한을 요청하세요.'));
   const hd=route.v==='dash'?['안녕하세요'+((ME.name||(acct&&acct.name))?', '+(ME.name||acct.name)+'님':''),ROLES[roleKey].ko+' · '+new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'})]:HEAD[route.v];if(hd)app.append(h('div',{class:'pagehead'},h('h2',{},hd[0]),h('p',{},hd[1])));
+  const _fc=route.focus;
   ({dash:vDash,sites:vSites,siteview:vSiteView,siteedit:vSiteEdit,insp:vInsp,sheet:vSheet,issues:vIssues,issue:vIssue,reports:vReports,report:vReport,cables:vCables,me:vMe,settings:vSettings}[route.v]||vDash)(app);
+  if(_fc){const e=document.getElementById(_fc);if(e){e.scrollIntoView({block:'center'});e.classList.add('flash');}route.focus=null;}
 }
 
 /* ---------- 로그인·권한 ---------- */
@@ -571,9 +593,13 @@ async function doLogin(){
   const id=($('#lg-id').value||'').trim().toLowerCase(),pw=$('#lg-pw').value||'';
   if(!id||!pw){err('아이디와 비밀번호를 입력하세요.');return;}
   let a=accounts.find(x=>x.id===id),ok=false,dpw=false;
-  if(a){ok=(await sha(pw,a.salt))===a.hash;dpw=ok&&a.role==='admin'&&pw==='12345';}
-  else if(id==='admin'&&pw==='12345'&&!accounts.some(x=>x.role==='admin')){ok=true;dpw=true;a={id:'admin',role:'admin',refType:null,refId:'',name:'통합관리자'};
-    if(CAP.write){try{await putAccount('admin',a,'12345');}catch(e){}}}
+  if(a){ok=(await sha(pw,a.salt))===a.hash;dpw=ok&&a.role==='admin'&&(pw==='admin123'||pw==='12345');}
+  else if(id==='admin'&&pw==='admin123'&&!accounts.some(x=>x.role==='admin')){ok=true;dpw=true;a={id:'admin',role:'admin',refType:null,refId:'',name:'통합관리자'};
+    if(CAP.write){try{await putAccount('admin',a,'admin123');}catch(e){}}}
+  else if(id==='jsolution'&&pw==='jsol1234'){ok=true;a={id:'jsolution',role:'engineer',refType:'company',refId:'co-jsolution',name:'제이솔루션'};
+    if(CAP.write){try{if(!companies.some(c=>c.id==='co-jsolution'))await db.collection('companies').doc('co-jsolution').set({name:'제이솔루션',biz:'',tel:'',updatedAt:new Date().toISOString()});await putAccount('jsolution',a,'jsol1234');}catch(e){}}}
+  else if(id==='lge'&&pw==='LGE123'){ok=true;a={id:'lge',role:'client',refType:'client',refId:'k-lge',name:'LGE'};
+    if(CAP.write){try{if(!raw.clients.some(c=>c.id==='k-lge'))await db.collection('clients').doc('k-lge').set({name:'LGE',biz:'',mgr:'',tel:'',addr:'',updatedAt:new Date().toISOString()});await putAccount('lge',a,'LGE123');}catch(e){}}}
   if(!ok){err('아이디 또는 비밀번호가 맞지 않습니다.');return;}
   startSession(a,dpw);
 }
@@ -581,18 +607,19 @@ function startSession(a,dpw){
   let nm=a.name||a.id;
   if(a.refType==='client'){const k=clients.find(x=>x.id===a.refId);if(k)nm=k.name;}
   if(a.refType==='person'){const p=people.find(x=>x.id===a.refId);if(p)nm=p.name;}
+  if(a.refType==='company'){const c=companies.find(x=>x.id===a.refId);if(c)nm=c.name;}
   if(a.role==='admin')nm='통합관리자';
   acct={id:a.id,role:a.role,refType:a.refType||null,refId:a.refId||'',name:nm,defaultPw:!!dpw};
   roleKey=a.role==='admin'?'supervisor':a.role==='engineer'?'engineer':'manager';
-  ROLE.write=CAP.write&&a.role!=='client';ROLE.admin=CAP.write&&a.role==='admin';
+  ROLE.write=CAP.write;ROLE.admin=CAP.write&&a.role==='admin';ROLE.site=CAP.write;
   ME.personId='';ME.name='';ME.org='';ME.grade='';
   if(a.refType==='person')applyPerson(a.refId);
-  if(a.role==='engineer'&&!ME.name)ME.name=nm;
+  if((a.role==='engineer'||a.role==='client')&&!ME.name){ME.name=nm;if(a.refType==='company'||a.role==='client')ME.org=nm;}
   lsSet('last_id',a.id);applyScope();
   entered=true;$('#gate').hidden=true;document.body.classList.remove('gated');
   setRole(ROLES[roleKey].ko+' · '+nm);route={v:'dash'};renderNav();render();window.scrollTo(0,0);hashCable();
 }
-async function logout(){await flush();acct=null;ROLE.write=false;ROLE.admin=false;ME.personId='';ME.name='';ME.org='';ME.grade='';applyScope();entered=false;renderGate();}
+async function logout(){await flush();acct=null;ROLE.write=false;ROLE.admin=false;ROLE.site=false;ME.personId='';ME.name='';ME.org='';ME.grade='';applyScope();entered=false;renderGate();}
 function pwCard(){
   const a=accounts.find(x=>x.id===acct.id);const msg=h('div');
   const idEl=h('input',{type:'text',autocapitalize:'none'});idEl.value=acct.id;if(acct.role!=='admin')idEl.disabled=true;
@@ -600,7 +627,7 @@ function pwCard(){
   const say=(m,e)=>msg.replaceChildren(h('div',{class:'note'+(e?' err':'')},m));
   const save=async()=>{
     if(!CAP.write){say('이 링크의 공유 권한이 보기 전용이라 변경할 수 없습니다. 통합관리자에게 요청하세요.',1);return;}
-    const cur=a?(await sha(p0.value,a.salt))===a.hash:(acct.id==='admin'&&p0.value==='12345');
+    const cur=a?(await sha(p0.value,a.salt))===a.hash:(acct.id==='admin'&&(p0.value==='admin123'||p0.value==='12345'));
     if(!cur){say('현재 비밀번호가 맞지 않습니다.',1);return;}
     const nid=(idEl.value||'').trim().toLowerCase();
     if(!validId(nid)){say('아이디는 영문 소문자·숫자·._- 3~20자로 입력하세요.',1);return;}
@@ -610,7 +637,7 @@ function pwCard(){
     try{await putAccount(nid,acct,p1.value||(a?null:p0.value),a);if(nid!==acct.id&&a)await db.collection('accounts').doc(acct.id).delete();
       acct.id=nid;if(p1.value)acct.defaultPw=false;lsSet('last_id',nid);p0.value=p1.value=p2.value='';say('저장했습니다. 다음 로그인부터 적용됩니다.');}
     catch(e){say('저장 실패: '+(e.code||e.message),1);}};
-  return h('div',{class:'card'},h('h3',{},'로그인 정보'),acct.defaultPw?h('div',{class:'note err'},'초기 비밀번호(12345)를 쓰고 있습니다. 새 비밀번호로 바꾸세요.'):null,
+  return h('div',{class:'card'},h('h3',{},'로그인 정보'),acct.defaultPw?h('div',{class:'note err'},'초기 비밀번호를 쓰고 있습니다. 새 비밀번호로 바꾸세요.'):null,
     h('div',{class:'idp'},fld('아이디'+(acct.role==='admin'?'':' (변경 불가)'),idEl),fld('현재 비밀번호',p0),fld('새 비밀번호 (바꿀 때만)',p1),fld('새 비밀번호 확인',p2)),
     h('div',{class:'row',style:'margin-top:12px'},h('button',{class:'pri',onclick:save},'저장'),h('div',{class:'grow'}),msg));
 }
@@ -718,6 +745,7 @@ async function parseSiteXlsx(file,box,opt={}){
   const parseAreas=(v,tag)=>{const t=str(v);if(!t)return[];if(/^전체|^all$/i.test(t))return nos.slice();const out=new Set();
     t.split(/[,，、;/\s]+/).filter(Boolean).forEach(k=>{const n=areaNo(k,tag);if(n!=null)out.add(n);});return[...out].sort((a,b)=>a-b);};
   const sp=new Map();rowsOf(sheet('사이트',0)).filter(pick).forEach(r=>{sp.set(str(r[0]),{name:str(r[0]),client:str(r[1]),address:str(r[2]),completed:dt(r[3]),area:str(r[4]),mgr:str(r[5]),mgrTel:str(r[6]),use:str(r[7]),floorsUp:str(r[8]),floorsDown:str(r[9]),safetyExtra:str(r[10])});});
+  if(acct&&acct.role==='client'){const own=(clients.find(k=>k.id===acct.refId)||{}).name||'';sp.forEach(x=>{x.client=own;});}
   [...sp.keys()].forEach(n=>{if(sites.some(s=>s.name===n))return;const x=sp.get(n),miss=[!x.client&&'고객(발주처)',!x.mgr&&'관리주체 담당자',!x.mgrTel&&'연락처'].filter(Boolean);
     if(miss.length){warn.push('신규 사이트 "'+n+'": 필수 항목('+miss.join(', ')+')이 비어 있어 건너뜀');sp.delete(n);}});
   const known=n=>sp.has(n)||sites.some(s=>s.name===n);
@@ -745,9 +773,9 @@ async function parseSiteXlsx(file,box,opt={}){
     try{const ts=new Date().toISOString(),written=new Map(),newC=new Map();let nc=0;
       for(const name of names){const ex=sites.find(s=>s.name===name),x=sp.get(name)||{};if(!ex&&!sp.has(name))continue;
         let cid=ex?ex.clientId||'':'';
-        if(x.client){let k=clients.find(c=>c.name===x.client)||newC.get(x.client);if(!k){k={id:uid(),name:x.client};newC.set(x.client,k);nc++;await db.collection('clients').doc(k.id).set({name:x.client,biz:'',mgr:'',tel:'',addr:'',updatedAt:ts});}cid=k.id;}
+        if(x.client){let k=clients.find(c=>c.name===x.client)||newC.get(x.client);if(!k){k={id:uid(),name:x.client};newC.set(x.client,k);nc++;await db.collection('clients').doc(k.id).set({name:x.client,biz:'',mgr:'',tel:'',addr:'',ownerId:myCo(),updatedAt:ts});}cid=k.id;}
         const id=ex?ex.id:uid(),base=ex?(({id:_,...r})=>r)(clone(ex)):{areas:[],fac:{},createdAt:ts};
-        const body={...base,name,updatedAt:ts};if(x.client){body.client=x.client;body.clientId=cid;}
+        const body={...base,name,updatedAt:ts};if(!ex&&myCo())body.ownerId=myCo();if(!ex)body.src=acct?(acct.role==='client'?'client':acct.role==='engineer'?'company':'admin'):'admin';if(x.client){body.client=x.client;body.clientId=cid;}
         ['address','completed','area','mgr','mgrTel','use','floorsUp','floorsDown','safetyExtra'].forEach(k=>{if(x[k])body[k]=x[k];});
         if(ct.has(name))body.contacts=ct.get(name);if(eq.has(name))body.equip=eq.get(name);
         body.fac={...(body.fac||{})};if(fc.has(name))for(const [no,rows] of fc.get(name))body.fac[no]=rows;
@@ -802,8 +830,8 @@ const qrId=v=>{v=String(v==null?'':v).trim();const m=v.match(/#cable=([^&\s]+)/)
 const cabKey=v=>qrId(v).replace(/[\/\s]+/g,'_');
 const pts=c=>(c.points||c.marks||[]).map(p=>({qr:p.qr||'',m:p.m,note:p.note||''}));
 const siteNm=id=>(sites.find(s=>s.id===id)||{}).name||'';
-const visCables=()=>acct&&acct.role==='client'?cables.filter(c=>sites.some(s=>s.id===c.siteId)):cables;
-const visChecks=()=>acct&&acct.role==='client'?cabchecks.filter(c=>sites.some(s=>s.id===c.siteId)):cabchecks;
+const visCables=()=>acct&&(acct.role==='client'||deployOn())?cables.filter(c=>sites.some(s=>s.id===c.siteId)):cables;
+const visChecks=()=>acct&&(acct.role==='client'||deployOn())?cabchecks.filter(c=>sites.some(s=>s.id===c.siteId)):cabchecks;
 function cabFind(v){const k=qrId(v);if(!k)return null;const c=cables.find(x=>x.id===cabKey(k)||x.code===k);if(c)return{c};
   for(const x of cables){const p=pts(x).find(q=>q.qr&&q.qr===k);if(p)return{c:x,p};}return null;}
 function stopCam(){if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}}
@@ -824,9 +852,9 @@ function hashCable(){const m=(location.hash||'').match(/^#cable=([^&]+)/);if(!m|
   const f=()=>{const r=cabFind(id);route={v:'cables',t:'chk',id:r?r.c.id:'',q:id,pt:r&&r.p?r.p.qr:''};renderNav();render();};if(Object.values(loaded).every(Boolean))f();else setTimeout(f,600);return true;}
 window.addEventListener('hashchange',hashCable);
 function vCables(app){
-  stopCam();
+  stopCam();if(roleKey==='engineer'){go('dash');return;}
   const t=route.t||(ROLE.write?'reg':'chk');
-  app.append(h('div',{class:'note'},'Beta · 케이블의 QR 번호로 정보·위치·상태를 관리합니다. QR 스캔이 안 되면 QR의 번호를 직접 입력해도 됩니다.'));
+  app.append(h('div',{class:'note'},'Beta · 시험 제공 중인 기능입니다. 정식 제공 시 별도 이용료가 적용될 수 있습니다. QR 스캔이 안 되면 QR의 번호를 직접 입력해도 됩니다.'));
   const tabs=[['reg','케이블 등록',1],['chk','케이블 확인',0],['ins','상태점검',1],['rep','점검 리포트',0],['map','전체 도면',0]].filter(x=>!x[2]||ROLE.write);
   app.append(h('div',{class:'ctabs'},...tabs.map(([k,l])=>h('button',{class:t===k?'on':'',onclick:()=>{cabDraft=null;cabSel=null;route={v:'cables',t:k};render();}},l))));
   ({reg:cabReg,chk:cabChk,ins:cabIns,rep:cabRep,map:cabMap}[t]||cabChk)(app);
@@ -856,7 +884,7 @@ function cabReg(app){
       h('div',{class:'row',style:'margin-top:6px'},fld('지점 설명',bind(p,'note',{ph:'예: 2층 천장 분기점, 맨홀 #3'}),3),h('button',{class:'dng',style:'align-self:flex-end',onclick:()=>{c.points.splice(i,1);draw();}},'삭제')));}),
     h('button',{onclick:()=>{if(!(c.code||'').trim()){c.code=cabAutoId();codeIn.value=c.code;}c.points.push({qr:ptId(c.code,c.points.length),m:'',note:''});draw();}},'+ 지점 추가'));};
   draw();box.append(list);app.append(box);
-  app.append(h('div',{class:'row'},h('button',{onclick:()=>{cabDraft=null;render();}},'취소'),h('div',{class:'grow'}),h('button',{class:'pri',onclick:saveCab},'저장')));
+  app.append(h('div',{class:'row'},h('button',{onclick:()=>{cabDraft=null;render();}},'← 이전'),h('div',{class:'grow'}),h('button',{class:'pri',onclick:saveCab},'저장')));
 }
 async function saveCab(){const c=cabDraft;stopCam();
   const code=qrId(c.code)||cabAutoId();
@@ -1052,7 +1080,60 @@ function cabRep(app){
   app.append(body);draw();
 }
 
+/* ---------- 점검업체 설정: 내 고객 · 사이트 · 위치 ---------- */
+function vCoSettings(app){
+  const co=myCo(),mine=clients.filter(k=>k.ownerId===co);
+  const wr=(r)=>{const {id,...b}=r;b.ownerId=co;b.updatedAt=new Date().toISOString();setSave('저장 중…');return db.collection('clients').doc(id).set(b).then(()=>setSave('저장됨 '+hhmm())).catch(e=>setSave('저장 실패: '+(e.code||e.message)));};
+  const deb=r=>{let t;return()=>{clearTimeout(t);setSave('저장 대기…');t=setTimeout(()=>wr(r),600);};};
+  app.append(h('div',{class:'muted',id:'savestate',style:'margin:0 4px 10px'},'변경 내용은 자동 저장됩니다.'));
+  const kc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'내 고객 ('+mine.length+')'),ROLE.write?h('button',{class:'pri',onclick:()=>wr({id:uid(),name:'',biz:'',mgr:'',tel:'',email:'',addr:'',contractFrom:'',contractTo:'',note:''})},'+ 고객 추가'):null),
+    h('div',{class:'muted',style:'margin-top:6px'},'점검 계약을 맺은 고객(발주처)입니다. 고객 로그인 계정은 필요 없고, 여기에 입력한 고객의 사이트·점검 위치·점검 항목을 직접 관리합니다. 등록 고객 수에 따른 과금은 아직 적용하지 않습니다.'));
+  if(!mine.length)kc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 고객이 없습니다. 고객 추가를 눌러 첫 고객을 등록하세요.'));
+  mine.slice().sort(byName).forEach(k=>{const sv=deb(k);
+    kc.append(h('div',{class:'item'},
+      h('div',{class:'row'},fld('고객명(발주처) *',bind(k,'name',{on:sv,ph:'예: 한빛자산관리'}),2),fld('사업자등록번호',bind(k,'biz',{on:sv}))),
+      h('div',{class:'row',style:'margin-top:8px'},fld('담당자',bind(k,'mgr',{on:sv})),fld('연락처',bind(k,'tel',{on:sv})),fld('이메일',bind(k,'email',{on:sv}))),
+      h('div',{class:'row',style:'margin-top:8px'},fld('주소',bind(k,'addr',{on:sv}),2)),
+      h('div',{class:'row',style:'margin-top:8px'},fld('계약 시작일',bind(k,'contractFrom',{type:'date',on:sv})),fld('계약 종료일',bind(k,'contractTo',{type:'date',on:sv}))),
+      h('div',{class:'row',style:'margin-top:8px'},fld('계약·특이사항 메모',bind(k,'note',{area:true,on:sv}),2)),
+      h('div',{class:'row sb',style:'margin-top:8px'},h('span',{class:'muted sm'},'사이트 '+sites.filter(x=>x.clientId===k.id).length+'곳'),
+        twoStep('삭제',()=>{if(sites.some(x=>x.clientId===k.id)){alert2('이 고객에 연결된 사이트가 있어 삭제할 수 없습니다. 사이트를 먼저 삭제하세요.');return;}db.collection('clients').doc(k.id).delete();}))));});
+  app.append(kc);
+  app.append(h('h3',{style:'margin:14px 6px 8px'},'사이트 (고객사 건물)'));if(ROLE.write)app.append(excelCard());vSites(app);
+  app.append(locCard());
+}
+/* ---------- 고객관리자 설정: 우리 정보 · 점검업체 계정 공급 · 사이트 ---------- */
+function vCliSettings(app){
+  const me=clients.find(k=>k.id===acct.refId);
+  if(!me){app.append(h('div',{class:'card muted'},'고객 정보를 찾을 수 없습니다. 통합관리자에게 문의하세요.'));return;}
+  const wr=(col,r)=>{const {id,...b}=r;b.updatedAt=new Date().toISOString();setSave('저장 중…');return db.collection(col).doc(id).set(b).then(()=>setSave('저장됨 '+hhmm())).catch(e=>setSave('저장 실패: '+(e.code||e.message)));};
+  const deb=(col,r)=>{let t;return()=>{clearTimeout(t);setSave('저장 대기…');t=setTimeout(()=>wr(col,r),600);};};
+  app.append(h('div',{class:'muted',id:'savestate',style:'margin:0 4px 10px'},'변경 내용은 자동 저장됩니다.'));
+  const sv=deb('clients',me);
+  app.append(h('div',{class:'card'},h('h3',{},'우리 기관 정보'),
+    h('div',{class:'row'},fld('기관명',bind(me,'name',{on:sv}),2),fld('사업자등록번호',bind(me,'biz',{on:sv}))),
+    h('div',{class:'row',style:'margin-top:8px'},fld('담당자',bind(me,'mgr',{on:sv})),fld('연락처',bind(me,'tel',{on:sv})),fld('이메일',bind(me,'email',{on:sv}))),
+    h('div',{class:'row',style:'margin-top:8px'},fld('주소',bind(me,'addr',{on:sv}),2))));
+  me.staff=me.staff||[];
+  const sb=h('div'),sdraw=()=>{sb.replaceChildren(...me.staff.map((x,i)=>h('div',{class:'row',style:'margin:6px 0'},fld('이름',bind(x,'name',{on:sv}),1.2),fld('부서·직책',bind(x,'dept',{on:sv}),1.2),fld('연락처',bind(x,'tel',{on:sv})),fld('이메일',bind(x,'email',{on:sv})),
+    h('button',{class:'dng',style:'align-self:flex-end',onclick:()=>{me.staff.splice(i,1);sv();sdraw();}},'삭제'))),
+    h('button',{onclick:()=>{me.staff.push({id:uid(),name:'',dept:'',tel:'',email:''});sv();sdraw();}},'+ 담당자 추가'));};sdraw();
+  app.append(h('div',{class:'card'},h('h3',{},'우리 기관 담당자'),h('div',{class:'muted sm',style:'margin-bottom:6px'},'점검업체를 맡길 때 업체별로 연결할 우리 기관 담당자를 먼저 등록하세요.'),sb));
+  const cc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검업체 계정 ('+companies.length+')'),h('button',{class:'pri',onclick:()=>wr('companies',{id:uid(),name:'',tel:'',clientId:me.id})},'+ 점검업체 추가')),
+    h('div',{class:'muted',style:'margin-top:6px'},'우리 시설을 점검할 업체에 로그인 계정을 만들어 드립니다. 그 계정으로 로그인한 업체는 우리가 지정한 사이트의 점검 위치·항목을 입력하고 점검합니다. 사이트 등록 화면에서 담당 점검업체를 지정하세요.'));
+  if(!companies.length)cc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 점검업체가 없습니다.'));
+  companies.slice().sort(byName).forEach(c=>{const s2=deb('companies',c);
+    cc.append(h('div',{class:'item',id:'co-'+c.id},h('div',{class:'row'},fld('업체명',bind(c,'name',{on:s2}),2),fld('연락처',bind(c,'tel',{on:s2})),fld('우리 기관 담당자',selBox(c,'staffId',me.staff.map(x=>[x.id,(x.name||'(이름 없음)')+(x.dept?' · '+x.dept:'')]),'담당자 선택',s2))),
+      acctBlock('company',c,'engineer'),
+      h('div',{class:'row sb',style:'margin-top:6px'},h('span',{class:'muted sm'},'담당 사이트 '+sites.filter(x=>x.ownerId===c.id).length+'곳'),twoStep('삭제',()=>{dropAccts('company',c.id);db.collection('companies').doc(c.id).delete();}))));});
+  app.append(cc);
+  app.append(h('h3',{style:'margin:14px 6px 8px'},'사이트 (우리 건물)'));app.append(excelCard());vSites(app);
+  app.append(locCard());
+}
 function vSettings(app){
+  if(roleKey==='engineer'){vCoSettings(app);return;}
+  if(roleKey==='manager'){vCliSettings(app);return;}
+  if(ROLE.admin)app.append(deployCard());
   app.append(h('h3',{style:'margin:4px 6px 8px'},'사이트 (고객사 건물)'));if(ROLE.write)app.append(excelCard());vSites(app);
   if(!ROLE.admin){go('dash');return;}
   const wr=(col,r)=>{const {id,...b}=r;b.updatedAt=new Date().toISOString();setSave('저장 중…');return db.collection(col).doc(id).set(b).then(()=>setSave('저장됨 '+hhmm())).catch(e=>setSave('저장 실패: '+(e.code||e.message)));};
@@ -1062,7 +1143,7 @@ function vSettings(app){
     h('div',{class:'muted',style:'margin-top:6px'},'유지보수 관리 업무를 발주한 고객입니다. 고객 계정으로 로그인하면 이 고객의 사이트 점검 결과만 볼 수 있습니다.'));
   if(!clients.length)kc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 고객이 없습니다. 고객(발주처)을 추가하세요.'));
   clients.slice().sort(byName).forEach(k=>{const sv=deb('clients',k);
-    kc.append(h('div',{class:'item'},fld('고객명(발주처)',bind(k,'name',{on:sv,ph:'예: 한빛자산관리'}),2),fld('사업자등록번호',bind(k,'biz',{on:sv})),fld('담당자',bind(k,'mgr',{on:sv})),fld('연락처',bind(k,'tel',{on:sv})),fld('주소',bind(k,'addr',{on:sv}),2),
+    kc.append(h('div',{class:'item',id:'k-'+k.id},fld('고객명(발주처)',bind(k,'name',{on:sv,ph:'예: 한빛자산관리'}),2),fld('사업자등록번호',bind(k,'biz',{on:sv})),fld('담당자',bind(k,'mgr',{on:sv})),fld('연락처',bind(k,'tel',{on:sv})),fld('주소',bind(k,'addr',{on:sv}),2),fld('관리 점검업체',selBox(k,'ownerId',companies.slice().sort(byName).map(c=>[c.id,c.name]),'지정 안 함',sv)),
       acctBlock('client',k,'client'),
       twoStep('삭제',()=>{if(raw.sites.some(x=>x.clientId===k.id)){alert2('이 고객에 연결된 사이트가 있어 삭제할 수 없습니다.');return;}dropAccts('client',k.id);db.collection('clients').doc(k.id).delete();})));});
   app.append(kc);
@@ -1070,7 +1151,7 @@ function vSettings(app){
   const cc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검업체 ('+companies.length+')'),h('button',{class:'pri',onclick:()=>wr('companies',{id:uid(),name:'',biz:'',tel:''})},'+ 업체 추가')));
   if(!companies.length)cc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 업체가 없습니다. 업체를 먼저 추가하세요.'));
   companies.slice().sort(byName).forEach(c=>{const sv=deb('companies',c);
-    cc.append(h('div',{class:'item'},fld('업체명',bind(c,'name',{on:sv,ph:'예: 제이솔루션'}),2),fld('사업자등록번호',bind(c,'biz',{on:sv})),fld('연락처',bind(c,'tel',{on:sv})),
+    cc.append(h('div',{class:'item',id:'co-'+c.id},fld('업체명',bind(c,'name',{on:sv,ph:'예: 제이솔루션'}),2),fld('사업자등록번호',bind(c,'biz',{on:sv})),fld('연락처',bind(c,'tel',{on:sv})),
       twoStep('삭제',()=>{if(people.some(p=>p.companyId===c.id)){alert2('소속 점검자를 먼저 삭제하거나 다른 업체로 옮기세요.');return;}db.collection('companies').doc(c.id).delete();})));});
   app.append(cc);
   const pc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검자 ('+people.length+')'),h('button',{class:'pri',disabled:!companies.length,onclick:()=>wr('people',{id:uid(),name:'',companyId:'',grade:'특급',tel:''})},'+ 점검자 추가')));
@@ -1150,9 +1231,71 @@ const dd=n=>n>0?'D-'+n+'일':n===0?'D-0일':'D+'+(-n)+'일 (초과)';
 function upcoming(){const rows=[];for(const s of sites)for(const t of ['maint','perf']){const d=dueInfo(s,t);if(!d||d.done)continue;
   const dr=insps.find(i=>i.siteId===s.id&&i.type===t&&i.status!=='submitted'&&(i.date||'')>=d.start);rows.push({s,t,d,dr});}
   return rows.sort((a,b)=>a.d.dday-b.d.dday);}
+const lastInsp=ids=>insps.filter(i=>i.status==='submitted'&&ids.has(i.siteId)).sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+const pendConfirm=()=>insps.filter(i=>i.status==='submitted'&&!i.confirm);
+function pcard(title,sub,rows,pill,on){return h('div',{class:'sitecard',role:'button',tabindex:0,onclick:on,onkeydown:e=>{if(e.key==='Enter')on();}},
+  h('div',{class:'row sb'},h('h4',{},title||'(이름 없음)'),pill||null),sub?h('div',{class:'muted'},sub):null,
+  ...rows.filter(Boolean).map(([k,v])=>h('div',{class:'row sb sm'},h('span',{class:'muted'},k),h('span',{},v))),h('div',{class:'muted sm'},'눌러서 상세 정보 보기'));}
+const SRC={client:'고객 입력',company:'업체 입력',admin:'관리자 입력'};
+const srcOf=x=>x.src||(x.ownerId?'company':'client');
+function relStats(ss){const ids=new Set(ss.map(x=>x.id)),is=issues.filter(x=>ids.has(x.siteId)),ins=insps.filter(i=>ids.has(i.siteId)&&i.status==='submitted');
+  return{open:is.filter(x=>x.status!=='done').length,done:is.filter(x=>x.status==='done').length,sub:ins.length,conf:ins.filter(i=>i.confirm).length,pend:ins.filter(i=>!i.confirm).length,last:ins.map(i=>i.date).sort().pop()||''};}
+const chip=(t,tone)=>h('span',{class:'pill '+(tone||'')},t);
+function adminHome(app){
+  const dep=deployOn(),dk=dep?clients[0]:null,all=relStats(sites);
+  app.append(h('div',{class:'sechead'},h('h3',{},dep?'설치형 운영 현황':'클라우드 운영 현황'),h('span',{},dep?((dk&&dk.name)||'')+' 전용 설치 · 이 고객사와 담당 점검업체만 표시':'모든 고객사·점검업체·사이트의 연결 관계')));
+  app.append(h('div',{class:'stats s3'},stat('고객사',clients.length,'',()=>go('settings')),stat('점검업체',companies.length,'',()=>go('settings')),stat('사이트',sites.length,'',()=>go('settings')),
+    stat('미조치 이슈',all.open,all.open?'ng':'ok',()=>navTo('issues')),stat('확인 대기 리포트',all.pend,all.pend?'warn':'ok',()=>navTo('reports')),stat('해결 완료 이슈',all.done,'ok',()=>navTo('issues'))));
+  app.append(h('div',{class:'muted sm',style:'margin:2px 4px 10px'},'고객사 → 점검업체 → 사이트 순으로 연결해 보여 줍니다. '+(dep?'':'점검업체가 올린 내용과 고객사가 직접 관리하는 내용을 함께 확인할 수 있습니다. ')+'이름을 누르면 상세로 이동합니다.'));
+  const ks=clients.slice().sort(byName);
+  if(!ks.length)app.append(h('div',{class:'card empty'},'등록된 고객사가 없습니다.'));
+  ks.forEach(k=>{
+    const ss=sites.filter(x=>x.clientId===k.id),st=relStats(ss),cids=new Set([...companies.filter(c=>c.clientId===k.id).map(c=>c.id),...ss.map(x=>x.ownerId).filter(Boolean),k.ownerId].filter(Boolean));
+    const cos=companies.filter(c=>cids.has(c.id)).sort(byName),free=ss.filter(x=>!x.ownerId||!companies.some(c=>c.id===x.ownerId));
+    const siteRow=x=>{const q=relStats([x]);return h('div',{class:'relrow',onclick:()=>go('siteview',{id:x.id})},h('span',{class:'grow'},x.name),chip(SRC[srcOf(x)]||'',''),q.open?chip('미조치 '+q.open,'ng'):chip('미조치 없음','ok'),q.pend?chip('확인 대기 '+q.pend,'warn'):null,h('span',{class:'muted sm'},q.last?'최근 점검 '+q.last:'점검 없음'));};
+    const card=h('div',{class:'card rel',id:'rel-'+k.id});
+    card.append(h('div',{class:'row sb',style:'cursor:pointer',onclick:()=>go('settings',{focus:'k-'+k.id})},h('div',{},h('h3',{style:'margin:0'},k.name||'(이름 없음)'),h('div',{class:'muted sm'},[k.mgr,k.tel].filter(Boolean).join(' · ')||'담당자 미입력')),
+      h('div',{class:'row',style:'gap:6px'},st.open?chip('미조치 '+st.open,'ng'):chip('미조치 없음','ok'),st.pend?chip('확인 대기 '+st.pend,'warn'):null)));
+    card.append(h('div',{class:'relstat'},h('div',{},h('b',{},ss.length),h('span',{},'사이트')),h('div',{},h('b',{},st.sub),h('span',{},'제출 리포트')),h('div',{},h('b',{},st.conf),h('span',{},'확인 완료')),h('div',{},h('b',{},st.pend),h('span',{},'확인 대기')),h('div',{},h('b',{},st.open),h('span',{},'미조치 이슈')),h('div',{},h('b',{},st.done),h('span',{},'해결 완료'))));
+    cos.forEach(c=>{const cs=ss.filter(x=>x.ownerId===c.id),sf=((k.staff||[]).find(x=>x.id===c.staffId))||null;
+      card.append(h('div',{class:'relco'},h('div',{class:'row sb',style:'cursor:pointer',onclick:()=>go('settings',{focus:'co-'+c.id})},h('b',{},'점검업체 · '+c.name),h('span',{class:'muted sm'},[c.tel,sf?'고객 담당자 '+sf.name:''].filter(Boolean).join(' · '))),
+        cs.length?h('div',{},...cs.map(siteRow)):h('div',{class:'muted sm',style:'padding:4px 0'},'담당 사이트 없음')));});
+    if(free.length)card.append(h('div',{class:'relco'},h('b',{},'업체 미배정 사이트'),h('div',{},...free.map(siteRow))));
+    if(!cos.length&&!free.length)card.append(h('div',{class:'muted sm',style:'margin-top:8px'},'연결된 점검업체와 사이트가 없습니다.'));
+    app.append(card);});
+  const lone=companies.filter(c=>!clients.some(k=>k.id===c.clientId||sites.some(x=>x.clientId===k.id&&x.ownerId===c.id)||k.ownerId===c.id));
+  if(lone.length){app.append(h('div',{class:'sechead'},h('h3',{},'연결된 고객사가 없는 점검업체 ('+lone.length+')')));app.append(h('div',{class:'sitegrid'},...lone.map(c=>pcard(c.name,c.tel||'',[['담당 사이트',sites.filter(x=>x.ownerId===c.id).length+'곳'],['점검자',people.filter(p=>p.companyId===c.id).length+'명']],null,()=>go('settings',{focus:'co-'+c.id})))));}
+}
+function deployCard(){
+  const sel=h('select',{},h('option',{value:'cloud'},'클라우드 운영 (모든 고객사·업체 확인)'),h('option',{value:'onprem'},'고객사 설치형 (한 고객사 전용)'));sel.value=DEPLOY.mode;
+  const ks=h('select',{},h('option',{value:''},'고객사 선택'),...raw.clients.slice().sort(byName).map(k=>h('option',{value:k.id},k.name||'(이름 없음)')));ks.value=DEPLOY.clientId||'';
+  const apply=()=>{if(sel.value==='onprem'&&!ks.value){alert2('설치형은 대상 고객사를 선택하세요.');return;}setDeploy({mode:sel.value,clientId:sel.value==='onprem'?ks.value:''});};
+  const draw=()=>{ks.disabled=sel.value!=='onprem';};sel.addEventListener('change',draw);draw();
+  return h('div',{class:'card'},h('h3',{},'운영 방식'),
+    h('div',{class:'muted sm',style:'margin-bottom:8px'},'클라우드: 점검업체가 올린 내용과 고객사가 구독하며 관리하는 내용을 모두 확인합니다. 설치형: 고객사에 직접 설치해 주는 경우로, 그 고객사와 담당 점검업체의 정보만 확인합니다.'),
+    h('div',{class:'row'},fld('운영 방식',sel),fld('대상 고객사 (설치형)',ks),h('button',{class:'pri',style:'align-self:flex-end',onclick:apply},'적용')),
+    h('div',{class:'muted sm',style:'margin-top:6px'},'현재: '+(deployOn()?'설치형 · '+((clients[0]||{}).name||''):'클라우드')+'  ※ 실제로 데이터를 분리하려면 고객사별로 따로 설치(별도 저장소)해야 합니다. 이 설정은 화면에 보이는 범위를 바꿉니다.'));
+}
+function roleHome(app){
+  if(ROLE.admin){adminHome(app);
+  }else if(roleKey==='manager'){
+    const me=clients.find(k=>k.id===acct.refId)||{},cs=visCables(),n=t=>cs.filter(c=>(c.status||'정상')===t).length,pc=pendConfirm().length;
+    if(!(me.mgr&&me.tel))app.append(h('div',{class:'card empty'},h('b',{},'기관 정보를 먼저 입력하세요'),h('div',{},'담당자·연락처와 기관 담당자를 등록해야 점검업체에 권한과 계정을 줄 때 담당자를 연결할 수 있습니다.'),h('div',{style:'margin-top:12px'},h('button',{class:'pri',onclick:()=>go('settings')},'설정으로 이동'))));
+    app.append(h('div',{class:'sechead'},h('h3',{},'점검업체 ('+companies.length+')'),h('span',{},'우리 시설을 점검하는 업체와 담당자')));
+    app.append(companies.length?h('div',{class:'sitegrid'},...companies.slice().sort(byName).map(c=>{const ss=sites.filter(x=>x.ownerId===c.id),ids=new Set(ss.map(x=>x.id)),li=lastInsp(ids),st=((me.staff||[]).find(x=>x.id===c.staffId))||null;
+      return pcard(c.name,c.tel||'',[['우리 담당자',st?st.name+(st.tel?' · '+st.tel:''):'미지정'],['담당 사이트',ss.length+'곳'],['최근 점검',li?li.date:'없음']],null,()=>go('settings',{focus:'co-'+c.id}));})):h('div',{class:'card empty'},h('b',{},'등록된 점검업체가 없습니다'),h('div',{},'설정에서 점검업체를 추가하고 계정을 만들어 주세요.')));
+    app.append(h('div',{class:'sechead'},h('h3',{},'확인 대기 · 케이블'),h('span',{},'최종 확인이 필요한 리포트와 케이블 상태')));
+    app.append(h('div',{class:'stats s3'},stat('확인 대기 리포트',pc,pc?'warn':'ok',()=>navTo('reports')),stat('케이블 점검 필요',n('점검 필요'),n('점검 필요')?'warn':'',()=>navTo('cables')),stat('케이블 장애',n('장애'),n('장애')?'ng':'ok',()=>navTo('cables'))));
+  }else if(roleKey==='engineer'){
+    app.append(h('div',{class:'sechead'},h('h3',{},'내 담당'),h('span',{},'계약한 고객과 점검 사이트')));
+    app.append(h('div',{class:'stats s3'},stat('내 고객',clients.length,'',()=>navTo('settings')),stat('점검 사이트',sites.length,'',()=>navTo('settings'))));
+    if(!clients.length&&ROLE.write)app.append(h('div',{class:'card empty'},h('b',{},'등록된 고객이 없습니다'),h('div',{},'설정에서 계약한 고객을 입력하고, 그 고객의 사이트와 점검 위치를 등록하세요.'),h('div',{style:'margin-top:12px'},h('button',{class:'pri',onclick:()=>navTo('settings')},'고객 등록하러 가기'))));
+  }
+}
 function vDash(app){
-  const sub=insps.filter(i=>i.status==='submitted'),drs=insps.filter(i=>i.status!=='submitted'),oi=openIssues().length;
-  app.append(h('div',{class:'stats s3'},stat('제출된 점검',sub.length,'',()=>navTo('reports')),ROLE.write?stat('작성 중',drs.length,drs.length?'warn':'',()=>navTo('insp')):null,stat('미조치 이슈',oi,oi?'ng':'ok',()=>navTo('issues'))));
+  const sub=insps.filter(i=>i.status==='submitted'),drs=insps.filter(i=>i.status!=='submitted'&&canDraft(i)),oi=openIssues().length;
+  if(!ROLE.admin)app.append(h('div',{class:'stats s3'},stat('제출된 점검',sub.length,'',()=>navTo('reports')),ROLE.write?stat('작성 중',drs.length,drs.length?'warn':'',()=>navTo('insp')):null,stat('미조치 이슈',oi,oi?'ng':'ok',()=>navTo('issues'))));
+  roleHome(app);
   const up=upcoming().slice(0,6);
   const uc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'다가오는 점검'),h('span',{class:'muted sm'},'완공일 기준 · 유지보수 반기 1회, 성능점검 연 1회')));
   if(!up.length)uc.append(h('div',{class:'muted',style:'margin-top:10px'},'없음'));
@@ -1191,7 +1334,7 @@ function cnt(i){const c={ok:0,ng:0,na:0,total:0,done:0};
 /* ---------- 사이트 ---------- */
 function vSites(app){
   app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('div',{class:'grow muted'},'관리 사이트 '+sites.length+'곳'),
-    ROLE.write?h('button',{class:'pri',onclick:()=>{siteDraft={id:uid(),isNew:true,name:'',client:'',address:'',completed:'',area:'',mgr:'',mgrTel:'',areas:[],fac:{}};go('siteedit');}},'+ 사이트 등록'):null));
+    ROLE.site?h('button',{class:'pri',onclick:()=>{siteDraft={id:uid(),isNew:true,name:'',client:'',address:'',completed:'',area:'',mgr:'',mgrTel:'',areas:[],fac:{}};go('siteedit');}},'+ 사이트 등록'):null));
   const card=h('div',{class:'card'});
   if(!sites.length)card.append(h('div',{class:'muted'},'등록된 사이트가 없습니다.'));
   sites.slice().sort((a,b)=>a.name.localeCompare(b.name,'ko')).forEach(s=>card.append(h('div',{class:'row',style:'padding:10px 0;border-top:1px solid var(--line);cursor:pointer',onclick:()=>go('siteview',{id:s.id})},
@@ -1202,7 +1345,7 @@ function vSiteView(app){
   const BK=roleKey==='supervisor'?'settings':roleKey==='engineer'?'insp':'dash';
   const s=sites.find(x=>x.id===route.id);if(!s){go(BK);return;}
   app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go(BK)},'← 뒤로'),h('div',{class:'grow'}),
-    ROLE.write?h('button',{onclick:()=>{siteDraft=clone(s);go('siteedit');}},'정보·설비 수정'):null,
+    ROLE.site?h('button',{onclick:()=>{siteDraft=clone(s);go('siteedit');}},'정보·설비 수정'):null,
     ROLE.write?h('button',{class:'pri',onclick:()=>newInspDialog(s.id)},'+ 새 점검'):null));
   app.append(h('div',{class:'card'},h('h3',{},s.name),
     h('div',{class:'muted'},[s.client&&'고객사: '+s.client,s.address,s.completed&&'완공일 '+s.completed,s.area&&'연면적 '+s.area+'㎡',s.mgr&&'관리주체 '+s.mgr+(s.mgrTel?' ('+s.mgrTel+')':'')].filter(Boolean).join(' · ')),
@@ -1229,12 +1372,13 @@ function bind(obj,key,opt={}){
 function fld(label,el,w){return h('div',{class:'grow',style:w?'flex:'+w:''},h('label',{class:'f'},label),el);}
 function vSiteEdit(app){
   const s=siteDraft;if(!s){go('settings');return;}
-  app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go(s.isNew?'settings':'siteview',{id:s.id})},'← 취소'),h('div',{class:'grow'}),
+  app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go(s.isNew?'settings':'siteview',{id:s.id})},'← 이전'),h('div',{class:'grow'}),
     twoStep('초기화',()=>{const keep={id:s.id,isNew:s.isNew,createdAt:s.createdAt};siteDraft={...keep,name:'',client:'',clientId:'',address:'',completed:'',area:'',mgr:'',mgrTel:'',use:'',floorsUp:'',floorsDown:'',safetyExtra:'',contacts:[],equip:[],staff:{},areas:[],fac:{}};render();window.scrollTo(0,0);},'한 번 더 누르면 모두 지움'),
     h('button',{class:'pri',id:'sitesave',onclick:saveSite},'저장')));
   app.append(siteExcelBar(s));
   app.append(h('div',{class:'card'},h('h3',{},'사이트 기본 정보'),
     h('div',{class:'row'},fld('고객(발주처) *',clients.length?selBox(s,'clientId',clients.slice().sort(byName).map(k=>[k.id,k.name||'(이름 없음)']),'고객 선택',()=>{const k=clients.find(x=>x.id===s.clientId);if(k){s.client=k.name;if(!s.mgr)s.mgrTel=s.mgrTel||'';if(!s.mgr)s.mgr=k.mgr||'';if(!s.mgrTel)s.mgrTel=k.tel||'';render();}}):bind(s,'client',{ph:'환경설정에서 고객을 먼저 등록하세요'})),fld('건축물 상호(명칭) *',bind(s,'name'))),
+    (ROLE.admin||roleKey==='manager')?h('div',{class:'row',style:'margin-top:8px'},fld('담당 점검업체 (선택)',selBox(s,'ownerId',companies.slice().sort(byName).map(c=>[c.id,c.name]),'지정 안 함'))):null,
     h('div',{class:'row',style:'margin-top:8px'},fld('관리주체 담당자 *',bind(s,'mgr')),fld('연락처 *',bind(s,'mgrTel',{ph:'010-0000-0000'}))),
     h('div',{class:'row',style:'margin-top:8px'},fld('현장 주소 (선택)',bind(s,'address'),2),fld('완공일(사용승인일) (선택)',bind(s,'completed',{type:'date'})),fld('연면적(㎡) (선택)',bind(s,'area',{type:'number'}))),
     h('div',{class:'row',style:'margin-top:8px'},fld('건축물 용도 (선택)',bind(s,'use',{ph:'예: 공동주택, 업무시설'})),fld('지상 층수 (선택)',bind(s,'floorsUp',{type:'number'})),fld('지하 층수 (선택)',bind(s,'floorsDown',{type:'number'})))));
@@ -1280,7 +1424,7 @@ async function saveSite(){
   if(!(s.name||'').trim()){alert2('건축물 상호(명칭)를 입력하세요.');return;}
   if(!(s.mgr||'').trim()){alert2('관리주체 담당자를 입력하세요.');return;}
   if(!(s.mgrTel||'').trim()){alert2('관리주체 연락처를 입력하세요.');return;}
-  const {isNew,...body}=s;body.areas=(body.areas||[]).slice().sort((a,b)=>a-b);body.updatedAt=new Date().toISOString();if(isNew)body.createdAt=body.updatedAt;
+  const {isNew,...body}=s;if(!body.src)body.src=acct?(acct.role==='client'?'client':acct.role==='engineer'?'company':'admin'):'admin';if(myCo()&&!body.ownerId)body.ownerId=myCo();if(acct&&acct.role==='client'){body.clientId=acct.refId;body.client=(clients.find(k=>k.id===acct.refId)||{}).name||body.client;}body.areas=(body.areas||[]).slice().sort((a,b)=>a-b);body.updatedAt=new Date().toISOString();if(isNew)body.createdAt=body.updatedAt;
   try{await db.collection('sites').doc(s.id).set(body);go('siteview',{id:s.id});}catch(e){alert2('저장 실패: '+(e.code||e.message));}
 }
 function alert2(msg){const n=h('div',{class:'note err'},msg);const a=$('#app');a.prepend(n);setTimeout(()=>n.remove(),4000);window.scrollTo(0,0);}
@@ -1340,7 +1484,7 @@ function newInspDialog(siteId,locId){
           ls.forEach(l=>(l.areas||[]).slice().sort((x,y)=>x-y).forEach(no=>{const u=l.id+'.'+no;units.push({u,no,loc:l.id});meta[u]={loc:l.name||'',inst:''};}));
           areas=[...new Set(units.map(x=>x.no))].sort((x,y)=>x-y);}
         else{areas=s.areas.slice();units=null;}
-        cur={id:uid(),isNew:true,siteId:s.id,type:d.type,date:d.date,engineer:{name:d.name,org:d.org,grade:d.grade,personId:d.personId||''},witness:d.witness,areas,res:{},meta,gps:'',status:'draft',summary:'',createdAt:new Date().toISOString()};
+        cur={id:uid(),isNew:true,siteId:s.id,type:d.type,date:d.date,engineer:{name:d.name,org:d.org,grade:d.grade,personId:d.personId||''},witness:d.witness,areas,res:{},meta,gps:'',status:'draft',summary:'',createdBy:acct?acct.id:'',createdAt:new Date().toISOString()};
         if(units){cur.units=units;cur.locs=locs;}
         dirty=true;await flush();openInsp(cur.id);}},'점검 시작'))));
   drawLocs();
@@ -1518,38 +1662,45 @@ const ISTAT={open:['미조치','ng'],doing:['조치 중','warn'],done:['완료',
 function vIssues(app){
   const f=route.f||'open';
   const tabs=h('div',{class:'row',style:'margin-bottom:10px'},...[['open','미완료'],['all','전체'],['done','완료']].map(([k,t])=>h('button',{class:f===k?'pri':'',onclick:()=>{route.f=k;render();}},t)));
+  tabs.append(h('div',{class:'grow'}),h('button',{onclick:()=>exportIssues(f)},'엑셀 내려받기'));
   app.append(tabs);
   const list=issues.filter(x=>f==='all'||(f==='done'?x.status==='done':x.status!=='done')).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
   const c=h('div',{class:'card'});if(!list.length)c.append(h('div',{class:'muted'},'해당하는 이슈가 없습니다.'));
-  else c.append(h('div',{style:'overflow-x:auto'},h('table',{class:'t'},h('tr',{},...['사이트','영역','항목','부적합 사유','상태','조치일'].map(x=>h('th',{},x))),
+  else c.append(h('div',{style:'overflow-x:auto'},h('table',{class:'t'},h('tr',{},...['사이트','영역','항목','부적합 사유','상태','해결일','담당자'].map(x=>h('th',{},x))),
     ...list.map(x=>h('tr',{class:'click',onclick:()=>go('issue',{id:x.id})},h('td',{},siteName(x.siteId)),h('td',{},ai(x)),h('td',{},x.title),h('td',{},x.note),
-      h('td',{},h('span',{class:'pill '+ISTAT[x.status][1]},ISTAT[x.status][0])),h('td',{},x.actionDate||'-'))))));
+      h('td',{},h('span',{class:'pill '+ISTAT[x.status][1]},ISTAT[x.status][0])),h('td',{},x.actionDate||'-'),h('td',{},x.handler||'-'))))));
   app.append(c);
 }
+async function exportIssues(f){const X=window.XLSX;if(!X){alert2('엑셀 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.');return;}
+  const list=issues.filter(x=>f==='all'||(f==='done'?x.status==='done':x.status!=='done')).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
+  const rows=[['사이트','점검일','영역','위치','항목','구분','부적합 사유','처리 상태','발견일','해결일','해결 방법','해결 결과','처리 담당자'],...list.map(x=>{const i=insps.find(q=>q.id===x.inspId)||{};return[siteName(x.siteId),i.date||'',areaOf(x.area).name,x.loc||'',x.title||'',x.cat||'',x.note||'',ISTAT[x.status][0],(x.createdAt||'').slice(0,10),x.actionDate||'',x.action||'',x.result||'',x.handler||''];})];
+  const wb=X.utils.book_new(),t=X.utils.aoa_to_sheet(rows);t['!cols']=[20,12,16,16,30,8,34,10,12,12,34,30,12].map(w=>({wch:w}));X.utils.book_append_sheet(wb,t,'이슈');
+  try{await downloads.save({filename:'이슈-목록-'+({open:'미완료',all:'전체',done:'완료'}[f]||'')+'-'+today()+'.xlsx',data:new Blob([X.write(wb,{bookType:'xlsx',type:'array'})],{type:XLSX_MIME})});}catch(e){if(!e||e.code!=='declined')alert2('파일 저장 실패: '+(e.message||e.code));}}
 let issueDraft=null;
 function vIssue(app){
   const x0=issues.find(x=>x.id===route.id);if(!x0){go('issues');return;}
   if(!issueDraft||issueDraft.id!==x0.id)issueDraft=clone(x0);const x=issueDraft;
   const wr=ROLE.write;
-  const st=h('select',{},...Object.entries(ISTAT).map(([k,v])=>h('option',{value:k},v[0])));st.value=x.status;st.disabled=!wr;st.addEventListener('change',()=>{x.status=st.value;if(x.status==='done'&&!x.actionDate){x.actionDate=today();render();}});
+  const st=h('select',{},...Object.entries(ISTAT).map(([k,v])=>h('option',{value:k},v[0])));st.value=x.status;st.disabled=!wr;st.addEventListener('change',()=>{x.status=st.value;if(x.status==='done'){if(!x.actionDate)x.actionDate=today();if(!x.handler)x.handler=ME.name||(acct&&acct.name)||'';render();}});
   app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>{issueDraft=null;go('issues');}},'← 목록'),h('div',{class:'grow'}),
     wr?h('button',{class:'pri',onclick:async()=>{try{await db.collection('issues').doc(x.id).set({...x,updatedAt:new Date().toISOString()});issueDraft=null;go('issues');}catch(e){alert2('저장 실패: '+(e.code||e.message));}}},'저장'):null));
   app.append(h('div',{class:'card'},h('h3',{},siteName(x.siteId)+' · '+ai(x)),h('div',{style:'font-weight:600'},x.title),
     h('div',{class:'muted',style:'margin:4px 0 8px'},'구분 '+x.cat+' · 발견 '+((x.createdAt||'').slice(0,10))),h('div',{},x.note||'(사유 없음)'),photoBlock(x.photos||[],()=>{},null)));
-  app.append(h('div',{class:'card'},h('h3',{},'개선 조치'),h('div',{class:'row'},fld('조치 상태',st),fld('조치일',bind(x,'actionDate',{type:'date',dis:!wr}))),
-    h('div',{style:'margin-top:8px'},h('label',{class:'f'},'개선 내용'),bind(x,'action',{area:true,ph:'교체·수리·재점검 등 조치 내용',dis:!wr})),
+  app.append(h('div',{class:'card'},h('h3',{},'사후 해결 처리'),h('div',{class:'muted sm',style:'margin-bottom:8px'},'점검과 별개로, 부적합 사항을 실제로 해결한 뒤 여기에 기록합니다.'),h('div',{class:'row'},fld('해결 상태',st),fld('해결일',bind(x,'actionDate',{type:'date',dis:!wr})),fld('처리 담당자',bind(x,'handler',{dis:!wr,ph:'조치한 사람'}))),
+    h('div',{style:'margin-top:8px'},h('label',{class:'f'},'해결 방법'),bind(x,'action',{area:true,ph:'교체·수리·재설정 등 조치한 방법',dis:!wr})),
+    h('div',{style:'margin-top:8px'},h('label',{class:'f'},'해결 결과'),bind(x,'result',{area:true,ph:'조치 후 확인 결과 (예: 링크 정상, 손실 0.3dB)',dis:!wr})),
     h('div',{style:'margin-top:8px'},h('label',{class:'f'},'증빙 사진'),photoBlock(x.evid=x.evid||[],()=>{},'📷 증빙 사진'))));
   if(!wr)app.append(h('div',{class:'muted'},'열람 전용입니다.'));
 }
 
 /* ---------- 리포트 ---------- */
 function vReports(app){
-  const list=visInsps().filter(i=>i.status==='submitted'||ROLE.write);
+  const list=visInsps();
   const c=h('div',{class:'card'},h('h3',{},'점검 리포트 (이력 조회·출력)'));
   if(!list.length)c.append(h('div',{class:'muted'},'리포트가 없습니다.'));
-  else c.append(h('div',{style:'overflow-x:auto'},h('table',{class:'t'},h('tr',{},...['점검일','사이트','유형','점검자','결과','상태'].map(x=>h('th',{},x))),
+  else c.append(h('div',{style:'overflow-x:auto'},h('table',{class:'t'},h('tr',{},...['점검일','사이트','유형','점검자','결과','상태','고객 확인'].map(x=>h('th',{},x))),
     ...list.map(i=>{const n=cnt(i);return h('tr',{class:'click',onclick:()=>go('report',{id:i.id})},h('td',{},i.date),h('td',{},siteName(i.siteId)),h('td',{},TYPES[i.type]),h('td',{},i.engineer&&i.engineer.name),
-      h('td',{},'○'+n.ok+' X'+n.ng+' －'+n.na),h('td',{},h('span',{class:'pill '+(i.status==='submitted'?'ok':'warn')},i.status==='submitted'?'제출':'작성중')));}))));
+      h('td',{},'○'+n.ok+' X'+n.ng+' －'+n.na),h('td',{},h('span',{class:'pill '+(i.status==='submitted'?'ok':'warn')},i.status==='submitted'?'제출':'작성중')),h('td',{},i.status!=='submitted'?'':i.confirm?h('span',{class:'pill ok'},'확인 '+i.confirm.at):h('span',{class:'pill warn'},'확인 대기')));}))));
   app.append(c);
 }
 const ovrOf=(m,no)=>{const as=m.areas.filter(a=>a.no===no);if(!as.length)return null;const o=as.some(a=>a.overall==='ng')?'ng':as.some(a=>a.overall==='ok')?'ok':as.every(a=>a.overall==='na')?'na':'';return{overall:o};};
@@ -1569,12 +1720,49 @@ function model(i){
     return{...l,n:as.length,ok:rs.filter(r=>r.r==='ok').length,ng:rs.filter(r=>r.r==='ng').length,na:rs.filter(r=>r.r==='na').length,done:rs.length>0&&rs.every(r=>r.r)};});
   return{site,areas,c,iss,locs};
 }
+/* ---------- 고객 최종 확인 (날짜·사인·직인) ---------- */
+function signPad(){const cv=h('canvas',{width:420,height:150,style:'width:100%;max-width:420px;height:auto;border:1px dashed #888;border-radius:8px;background:#fff;touch-action:none'});
+  let down=false,drawn=false,ctx=null;const g=()=>ctx||(ctx=cv.getContext&&cv.getContext('2d'));
+  const pos=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height];};
+  cv.addEventListener('pointerdown',e=>{const c=g();if(!c)return;down=true;const[p,q]=pos(e);c.lineWidth=2.5;c.lineCap='round';c.strokeStyle='#111';c.beginPath();c.moveTo(p,q);try{cv.setPointerCapture(e.pointerId);}catch(x){}e.preventDefault();});
+  cv.addEventListener('pointermove',e=>{if(!down)return;const c=g(),[p,q]=pos(e);c.lineTo(p,q);c.stroke();drawn=true;e.preventDefault();});
+  const up=()=>{down=false;};cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);
+  const clear=()=>{const c=g();if(c)c.clearRect(0,0,cv.width,cv.height);drawn=false;};
+  return{el:h('div',{},cv,h('div',{class:'row',style:'margin-top:4px'},h('span',{class:'muted sm grow'},'손가락이나 마우스로 사인하세요.'),h('button',{onclick:clear},'지우기'))),has:()=>drawn,data:()=>cv.toDataURL('image/png')};}
+function imgToPng(file,max){return new Promise((ok,no)=>{const fr=new FileReader();fr.onerror=no;fr.onload=()=>{const im=new Image();im.onerror=no;im.onload=()=>{const k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/png'));};im.src=fr.result;};fr.readAsDataURL(file);});}
+function confirmCard(i){
+  if(i.status!=='submitted')return null;const cf=i.confirm;
+  if(cf){const c=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'최종 확인 완료'),h('span',{class:'pill ok'},'확인 '+cf.at)),
+      h('div',{style:'margin-top:8px'},'확인자: '+(cf.name||'')+(cf.dept?' ('+cf.dept+')':'')+(cf.org?' · '+cf.org:'')),cf.note?h('div',{class:'muted',style:'margin-top:4px'},'의견: '+cf.note):null,
+      h('div',{class:'row',style:'margin-top:8px;gap:16px;align-items:flex-end'},cf.sign?h('figure',{style:'margin:0'},h('img',{src:cf.sign,alt:'사인',style:'height:64px;background:#fff;border:1px solid #ddd;border-radius:6px'}),h('figcaption',{class:'muted sm'},'사인')):null,cf.seal?h('figure',{style:'margin:0'},h('img',{src:cf.seal,alt:'직인',style:'height:64px'}),h('figcaption',{class:'muted sm'},'직인')):null));
+    if(ROLE.admin)c.append(h('div',{style:'margin-top:8px'},twoStep('확인 취소',async()=>{const {id,isNew,confirm,...b}=i;b.updatedAt=new Date().toISOString();await db.collection('inspections').doc(i.id).set(b);go('report',{id:i.id});})));
+    return c;}
+  if(roleKey!=='manager'||!ROLE.write)return h('div',{class:'note'},'고객 최종 확인 대기 중입니다.');
+  const me=clients.find(k=>k.id===acct.refId)||{},st=me.staff||[];
+  const d={at:today(),name:ME.name||'',dept:'',note:''},pad=signPad();
+  const sel=selBox({v:''},'v',st.map(x=>[x.id,x.name+(x.dept?' · '+x.dept:'')]),'확인자 선택(등록된 담당자)',()=>{});
+  sel.addEventListener('change',()=>{const x=st.find(q=>q.id===sel.value);if(x){d.name=x.name;d.dept=x.dept||'';nm.value=d.name;}});
+  const nm=bind(d,'name',{ph:'확인자 성명'}),seal={url:me.seal||''},sealBox=h('div'),file=h('input',{type:'file',accept:'image/*',style:'display:none'});
+  const drawSeal=()=>sealBox.replaceChildren(seal.url?h('img',{src:seal.url,alt:'직인',style:'height:64px;display:block;margin-bottom:6px'}):h('div',{class:'muted sm',style:'margin-bottom:6px'},'등록된 직인 없음 (사인만으로 확인할 수 있습니다)'),h('button',{onclick:()=>file.click()},seal.url?'직인 바꾸기':'직인 이미지 올리기'),file);
+  file.addEventListener('change',async()=>{const f=file.files[0];file.value='';if(!f)return;try{seal.url=await imgToPng(f,260);drawSeal();}catch(e){alert2('이미지를 읽을 수 없습니다.');}});drawSeal();
+  return h('div',{class:'card'},h('h3',{},'최종 확인 (점검업체가 올린 리포트)'),h('div',{class:'muted sm',style:'margin-bottom:8px'},'내용을 확인한 뒤 확인일·확인자·사인(직인)을 남기면 리포트에 함께 표시되고 Word 출력에도 들어갑니다.'),
+    h('div',{class:'row'},fld('확인일',bind(d,'at',{type:'date'})),fld('확인자 선택',sel),fld('확인자 성명 *',nm)),
+    h('div',{class:'row',style:'margin-top:8px'},fld('확인 의견 (선택)',bind(d,'note',{area:true}),2)),
+    h('div',{class:'row',style:'margin-top:8px'},h('div',{class:'grow'},h('label',{class:'f'},'사인 *'),pad.el),h('div',{class:'grow'},h('label',{class:'f'},'직인 (선택)'),sealBox)),
+    h('div',{class:'row',style:'margin-top:10px'},h('div',{class:'grow'}),h('button',{class:'pri',onclick:async()=>{
+      if(!(d.name||'').trim()){alert2('확인자 성명을 입력하세요.');return;}if(!d.at){alert2('확인일을 입력하세요.');return;}if(!pad.has()&&!seal.url){alert2('사인을 하거나 직인을 등록하세요.');return;}
+      const cf={at:d.at,name:d.name.trim(),dept:d.dept,note:d.note,org:me.name||'',sign:pad.has()?pad.data():'',seal:seal.url||'',by:acct.id,ts:new Date().toISOString()};
+      try{const {id,isNew,...b}=i;b.confirm=cf;b.updatedAt=cf.ts;await db.collection('inspections').doc(i.id).set(b);
+        if(seal.url&&seal.url!==me.seal){const {id:kid,...kb}=me;kb.seal=seal.url;kb.updatedAt=cf.ts;await db.collection('clients').doc(me.id).set(kb);}
+        go('report',{id:i.id});}catch(e){alert2('저장 실패: '+(e.code||e.message));}}},'최종 확인')));
+}
 function vReport(app){
   const i=insps.find(x=>x.id===route.id)||(cur&&cur.id===route.id?cur:null);if(!i){go('reports');return;}
   const m=model(i);
   app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go('reports')},'← 목록'),h('div',{class:'grow muted'},i.status==='submitted'?'제출 완료':'작성 중 초안'),
     ROLE.admin&&i.status==='submitted'?h('button',{onclick:async()=>{cur=clone(i);cur.status='draft';delete cur.submittedAt;dirty=true;await flush();sheet={mode:'areas',area:null,idx:-1};go('sheet');}},'수정(재개)'):null,
     downloads?h('button',{class:'pri',id:'dl',onclick:()=>downloadDocx(i,m)},'Word(.docx) 다운로드'):null));
+  {const cc=confirmCard(i);if(cc)app.append(cc);}
   app.append(reportHtml(i,m));
 }
 const symEl=r=>h('span',{class:'sym-'+(r||'na')},SYM[r]||'');
@@ -1680,11 +1868,11 @@ function reportHtml(i,m){
     if(ngr.length)R.append(h('table',{style:'margin-top:-1px'},h('tr',{},h('th',{style:'width:50%'},'부적합사항'),h('th',{},'조치사항')),...ngr.map(r=>h('tr',{},h('td',{},r.t+(r.note?' — '+r.note:'')),h('td',{},r.act||'(미조치)')))));});
   blkHtml(R,resultBlocks(i,m,()=>sec++));
   const photos=[];m.areas.forEach(a=>a.rows.forEach(r=>r.photos.forEach(p=>photos.push({id:p,cap:(a.locName?a.locName+' / ':'')+a.name+' / '+r.t+(r.r==='ng'?' (부적합)':'')}))));
-  if(m.iss.length){R.append(h('h3',{},(sec++)+'. 이슈(부적합) 조치 현황'),h('table',{},h('tr',{},...['영역','항목','부적합 사유','조치 상태','조치일','개선 내용'].map(x=>h('th',{},x))),
-    ...m.iss.map(x=>h('tr',{},h('td',{},ai(x)),h('td',{},x.title),h('td',{},x.note),h('td',{},ISTAT[x.status][0]),h('td',{},x.actionDate||''),h('td',{},x.action||'')))));
+  if(m.iss.length){R.append(h('h3',{},(sec++)+'. 이슈(부적합) 조치 현황'),h('table',{},h('tr',{},...['영역','항목','부적합 사유','조치 상태','해결일','해결 방법','결과','담당자'].map(x=>h('th',{},x))),
+    ...m.iss.map(x=>h('tr',{},h('td',{},ai(x)),h('td',{},x.title),h('td',{},x.note),h('td',{},ISTAT[x.status][0]),h('td',{},x.actionDate||''),h('td',{},x.action||''),h('td',{},x.result||''),h('td',{},x.handler||'')))));
     m.iss.forEach(x=>(x.evid||[]).forEach(p=>photos.push({id:p,cap:'조치 증빙 / '+x.title})));}
   if(photos.length){R.append(h('h3',{},(sec++)+'. 현황 사진'));R.append(h('div',{class:'pg'},...photos.map((p,k)=>h('figure',{},h('img',{src:blobUrl(p.id),alt:''}),h('figcaption',{},'['+(k+1)+'] '+p.cap)))));}
-  R.append(h('h3',{},(sec++)+'. 확인 및 서명 (출력 후 서명)'),h('table',{},h('tr',{},h('th',{},'점검자'),h('td',{style:'height:48px'},e.name+'  (서명)'),h('th',{},'관리주체 확인'),h('td',{style:'height:48px'},'(서명)'))));
+  R.append(h('h3',{},(sec++)+'. 확인 및 서명 (출력 후 서명)'),h('table',{},h('tr',{},h('th',{},'점검자'),h('td',{style:'height:48px'},e.name+'  (서명)'),h('th',{},'관리주체 확인'),h('td',{style:'height:48px'},i.confirm?h('div',{},'확인일 '+i.confirm.at+' · '+i.confirm.name+(i.confirm.dept?' ('+i.confirm.dept+')':''),h('div',{style:'display:flex;gap:10px;align-items:center;margin-top:4px'},i.confirm.sign?h('img',{src:i.confirm.sign,alt:'사인',style:'height:44px'}):null,i.confirm.seal?h('img',{src:i.confirm.seal,alt:'직인',style:'height:52px'}):null)):'(서명)'))));
   R._photos=photos;return R;
 }
 
@@ -1728,14 +1916,16 @@ async function downloadDocx(i,m){
         ...a.rows.map(r=>[...(i.type==='maint'?[cell(r.cat,{c:1})]:[]),cell(r.t),cell(SYM[r.r],{c:1,color:col[r.r]}),cell(r.note)])]));
       const ngr=a.rows.filter(r=>r.r==='ng');if(ngr.length)K.push(tbl([[cell('부적합사항',{head:1,w:50}),cell('조치사항',{head:1,w:50})],...ngr.map(r=>[cell(r.t+(r.note?' — '+r.note:'')),cell(r.act||'(미조치)')])]));});
     blk(resultBlocks(i,m,()=>sec++));
-    if(m.iss.length){K.push(H((sec++)+'. 이슈(부적합) 조치 현황'),tbl([['영역','항목','부적합 사유','상태','조치일','개선 내용'].map(t=>cell(t,{head:1})),...m.iss.map(x=>[ai(x),x.title,x.note,ISTAT[x.status][0],x.actionDate,x.action].map(v=>cell(v)))]));}
+    if(m.iss.length){K.push(H((sec++)+'. 이슈(부적합) 조치 현황'),tbl([['영역','항목','부적합 사유','상태','해결일','해결 방법','결과','담당자'].map(t=>cell(t,{head:1})),...m.iss.map(x=>[ai(x),x.title,x.note,ISTAT[x.status][0],x.actionDate,x.action,x.result,x.handler].map(v=>cell(v)))]));}
     const R=reportHtml(i,m),photos=R._photos||[];
     if(photos.length){K.push(H((sec++)+'. 현황 사진'));const imgs=await Promise.all(photos.map(p=>loadImg(p.id).catch(()=>null)));
       const cells=photos.map((p,k)=>{const im=imgs[k],Wd=250,Hh=im?Math.min(190,Math.round(Wd*im.h/im.w)):140,Ww=im?Math.min(Wd,Math.round(Hh*im.w/im.h)):Wd;
         return new D.TableCell({width:{size:50,type:D.WidthType.PERCENTAGE},margins:{top:50,bottom:50,left:70,right:70},children:[
           new D.Paragraph({alignment:D.AlignmentType.CENTER,children:im?[new D.ImageRun({data:im.buf,type:'jpg',transformation:{width:Ww,height:Hh}})]:[tx('(사진 없음)')]}),para('['+(k+1)+'] '+p.cap,{run:{size:16}})]});});
       const rows=[];for(let k=0;k<cells.length;k+=2)rows.push(new D.TableRow({cantSplit:true,children:[cells[k],cells[k+1]||new D.TableCell({children:[new D.Paragraph('')]})]}));K.push(new D.Table({width:{size:100,type:D.WidthType.PERCENTAGE},rows}));}
-    K.push(H((sec++)+'. 확인 및 서명 (출력 후 서명)'),tbl([[cell('점검자',{head:1,c:1,w:20}),cell(e.name+'  (서명)',{w:30}),cell('관리주체 확인',{head:1,c:1,w:20}),cell('(서명)',{w:30})]]));
+    K.push(H((sec++)+'. 확인 및 서명 (출력 후 서명)'),tbl([[cell('점검자',{head:1,c:1,w:20}),cell(e.name+'  (서명)',{w:30}),cell('관리주체 확인',{head:1,c:1,w:20}),(()=>{const cf=i.confirm;if(!cf)return cell('(서명)',{w:30});const u8=u=>{const b=atob(u.split(',')[1]),a=new Uint8Array(b.length);for(let k=0;k<b.length;k++)a[k]=b.charCodeAt(k);return a;};
+      const ch=[para('확인일 '+cf.at+' · '+cf.name+(cf.dept?' ('+cf.dept+')':''))];const runs=[];if(cf.sign)runs.push(new D.ImageRun({data:u8(cf.sign),type:'png',transformation:{width:120,height:43}}));if(cf.seal)runs.push(new D.ImageRun({data:u8(cf.seal),type:'png',transformation:{width:60,height:60}}));if(runs.length)ch.push(new D.Paragraph({children:runs}));
+      return new D.TableCell({width:{size:30,type:D.WidthType.PERCENTAGE},margins:{top:60,bottom:60,left:80,right:80},children:ch});})()]]));
     const doc=new D.Document({sections:[{properties:{page:{margin:{top:900,bottom:900,left:900,right:900}}},children:K}]});
     const blob=await D.Packer.toBlob(doc);
     await downloads.save({filename:'점검보고서_'+(m.site.name||'현장').replace(/[\\/:*?"<>|]/g,'')+'_'+TYPES[i.type].slice(0,4)+'_'+i.date+'.docx',data:blob});
