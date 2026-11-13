@@ -598,8 +598,8 @@ async function doLogin(){
     if(CAP.write){try{await putAccount('admin',a,'admin123');}catch(e){}}}
   else if(id==='jsolution'&&pw==='jsol1234'){ok=true;a={id:'jsolution',role:'engineer',refType:'company',refId:'co-jsolution',name:'제이솔루션'};
     if(CAP.write){try{if(!companies.some(c=>c.id==='co-jsolution'))await db.collection('companies').doc('co-jsolution').set({name:'제이솔루션',biz:'',tel:'',updatedAt:new Date().toISOString()});await putAccount('jsolution',a,'jsol1234');}catch(e){}}}
-  else if(id==='lge'&&pw==='LGE123'){ok=true;a={id:'lge',role:'client',refType:'client',refId:'k-lge',name:'LGE'};
-    if(CAP.write){try{if(!raw.clients.some(c=>c.id==='k-lge'))await db.collection('clients').doc('k-lge').set({name:'LGE',biz:'',mgr:'',tel:'',addr:'',updatedAt:new Date().toISOString()});await putAccount('lge',a,'LGE123');}catch(e){}}}
+  else if(id==='guest'&&pw==='guest123'){ok=true;a={id:'guest',role:'client',refType:'client',refId:'k-lge',name:'LGE'};
+    if(CAP.write){try{if(!raw.clients.some(c=>c.id==='k-lge'))await db.collection('clients').doc('k-lge').set({name:'LGE',biz:'',mgr:'',tel:'',addr:'',updatedAt:new Date().toISOString()});await putAccount('guest',a,'guest123');}catch(e){}}}
   if(!ok){err('아이디 또는 비밀번호가 맞지 않습니다.');return;}
   startSession(a,dpw);
 }
@@ -617,7 +617,7 @@ function startSession(a,dpw){
   if((a.role==='engineer'||a.role==='client')&&!ME.name){ME.name=nm;if(a.refType==='company'||a.role==='client')ME.org=nm;}
   lsSet('last_id',a.id);applyScope();
   entered=true;$('#gate').hidden=true;document.body.classList.remove('gated');
-  setRole(ROLES[roleKey].ko+' · '+nm);route={v:'dash'};renderNav();render();window.scrollTo(0,0);hashCable();
+  setRole(ROLES[roleKey].ko+' · '+nm);route={v:'dash'};renderNav();render();window.scrollTo(0,0);hashCable();hashSite();
 }
 async function logout(){await flush();acct=null;ROLE.write=false;ROLE.admin=false;ROLE.site=false;ME.personId='';ME.name='';ME.org='';ME.grade='';applyScope();entered=false;renderGate();}
 function pwCard(){
@@ -827,6 +827,10 @@ function cabAutoId(extra){const d=new Date(),pre='CB-'+String(d.getFullYear()).s
   const used=[...cables.map(c=>c.code||c.id),...(extra||[])];let n=1;used.forEach(k=>{if(k.startsWith(pre)){const v=parseInt(k.slice(pre.length),10);if(v>=n)n=v+1;}});return pre+String(n).padStart(3,'0');}
 const ptId=(code,i)=>code+'-S'+String(i+1).padStart(2,'0');
 const qrId=v=>{v=String(v==null?'':v).trim();const m=v.match(/#cable=([^&\s]+)/);if(m){try{return decodeURIComponent(m[1]);}catch(e){return m[1];}}return v;};
+const siteQrText=id=>cabBase()+'#site='+encodeURIComponent(id);
+function siteFind(v){v=String(v==null?'':v).trim();if(!v)return null;const m=v.match(/#site=([^&\s]+)/);if(m){try{v=decodeURIComponent(m[1]);}catch(e){v=m[1];}}
+  let x=sites.find(a=>a.id===v);if(x)return x;const L=v.toLowerCase();x=sites.filter(a=>(a.name||'').toLowerCase()===L);if(x.length===1)return x[0];
+  x=sites.filter(a=>(a.name||'').toLowerCase().includes(L));return x.length===1?x[0]:null;}
 const cabKey=v=>qrId(v).replace(/[\/\s]+/g,'_');
 const pts=c=>(c.points||c.marks||[]).map(p=>({qr:p.qr||'',m:p.m,note:p.note||''}));
 const siteNm=id=>(sites.find(s=>s.id===id)||{}).name||'';
@@ -851,6 +855,10 @@ function scanner(onValue,label){
 function hashCable(){const m=(location.hash||'').match(/^#cable=([^&]+)/);if(!m||!entered)return false;const id=qrId(location.hash);
   const f=()=>{const r=cabFind(id);route={v:'cables',t:'chk',id:r?r.c.id:'',q:id,pt:r&&r.p?r.p.qr:''};renderNav();render();};if(Object.values(loaded).every(Boolean))f();else setTimeout(f,600);return true;}
 window.addEventListener('hashchange',hashCable);
+let pendSite=null;
+function hashSite(){const m=(location.hash||'').match(/^#site=([^&]+)/);if(!m||!entered||!ROLE.write)return false;pendSite=location.hash;
+  const f=()=>{newInspDialog();};if(Object.values(loaded).every(Boolean))f();else setTimeout(f,600);return true;}
+window.addEventListener('hashchange',hashSite);
 function vCables(app){
   stopCam();if(roleKey==='engineer'){go('dash');return;}
   const t=route.t||(ROLE.write?'reg':'chk');
@@ -1350,6 +1358,11 @@ function vSiteView(app){
   app.append(h('div',{class:'card'},h('h3',{},s.name),
     h('div',{class:'muted'},[s.client&&'고객사: '+s.client,s.address,s.completed&&'완공일 '+s.completed,s.area&&'연면적 '+s.area+'㎡',s.mgr&&'관리주체 '+s.mgr+(s.mgrTel?' ('+s.mgrTel+')':'')].filter(Boolean).join(' · ')),
     h('div',{class:'row',style:'margin-top:10px'},h('div',{},h('div',{class:'muted'},'유지보수관리 점검 기한'),dayPill(dueInfo(s,'maint'))),h('div',{},h('div',{class:'muted'},'성능점검 기한'),dayPill(dueInfo(s,'perf'))))));
+  {const q=cabQr(siteQrText(s.id),150);
+   app.append(h('div',{class:'card'},h('div',{class:'row'},h('div',{style:'width:150px'},q),
+    h('div',{class:'grow'},h('h3',{style:'margin:0 0 4px'},'사이트 QR'),h('div',{class:'muted sm'},'현장 입구나 랙실에 부착하세요. 점검자가 점검을 시작할 때 이 QR을 스캔하면 사이트 정보를 확인한 뒤 점검을 시작합니다.'),
+     h('div',{class:'sm',style:'margin-top:6px;word-break:break-all'},'사이트 ID: ',h('b',{},s.id)),
+     h('button',{style:'margin-top:8px',onclick:async()=>{const svg=q.querySelector('svg');if(!svg)return;try{await downloads.save({filename:'사이트QR_'+(s.name||'site').replace(/[\\/:*?"<>|]/g,'')+'.svg',data:new Blob([svg.outerHTML.replace('<svg','<svg xmlns="http://www.w3.org/2000/svg"')],{type:'image/svg+xml'})});}catch(e){}}},'QR 이미지 저장')))));}
   {const ls=locsOfSite(s.id),lc=h('div',{class:'card'},h('h3',{},'점검 위치 ('+ls.length+')'));
     if(!ls.length)lc.append(h('div',{class:'muted'},'등록된 위치가 없습니다. 환경설정 > 점검 위치에서 추가하세요.'));
     else{const last={};visInsps().filter(i=>i.status==='submitted').sort((a,b)=>(a.date||'').localeCompare(b.date||'')).forEach(i=>(i.locs||[]).forEach(l=>{last[l.id]=i.date;}));
@@ -1450,7 +1463,7 @@ function vInsp(app){
 }
 function newInspDialog(siteId,locId){
   const a=$('#app');a.replaceChildren();
-  const d={siteId:siteId||(sites[0]&&sites[0].id)||'',type:'maint',date:today(),personId:ME.personId,name:ME.name,org:ME.org,grade:ME.grade,witness:'',locIds:locId?[locId]:null};
+  const d={siteId:siteId||(sites[0]&&sites[0].id)||'',type:'maint',date:today(),personId:ME.personId,name:ME.name,org:ME.org,grade:ME.grade,witness:'',locIds:locId?[locId]:null,chk:null};
   const ss=h('select',{},...sites.map(s=>h('option',{value:s.id},s.name)));ss.value=d.siteId;
   const lbox=h('div');
   const drawLocs=()=>{const ls=locsOfSite(d.siteId);if(d.locIds===null)d.locIds=ls.map(l=>l.id);lbox.replaceChildren();
@@ -1463,17 +1476,35 @@ function newInspDialog(siteId,locId){
         const tg=()=>{d.locIds=cb.checked?[...d.locIds,l.id]:d.locIds.filter(x=>x!==l.id);drawLocs();};
         cb.addEventListener('change',tg);row.addEventListener('click',e=>{if(e.target!==cb){cb.checked=!cb.checked;tg();}});return row;})));
     lbox.append(h('label',{class:'seltools'},master,h('b',{},'전체 선택 / 해제'),h('span',{class:'muted'},d.locIds.length+' / '+ls.length+'곳')),tb);sync();};
-  ss.addEventListener('change',()=>{d.siteId=ss.value;d.locIds=null;drawLocs();});
+  const chkBox=h('div',{style:'margin-top:10px'}),scMsg=h('div');
+  const drawChk=()=>{chkBox.replaceChildren();const st=sites.find(x=>x.id===d.siteId);if(!st)return;
+    const last=insps.filter(i=>i.siteId===st.id&&i.status==='submitted').sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+    const row=(k,v)=>v?h('div',{class:'row sm',style:'gap:8px;padding:2px 0'},h('span',{class:'muted',style:'min-width:64px'},k),h('span',{class:'grow'},v)):null;
+    chkBox.append(h('div',{class:'card',style:'margin:0;border:2px solid '+(d.chk?'var(--pri,#111)':'var(--line)')},
+      h('div',{class:'row sb'},h('b',{},st.name),d.chk?h('span',{class:'pill pri'},'✔ 확인 완료 ('+(d.chk.by==='qr'?'QR 스캔':d.chk.by==='id'?'ID 입력':'직접 확인')+')'):h('span',{class:'pill'},'확인 필요')),
+      row('고객사',st.client),row('현장주소',st.address),row('관리주체',[st.mgr,st.mgrTel].filter(Boolean).join(' · ')),row('완공일',st.completed),
+      row('점검 위치',locsOfSite(st.id).length?locsOfSite(st.id).length+'곳':'점검 영역 '+(st.areas||[]).length+'개'),row('최근 점검',last?last.date+' ('+(TYPES[last.type]||'').slice(0,6)+')':'점검 이력 없음'),
+      d.chk?null:h('div',{style:'margin-top:8px'},h('button',{class:'pri',onclick:()=>{d.chk={by:'manual',at:new Date().toISOString()};drawChk();}},'이 사이트가 맞습니다'))));};
+  const applySite=(st,by)=>{if(!st){scMsg.replaceChildren(h('div',{class:'note err sm'},'일치하는 사이트를 찾을 수 없습니다. QR을 다시 스캔하거나 아래 목록에서 사이트를 선택하세요.'));return;}
+    scMsg.replaceChildren();d.siteId=st.id;ss.value=st.id;d.locIds=null;d.chk={by,at:new Date().toISOString()};drawLocs();drawChk();};
+  const idIn=h('input',{type:'text',placeholder:'QR 번호(사이트 ID) 또는 사이트명 입력'});
+  const qrCard=h('div',{class:'card',style:'margin:0 0 12px;background:var(--soft,#f4f4f2)'},h('b',{},'① 사이트 QR 스캔'),h('div',{class:'muted sm',style:'margin:2px 0 8px'},'현장에 부착된 QR을 찍으면 사이트 정보가 확인됩니다. QR이 안 읽히면 번호를 입력하거나 아래에서 직접 선택하세요.'),
+    scanner(v=>applySite(siteFind(v),'qr'),'📷 QR 스캔'),scMsg,
+    h('div',{class:'row',style:'margin-top:8px'},h('div',{class:'grow'},idIn),h('button',{onclick:()=>applySite(siteFind(idIn.value),'id')},'ID로 확인')));
+  ss.addEventListener('change',()=>{d.siteId=ss.value;d.locIds=null;d.chk=null;scMsg.replaceChildren();drawLocs();drawChk();});
   const ts=h('select',{},h('option',{value:'maint'},'유지보수관리 점검 (반기별 1회 · 별지 제2호)'),h('option',{value:'perf'},'성능점검 (연 1회 · 별지 제3호)'));ts.addEventListener('change',()=>d.type=ts.value);
   a.append(h('div',{class:'card'},h('h3',{},'새 점검 시작'),
     sites.length?null:h('div',{class:'note'},'먼저 사이트를 등록하세요.'),
+    sites.length?qrCard:null,
     h('div',{class:'row'},fld('사이트(고객사)',ss),fld('점검 유형',ts),fld('점검일',bind(d,'date',{type:'date'}))),
+    chkBox,
     h('div',{style:'margin-top:12px'},lbox),
     h('div',{style:'margin-top:8px'},identityPicker(d)),
     h('div',{class:'row',style:'margin-top:8px'},fld('입회자(관리주체) — 성능점검 시',bind(d,'witness'))),
     h('div',{class:'row',style:'margin-top:12px'},h('button',{onclick:()=>go('insp')},'취소'),h('div',{class:'grow'}),
       h('button',{class:'pri',onclick:async()=>{
         const s=sites.find(x=>x.id===d.siteId);if(!s){alert2('사이트를 선택하세요.');return;}
+        if(!d.chk){alert2('사이트 정보를 먼저 확인하세요. QR을 스캔하거나, 정보를 확인한 뒤 "이 사이트가 맞습니다"를 누르세요.');return;}
         const ls=locsOfSite(s.id).filter(l=>(d.locIds||[]).includes(l.id));
         if(locsOfSite(s.id).length){if(!ls.length){alert2('점검할 위치를 하나 이상 선택하세요.');return;}
           if(ls.some(l=>!(l.areas||[]).length)){alert2('점검 영역이 없는 위치가 있습니다. 환경설정 > 점검 위치에서 영역을 선택하세요.');return;}}
@@ -1484,10 +1515,11 @@ function newInspDialog(siteId,locId){
           ls.forEach(l=>(l.areas||[]).slice().sort((x,y)=>x-y).forEach(no=>{const u=l.id+'.'+no;units.push({u,no,loc:l.id});meta[u]={loc:l.name||'',inst:''};}));
           areas=[...new Set(units.map(x=>x.no))].sort((x,y)=>x-y);}
         else{areas=s.areas.slice();units=null;}
-        cur={id:uid(),isNew:true,siteId:s.id,type:d.type,date:d.date,engineer:{name:d.name,org:d.org,grade:d.grade,personId:d.personId||''},witness:d.witness,areas,res:{},meta,gps:'',status:'draft',summary:'',createdBy:acct?acct.id:'',createdAt:new Date().toISOString()};
+        cur={id:uid(),isNew:true,siteId:s.id,type:d.type,date:d.date,engineer:{name:d.name,org:d.org,grade:d.grade,personId:d.personId||''},witness:d.witness,areas,res:{},meta,gps:'',status:'draft',summary:'',siteCheck:d.chk,createdBy:acct?acct.id:'',createdAt:new Date().toISOString()};
         if(units){cur.units=units;cur.locs=locs;}
         dirty=true;await flush();openInsp(cur.id);}},'점검 시작'))));
-  drawLocs();
+  drawLocs();drawChk();
+  if(pendSite){const st=siteFind(pendSite);pendSite=null;history.replaceState(null,'',location.pathname+location.search);if(st)applySite(st,'qr');}
 }
 function openInsp(id){
   const i=insps.find(x=>x.id===id)||(cur&&cur.id===id?cur:null);if(!i){go('insp');return;}
