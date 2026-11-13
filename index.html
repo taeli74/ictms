@@ -297,6 +297,28 @@ input[type=text],input[type=date],input[type=number],input[type=password],textar
 .ctb{border-collapse:collapse;width:100%;font-size:13px}.ctb th,.ctb td{border:1px solid var(--line2,#ccc);padding:6px 8px;text-align:left;vertical-align:top}.ctb th{background:#f3f3f1;font-weight:600;white-space:nowrap}.ctb tr.hit td{background:#fff3c4}
 @media print{.noprint,#nav,header.top,.pagehead,.ctabs,.note{display:none!important}body{background:#fff}.card{border:0;box-shadow:none;padding:0}.ctb.rep{font-size:10px}}
 .st{display:inline-block;border:1px solid #111;border-radius:12px;padding:1px 9px;font-size:12px}.st.bad{background:#111;color:#fff}.st.warn{border-style:dashed}
+.tour{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.62);display:flex;align-items:center;justify-content:center;padding:14px}
+.tour-box{background:#fff;border-radius:24px;max-width:520px;width:100%;max-height:94vh;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.tr-stage{background:#f3f3f2;border-radius:18px;padding:14px;min-height:240px;display:flex;flex-direction:column;justify-content:center;gap:10px;cursor:pointer;user-select:none}
+.tr-card{background:#fff;border:1px solid #d6d6d2;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.tr-card.on{border:2px solid #111}
+.tr-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.tr-row.sb{justify-content:space-between}
+.tr-s{font-size:12px;color:#666;line-height:1.5}
+.tr-chip{font-size:12px;font-weight:700;border:2px solid #111;border-radius:99px;padding:2px 10px;background:#fff}.tr-chip.f{background:#111;color:#fff}
+.tr-btn{font-size:13px;font-weight:700;border:2px solid #bbb;border-radius:99px;padding:6px 12px;background:#fff}.tr-btn.f{background:#111;color:#fff;border-color:#111}
+.tr-btn.hl{box-shadow:0 0 0 0 rgba(17,17,17,.5);animation:trp 1.6s infinite}
+@keyframes trp{0%{box-shadow:0 0 0 0 rgba(17,17,17,.45)}70%{box-shadow:0 0 0 10px rgba(17,17,17,0)}100%{box-shadow:0 0 0 0 rgba(17,17,17,0)}}
+@media (prefers-reduced-motion:reduce){.tr-btn.hl{animation:none;outline:3px solid #111}}
+.tr-memo{border:1px solid #ccc;border-radius:10px;padding:10px;font-size:12px;color:#999;background:#fff}
+.tr-c{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.tr-logo{width:56px;height:40px;border-radius:12px;background:#111;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center}
+.tr-paper{background:#fff;border:2px solid #111;border-radius:6px;padding:12px;display:flex;flex-direction:column;gap:8px;font-size:13px}
+.tr-tbl{display:grid;grid-template-columns:1fr 1fr;gap:2px}.tr-tbl i{height:16px;background:#e8e8e4}
+.tr-tbl2{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}.tr-tbl2 i{height:12px;background:#f0f0ec;border:1px solid #ddd}
+.tr-sign{position:relative;background:#fff;border:1px dashed #999;border-radius:10px;height:84px;display:flex;align-items:center;justify-content:center}
+.tr-sign svg{width:70%}.tr-seal{position:absolute;right:12px;top:10px;width:48px;height:48px;border:3px solid #111;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;transform:rotate(-12deg)}
+.tr-li{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #eee;padding-top:8px;font-size:13px}
+.tr-dots{display:flex;gap:6px;justify-content:center}.tr-dots i{width:8px;height:8px;border-radius:50%;background:#ccc}.tr-dots i.on{background:#111;width:22px;border-radius:6px}
 </style>
 </head>
 <body>
@@ -576,6 +598,47 @@ function identityPicker(T){T=T||ME;const box=h('div',{class:'idp'});
       fld('성명',bind(T,'name')),fld('소속 업체',bind(T,'org')),fld('등급',bind(T,'grade',{ph:'예: 특급'})));
   }
   return box;}
+/* ---------- 둘러보기 (로그인 없이 기능 안내) ---------- */
+let tourEl=null,tourI=0;
+const TOUR=[
+ {t:'Easy ICT Master',d:'정보통신 유지보수 점검부터 보고서 제출까지, 한 곳에서 처리합니다. 화면을 눌러 다음 안내로 넘어가세요.',
+  v:`<div class="tr-c"><div class="tr-logo">ICT</div><b style="font-size:20px">Easy ICT Master</b><div class="tr-row"><span class="tr-chip f">통합관리자</span><span class="tr-chip f">고객</span><span class="tr-chip f">점검업체·점검자</span></div><div class="tr-s">모바일 · PC 모두 지원</div></div>`},
+ {t:'1. 현장 QR로 사이트 확인',d:'현장에 붙은 사이트 QR을 스캔하면 고객사·주소·관리주체가 확인된 뒤 점검이 시작됩니다. QR이 안 읽히면 ID를 입력하거나 직접 확인할 수 있습니다.',
+  v:`<div class="tr-card"><b>① 사이트 QR 스캔</b><div class="tr-s">현장에 부착된 QR을 찍으면 사이트 정보가 확인됩니다.</div><div class="tr-row"><span class="tr-btn f hl">📷 QR 스캔</span><span class="tr-btn">ID로 확인</span></div></div>
+  <div class="tr-card on"><div class="tr-row sb"><b>창원 본사 전산동</b><span class="tr-chip f">✔ 확인 완료 (QR 스캔)</span></div><div class="tr-s">고객사 LGE · 경남 창원시 성산구<br>관리주체 김관리 · 최근 점검 2026-05-12</div></div>`},
+ {t:'2. 모바일 점검 · 사진 즉시 업로드',d:'점검 항목마다 점검 가이드를 보며 적합(○)·부적합(X)을 고르고, 메모와 현장 사진을 바로 남깁니다. 저장 버튼으로 언제든 저장됩니다.',
+  v:`<div class="tr-card"><div class="tr-s">외관 · 1/8</div><b>외관 상태 점검(오염, 부식, 손상, 파손 등)</b><div class="tr-row"><span class="tr-btn">○ 적합</span><span class="tr-btn f">X 부적합</span><span class="tr-btn">－ 해당없음</span></div><div class="tr-memo">부적합 사유와 필요한 조치를 적으세요</div><div class="tr-row"><span class="tr-btn hl">📷 촬영</span><span class="tr-btn">🖼 첨부</span></div></div><div class="tr-row sb"><span class="tr-btn">이전</span><span class="tr-btn">저장</span><span class="tr-btn f">다음</span></div>`},
+ {t:'3. 제출 양식 그대로 리포트 자동 생성',d:'점검 결과가 공공기관에 제출하는 양식과 동일한 보고서로 만들어집니다. Word(.docx)로 내려받아 바로 제출하세요.',
+  v:`<div class="tr-paper"><b style="display:block;text-align:center">정보통신설비 유지보수관리 점검 결과 보고서</b><div class="tr-s" style="text-align:center">별지 제2호서식 기준</div><div class="tr-tbl"><i></i><i></i><i></i><i></i></div><div class="tr-tbl2"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="tr-row" style="justify-content:flex-end"><span class="tr-btn f hl">Word(.docx) 다운로드</span></div>`},
+ {t:'4. 고객 최종 확인 (날짜·직인)',d:'점검업체가 올린 보고서를 고객사가 확인하고, 날짜와 직인(사인)을 넣어 최종 확인합니다. 확인 내용은 보고서와 Word 파일에 그대로 들어갑니다.',
+  v:`<div class="tr-card"><b>고객 최종 확인</b><div class="tr-s">확인자 김담당 · 시설팀</div><div class="tr-sign"><svg viewBox="0 0 200 60"><path d="M10 40C30 5 40 55 60 25S90 10 100 35 130 50 150 20 175 30 190 25" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/></svg><span class="tr-seal">직인</span></div><div class="tr-row" style="justify-content:flex-end"><span class="tr-btn f hl">최종 확인</span></div></div>`},
+ {t:'5. 이슈 관리 · 사후 해결 기록',d:'점검에서 나온 미조치 사항을 이슈로 모아 보고, 해결 방법·결과·담당자를 기록합니다. 목록은 엑셀로 내보낼 수 있습니다.',
+  v:`<div class="tr-card"><div class="tr-row sb"><b>이슈</b><span class="tr-btn hl">엑셀 내보내기</span></div><div class="tr-li"><span>케이블 설비 · 피복 손상</span><span class="tr-chip">미조치</span></div><div class="tr-li"><span>배관 설비 · 고정 불량</span><span class="tr-chip">진행</span></div><div class="tr-li"><span>단자함 · 라벨 누락</span><span class="tr-chip f">완료</span></div><div class="tr-s">해결 방법 · 결과 · 담당자 · 조치일 입력</div></div>`},
+ {t:'6. 고객·점검업체·사이트 연결 구조',d:'누가 어떤 사이트를 점검하는지 관계로 보이고, 사이트별로 점검·이슈·보고서를 분리해 관리합니다. 점검업체는 여러 고객을, 고객은 여러 점검업체를 쓸 수 있습니다.',
+  v:`<svg viewBox="0 0 300 190" style="width:100%" font-size="12" font-weight="700" text-anchor="middle"><g stroke="#111" stroke-width="2"><path d="M92 40L208 32M92 40L208 95M92 95L208 32M92 95L208 150M92 150L208 95M92 150L208 150"/></g><g fill="#111"><rect x="8" y="25" width="84" height="30" rx="15"/><rect x="8" y="80" width="84" height="30" rx="15"/><rect x="8" y="135" width="84" height="30" rx="15"/></g><g fill="#fff" stroke="#111" stroke-width="2"><rect x="208" y="17" width="84" height="30" rx="15"/><rect x="208" y="80" width="84" height="30" rx="15"/><rect x="208" y="135" width="84" height="30" rx="15"/></g><text x="50" y="45" fill="#fff">점검업체 A</text><text x="50" y="100" fill="#fff">점검업체 B</text><text x="50" y="155" fill="#fff">점검업체 C</text><text x="250" y="37">고객 X</text><text x="250" y="100">고객 Y</text><text x="250" y="155">고객 Z</text></svg>`},
+ {t:'7. 설치형 · 클라우드 구독',d:'고객사 내부에 직접 설치하는 On-premise와 클라우드 구독, 두 방식 모두 쓸 수 있습니다.',
+  v:`<div class="tr-row" style="gap:12px;align-items:stretch"><div class="tr-card" style="flex:1;text-align:center"><b>On-premise</b><div class="tr-s">고객사 서버에 설치<br>고객 데이터만 관리</div></div><div class="tr-card" style="flex:1;text-align:center"><b>Cloud 구독</b><div class="tr-s">업체·고객이 함께 사용<br>사이트별 분리 관리</div></div></div>`},
+ {t:'추가 기능 · 케이블 QR 관리 (Beta)',d:'케이블 전체와 구간별 QR로 위치·길이·상태를 확인하고, 건물 간 광케이블 연결 도면과 상태점검 리포트를 볼 수 있습니다.',
+  v:`<svg viewBox="0 0 300 170" style="width:100%" font-size="11" font-weight="700" text-anchor="middle"><rect x="10" y="20" width="110" height="110" rx="8" fill="#fff" stroke="#111" stroke-width="2"/><rect x="180" y="20" width="110" height="110" rx="8" fill="#fff" stroke="#111" stroke-width="2"/><text x="65" y="40">본관</text><text x="235" y="40">별관</text><rect x="30" y="75" width="70" height="22" rx="11" fill="#111"/><rect x="200" y="75" width="70" height="22" rx="11" fill="#111"/><text x="65" y="90" fill="#fff">1F MDF-R01</text><text x="235" y="90" fill="#fff">1F B-R01</text><path d="M100 86H200" stroke="#111" stroke-width="3"/><rect x="118" y="64" width="64" height="18" rx="9" fill="#fff" stroke="#111" stroke-width="2"/><text x="150" y="77">CB-2611-001</text><text x="150" y="155" font-weight="500">QR을 스캔하면 구간·위치·상태 확인</text></svg>`},
+ {t:'체험해 보기',d:'체험 계정을 입력창에 채워 드립니다. 아래에서 역할을 고른 뒤 로그인 버튼을 누르세요. (체험용 계정입니다)',
+  v:`<div class="tr-c" id="tr-acc"></div>`,end:true}
+];
+function closeTour(){if(tourEl){tourEl.remove();tourEl=null;document.removeEventListener('keydown',tourKey);}}
+function tourKey(e){if(!tourEl)return;if(e.key==='ArrowRight'||e.key==='Enter')tourGo(1);else if(e.key==='ArrowLeft')tourGo(-1);else if(e.key==='Escape')closeTour();}
+function tourGo(n){const j=tourI+n;if(j<0)return;if(j>=TOUR.length){closeTour();return;}tourI=j;drawTour();}
+function drawTour(){const s=TOUR[tourI],last=tourI===TOUR.length-1;
+  const stage=h('div',{class:'tr-stage'});stage.innerHTML=s.v;
+  if(!last)stage.addEventListener('click',()=>tourGo(1));
+  if(last){const box=stage.querySelector('#tr-acc');
+    [['통합관리자','admin','12345'],['고객','guest','guest123'],['점검업체','jsolution','jsol1234']].forEach(([n,i,p])=>box.append(h('button',{class:'pri big',style:'width:100%',onclick:()=>{const a=$('#lg-id'),b=$('#lg-pw');if(a)a.value=i;if(b)b.value=p;closeTour();if(b)b.focus();}},n+' 계정으로 입력')));}
+  const dots=h('div',{class:'tr-dots'},...TOUR.map((_,k)=>h('i',{class:k===tourI?'on':''})));
+  tourEl.replaceChildren(h('div',{class:'tour-box'},
+    h('div',{class:'row sb'},h('span',{class:'muted sm'},(tourI+1)+' / '+TOUR.length),h('button',{onclick:closeTour},'닫기')),
+    stage,h('h3',{style:'margin:2px 0 0'},s.t),h('div',{class:'muted',style:'line-height:1.55'},s.d),dots,
+    h('div',{class:'row'},tourI>0?h('button',{onclick:()=>tourGo(-1)},'이전'):null,h('div',{class:'grow'}),
+      last?null:h('button',{class:'pri big',onclick:()=>tourGo(1)},tourI===0?'둘러보기 시작':'다음'))));}
+function startTour(){closeTour();tourI=0;tourEl=h('div',{class:'tour',onclick:e=>{if(e.target===tourEl)closeTour();}});document.body.append(tourEl);document.addEventListener('keydown',tourKey);drawTour();}
+
 function renderGate(){
   const g=$('#gate');g.hidden=false;document.body.classList.add('gated');
   const idEl=h('input',{type:'text',id:'lg-id',autocomplete:'username',autocapitalize:'none',spellcheck:false,placeholder:'아이디'});idEl.value=lsGet('last_id');
@@ -584,6 +647,7 @@ function renderGate(){
   g.replaceChildren(h('div',{class:'gate-in'},h('div',{class:'gate-logo'},logo(true)),
     h('div',{},h('h1',{},'Easy ICT Master'),h('p',{},'정보통신 유지보수 관리')),
     h('div',{class:'panel'},fld('아이디',idEl),fld('비밀번호',pwEl),h('div',{id:'gerr'}),h('button',{class:'pri big',id:'lg-btn',onclick:doLogin},'로그인')),
+    h('button',{class:'big',style:'width:100%;margin-top:-4px',onclick:startTour},'로그인 없이 둘러보기'),
     h('p',{class:'sm',style:'text-align:center'},'계정은 통합관리자가 발급합니다. 아이디·비밀번호를 잊었다면 통합관리자에게 문의하세요.')));
   updateGate();
 }
@@ -593,9 +657,9 @@ async function doLogin(){
   const id=($('#lg-id').value||'').trim().toLowerCase(),pw=$('#lg-pw').value||'';
   if(!id||!pw){err('아이디와 비밀번호를 입력하세요.');return;}
   let a=accounts.find(x=>x.id===id),ok=false,dpw=false;
-  if(a){ok=(await sha(pw,a.salt))===a.hash;dpw=ok&&a.role==='admin'&&(pw==='admin123'||pw==='12345');}
-  else if(id==='admin'&&pw==='admin123'&&!accounts.some(x=>x.role==='admin')){ok=true;dpw=true;a={id:'admin',role:'admin',refType:null,refId:'',name:'통합관리자'};
-    if(CAP.write){try{await putAccount('admin',a,'admin123');}catch(e){}}}
+  if(a){ok=(await sha(pw,a.salt))===a.hash;if(!ok&&id==='admin'&&pw==='12345'&&a.role==='admin'&&(await sha('admin123',a.salt))===a.hash){ok=true;if(CAP.write){try{await putAccount('admin',a,'12345',a);}catch(e){}}}dpw=ok&&a.role==='admin'&&(pw==='admin123'||pw==='12345');}
+  else if(id==='admin'&&(pw==='12345'||pw==='admin123')&&!accounts.some(x=>x.role==='admin')){ok=true;dpw=true;a={id:'admin',role:'admin',refType:null,refId:'',name:'통합관리자'};
+    if(CAP.write){try{await putAccount('admin',a,'12345');}catch(e){}}}
   else if(id==='jsolution'&&pw==='jsol1234'){ok=true;a={id:'jsolution',role:'engineer',refType:'company',refId:'co-jsolution',name:'제이솔루션'};
     if(CAP.write){try{if(!companies.some(c=>c.id==='co-jsolution'))await db.collection('companies').doc('co-jsolution').set({name:'제이솔루션',biz:'',tel:'',updatedAt:new Date().toISOString()});await putAccount('jsolution',a,'jsol1234');}catch(e){}}}
   else if(id==='guest'&&pw==='guest123'){ok=true;a={id:'guest',role:'client',refType:'client',refId:'k-lge',name:'LGE'};
