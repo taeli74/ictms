@@ -1,0 +1,21 @@
+{
+  "name": "ictms",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "split": "node scripts/split-artifact.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "create-admin": "node --env-file=.env.server scripts/create-admin.mjs",
+    "import-backup": "node --env-file=.env.server scripts/import-backup.mjs",
+    "test:rls": "node --env-file=.env.server --env-file=.env.local scripts/test-rls.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
