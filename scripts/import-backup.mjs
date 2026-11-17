@@ -6,7 +6,8 @@
 //  - --photos-dir: 사진 파일이 <사진id>.<확장자> 로 들어 있는 폴더 (아티팩트 사진을 따로 받은 경우)
 //  - accounts 컬렉션은 비밀번호 방식이 달라 그대로 옮길 수 없습니다.
 //    --temp-password 를 주면 모든 계정을 그 임시 비밀번호로 만들고, 없으면 목록만 출력합니다.
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, writeFileSync, mkdirSync } from 'node:fs';
+import { randomBytes } from 'node:crypto';
 import { join, extname, basename } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
 
@@ -61,18 +62,26 @@ console.log(dry ? `[dry] 사진 ${photos.length}장` : `사진: ${up}/${photos.l
 // 3) 계정
 const accts = Object.entries(bk.db.accounts || {});
 if (accts.length) {
-  const temp = opt('--temp-password');
+  const temp = opt('--temp-password');   // 'auto' 면 계정마다 무작위 비밀번호를 만들어 backups/temp-passwords.txt 에 저장
+  const issued = [];
   console.log(`\n계정 ${accts.length}개 ${temp ? '— 임시 비밀번호로 생성' : '— 통합관리자 화면에서 다시 발급하세요'}:`);
   for (const [loginId, a] of accts) {
     const line = `  ${loginId}  (${a.role}${a.refType ? ', ' + a.refType + ':' + a.refId : ''})`;
     if (!temp || dry) { console.log(line); continue; }
-    if (temp.length < 8) { console.error('임시 비밀번호는 8자 이상'); process.exit(1); }
+    const pw = temp === 'auto' ? randomBytes(9).toString('base64url') : temp;
+    if (pw.length < 8) { console.error('임시 비밀번호는 8자 이상'); process.exit(1); }
     const { data: ex } = await sb.from('profiles').select('id').eq('login_id', loginId).maybeSingle();
     if (ex) { console.log(line + ' — 이미 있음, 건너뜀'); continue; }
-    const { data, error } = await sb.auth.admin.createUser({ email: `${loginId}@${LOGIN_DOMAIN}`, password: temp, email_confirm: true });
+    const { data, error } = await sb.auth.admin.createUser({ email: `${loginId}@${LOGIN_DOMAIN}`, password: pw, email_confirm: true });
     if (error) { console.log(line + ' — 실패: ' + error.message); continue; }
     const { error: pe } = await sb.from('profiles').insert({ id: data.user.id, login_id: loginId, role: a.role, ref_type: a.refType || null, ref_id: a.refId || '', name: a.name || '' });
     console.log(line + (pe ? ' — 프로필 실패: ' + pe.message : ' — 생성됨'));
+    if (!pe) issued.push(`${loginId}\t${pw}`);
+  }
+  if (temp === 'auto' && issued.length) {
+    mkdirSync('backups', { recursive: true });
+    writeFileSync('backups/temp-passwords.txt', '# 임시 비밀번호 — 사용자에게 전달 후 이 파일을 지우세요\n' + issued.join('\n') + '\n', { mode: 0o600 });
+    console.log('임시 비밀번호를 backups/temp-passwords.txt 에 저장했습니다 (git에 올라가지 않음).');
   }
 }
 console.log('\n완료');

@@ -26,7 +26,8 @@ if (!fm) throw new Error('내장 폰트를 찾지 못했습니다.');
 mkdirSync(join(root, 'public/fonts'), { recursive: true });
 writeFileSync(join(root, 'public/fonts/Paperlogy.woff2'), Buffer.from(fm[1], 'base64'));
 css = css.replace(fontRe, 'url(/fonts/Paperlogy.woff2)');
-writeFileSync(join(root, 'public/app.css'), css.trim() + '\n');
+const overrides = readFileSync(join(root, 'src/overrides.css'), 'utf8');
+writeFileSync(join(root, 'public/app.css'), css.trim() + '\n\n' + overrides);
 
 // 2) 본문 마크업 (body 시작 ~ 첫 외부 스크립트 전)
 const bodyStart = src.indexOf('<body>') + '<body>'.length;
@@ -79,7 +80,22 @@ writeFileSync(join(root, 'public/app.js'), '/* Easy ICT Master — artifact/sour
 
 // 4) index.html
 const head = src.slice(0, src.indexOf('<script>')) // doctype ~ meta (단독 실행용 저장소 스크립트 이전)
-  .replace('<meta name="robots" content="noindex,nofollow">', '<meta name="robots" content="noindex,nofollow">\n<link rel="preload" href="/fonts/Paperlogy.woff2" as="font" type="font/woff2" crossorigin>\n<link rel="stylesheet" href="/app.css">');
+  .replace(/<meta name="viewport"[^>]*>/, '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">')
+  .replace('<meta name="robots" content="noindex,nofollow">', [
+    '<meta name="robots" content="noindex,nofollow">',
+    // 홈 화면에 추가했을 때 주소창 없이 꽉 찬 앱 화면으로 열리게
+    '<meta name="theme-color" content="#f3f3f2">',
+    '<meta name="apple-mobile-web-app-capable" content="yes">',
+    '<meta name="mobile-web-app-capable" content="yes">',
+    '<meta name="apple-mobile-web-app-status-bar-style" content="default">',
+    '<meta name="apple-mobile-web-app-title" content="ICT Master">',
+    '<link rel="manifest" href="/manifest.webmanifest">',
+    '<link rel="icon" href="/icons/icon.svg" type="image/svg+xml">',
+    '<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">',
+    '<link rel="preload" href="/fonts/Paperlogy.woff2" as="font" type="font/woff2" crossorigin>',
+    '<link rel="stylesheet" href="/app.css">',
+  ].join('\n'));
+if (!head.includes('viewport-fit=cover')) throw new Error('viewport 메타 패치 실패');
 const html = `${head.trim()}
 </head>
 <body>
