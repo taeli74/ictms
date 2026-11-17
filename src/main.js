@@ -223,6 +223,11 @@ window.ICTMS = {
     await loadMe();
     return afterAuth();
   },
+  // 테스트 기간용: VITE_QUICK_LOGIN="아이디:비밀번호" 가 설정된 배포에서만 로그인 화면에 버튼이 보입니다.
+  // 테스트가 끝나면 Vercel 환경변수를 지우고 다시 배포한 뒤, 그 계정도 삭제하세요.
+  quickLogin: env.VITE_QUICK_LOGIN && env.VITE_QUICK_LOGIN.includes(':')
+    ? () => { const s = env.VITE_QUICK_LOGIN; const i = s.indexOf(':'); return window.ICTMS.signIn(s.slice(0, i), s.slice(i + 1)); }
+    : null,
   async restore() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return null;

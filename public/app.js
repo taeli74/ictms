@@ -317,6 +317,7 @@ function renderGate(){
     h('div',{},h('h1',{},'Easy ICT Master'),h('p',{},'정보통신 유지보수 관리')),
     h('div',{class:'panel'},fld('아이디',idEl),fld('비밀번호',pwEl),h('div',{id:'gerr'}),h('button',{class:'pri big',id:'lg-btn',onclick:doLogin},'로그인')),
     h('button',{class:'big',style:'width:100%;margin-top:-4px',onclick:startTour},'로그인 없이 둘러보기'),
+    ICTMS.quickLogin?h('button',{class:'pri big',id:'quick-btn',style:'width:100%;margin-top:-4px',onclick:async()=>{const b=$('#quick-btn');b.disabled=true;b.textContent='들어가는 중…';try{startSession(await ICTMS.quickLogin(),false);}catch(e){b.disabled=false;b.textContent='로그인 없이 사용 (테스트)';const g=$('#gerr');if(g)g.replaceChildren(h('div',{class:'note err'},e.message||'실패'));}}},'로그인 없이 사용 (테스트)'):null,
     h('p',{class:'sm',style:'text-align:center'},'계정은 통합관리자가 발급합니다. 아이디·비밀번호를 잊었다면 통합관리자에게 문의하세요.')));
   updateGate();
 }
@@ -345,7 +346,7 @@ function startSession(a,dpw){
   if((a.role==='engineer'||a.role==='client')&&!ME.name){ME.name=nm;if(a.refType==='company'||a.role==='client')ME.org=nm;}
   lsSet('last_id',a.id);applyScope();
   entered=true;$('#gate').hidden=true;document.body.classList.remove('gated');
-  setRole(ROLES[roleKey].ko+' · '+nm);route={v:'dash'};renderNav();render();window.scrollTo(0,0);hashCable();hashSite();
+  setRole(ROLES[roleKey].ko===nm?nm:ROLES[roleKey].ko+' · '+nm);route={v:'dash'};renderNav();render();window.scrollTo(0,0);hashCable();hashSite();
 }
 async function logout(){await flush();await ICTMS.signOut();acct=null;ROLE.write=false;ROLE.admin=false;ROLE.site=false;ME.personId='';ME.name='';ME.org='';ME.grade='';applyScope();entered=false;renderGate();}
 function pwCard(){

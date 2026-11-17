@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "create-admin": "node --env-file=.env.server scripts/create-admin.mjs",
     "import-backup": "node --env-file=.env.server scripts/import-backup.mjs",
-    "test:rls": "node --env-file=.env.server --env-file=.env.local scripts/test-rls.mjs"
+    "test:rls": "node --env-file=.env.server --env-file=.env.local scripts/test-rls.mjs",
+    "quick-login": "node --env-file=.env.server scripts/quick-login.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"

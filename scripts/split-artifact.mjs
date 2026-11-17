@@ -68,6 +68,14 @@ const patches = [
   ['통합관리자 메뉴: 홈·이슈·설정만 (점검·리포트·케이블 메뉴 제외)',
     /:\['insp','reports','dash','issues','settings','cables'\];(\nfunction renderNav)?/,
     ":['dash','issues','settings'];"],
+  ['상단 권한 표시: 역할과 이름이 같으면 한 번만 (통합관리자 · 통합관리자 → 통합관리자)',
+    "setRole(ROLES[roleKey].ko+' · '+nm)",
+    "setRole(ROLES[roleKey].ko===nm?nm:ROLES[roleKey].ko+' · '+nm)"],
+  ['테스트용 "로그인 없이 사용" 버튼 (VITE_QUICK_LOGIN 이 있을 때만 보임)',
+    "h('button',{class:'big',style:'width:100%;margin-top:-4px',onclick:startTour},'로그인 없이 둘러보기'),",
+    "h('button',{class:'big',style:'width:100%;margin-top:-4px',onclick:startTour},'로그인 없이 둘러보기'),\n" +
+    "    ICTMS.quickLogin?h('button',{class:'pri big',id:'quick-btn',style:'width:100%;margin-top:-4px',onclick:async()=>{const b=$('#quick-btn');b.disabled=true;b.textContent='들어가는 중…';" +
+    "try{startSession(await ICTMS.quickLogin(),false);}catch(e){b.disabled=false;b.textContent='로그인 없이 사용 (테스트)';const g=$('#gerr');if(g)g.replaceChildren(h('div',{class:'note err'},e.message||'실패'));}}},'로그인 없이 사용 (테스트)'):null,"],
 ];
 for (const [name, from, to] of patches) {
   const hit = typeof from === 'string' ? app.split(from).length - 1 : (app.match(new RegExp(from.source, 'g')) || []).length;
