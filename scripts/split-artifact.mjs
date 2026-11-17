@@ -79,6 +79,23 @@ const patches = [
   ['통합관리자 설정을 고객사 → 사이트 → 서버 운영방식 → 점검업체·점검자 순서로 (src/patches/admin-settings.js)',
     '  if(ROLE.admin)app.append(deployCard());',
     '  if(ROLE.admin){adminSettings(app);return;}'],
+  ['케이블: 등록 탭을 「등록 및 관리」로',
+    "['reg','케이블 등록',1]", "['reg','등록 및 관리',1]"],
+  ['케이블: 등록 및 관리 하위 메뉴 표시 (src/patches/cable-reg.js)',
+    'function cabReg(app){\n  if(!cabDraft){cabRegList(app);return;}',
+    "function cabReg(app){\n  if(!cabDraft&&route.s==='new')cabDraft=cabNew();\n  cabSubTabs(app);\n  if(!cabDraft){cabRegList(app);return;}"],
+  ['케이블: 등록 화면의 이전 버튼은 관리 목록으로',
+    "h('button',{onclick:()=>{cabDraft=null;render();}},'← 이전')",
+    "h('button',{onclick:()=>{stopCam();cabDraft=null;route={v:'cables',t:'reg',s:'list'};render();}},'← 목록으로')"],
+  ['케이블: 엑셀 일괄 등록은 하위 메뉴에서만',
+    "  app.append(h('div',{class:'card'},h('h3',{},'엑셀로 케이블 일괄 등록'),",
+    "  if(route.s==='xls')app.append(h('div',{class:'card'},h('h3',{},'엑셀로 케이블 일괄 등록'),"],
+  ['케이블: 관리 목록은 관리 하위 메뉴에서만',
+    "h('div',{style:'margin-top:10px'},box)));",
+    "h('div',{style:'margin-top:10px'},box)));\n  if(route.s==='xls')return;"],
+  ['케이블: 목록의 등록 버튼은 등록 하위 메뉴로',
+    "h('button',{class:'pri',onclick:()=>{cabDraft=cabNew();render();}},'+ 케이블 등록')",
+    "h('button',{class:'pri',onclick:()=>{route={v:'cables',t:'reg',s:'new'};render();}},'+ 케이블 등록')"],
 ];
 for (const [name, from, to] of patches) {
   const hit = typeof from === 'string' ? app.split(from).length - 1 : (app.match(new RegExp(from.source, 'g')) || []).length;
@@ -93,7 +110,7 @@ if (n4 < 3) throw new Error('비밀번호 길이 규칙 패치 실패');
 { // 추가 화면 코드는 마지막 init(); 앞에 넣습니다 (const 선언이 init 보다 먼저 실행되도록)
   const tail = app.trimEnd(), k = tail.lastIndexOf('\ninit();');
   if (k < 0 || tail.slice(k).trim() !== 'init();') throw new Error('끝의 init(); 를 찾지 못했습니다.');
-  app = tail.slice(0, k + 1) + readFileSync(join(root, 'src/patches/admin-settings.js'), 'utf8') + 'init();\n';
+  app = tail.slice(0, k + 1) + readFileSync(join(root, 'src/patches/admin-settings.js'), 'utf8') + readFileSync(join(root, 'src/patches/cable-reg.js'), 'utf8') + 'init();\n';
 }
 writeFileSync(join(root, 'public/app.js'), '/* Easy ICT Master — artifact/source.html 에서 생성됨 (npm run split). 직접 고치지 말고 원본을 고친 뒤 다시 생성하세요. */\n' + app.trim() + '\n');
 

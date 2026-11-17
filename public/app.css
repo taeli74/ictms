@@ -357,3 +357,8 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .kpeople{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
 .kchk{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
 .kchk:has(input:checked){border-color:#111;background:#f3f3f2}
+
+/* 케이블 '등록 및 관리' 하위 메뉴 */
+.ctabs.csub{gap:0;border-bottom:1px solid var(--line);margin-top:-4px}
+.ctabs.csub button{border:0;border-radius:0;background:none;color:inherit;border-bottom:2px solid transparent;margin-bottom:-1px;min-height:38px}
+.ctabs.csub button.on{background:none;color:#111;border-bottom-color:#111;font-weight:600}

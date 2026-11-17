@@ -602,13 +602,15 @@ function vCables(app){
   stopCam();if(roleKey==='engineer'){go('dash');return;}
   const t=route.t||(ROLE.write?'reg':'chk');
   app.append(h('div',{class:'note'},'Beta · 시험 제공 중인 기능입니다. 정식 제공 시 별도 이용료가 적용될 수 있습니다. QR 스캔이 안 되면 QR의 번호를 직접 입력해도 됩니다.'));
-  const tabs=[['reg','케이블 등록',1],['chk','케이블 확인',0],['ins','상태점검',1],['rep','점검 리포트',0],['map','전체 도면',0]].filter(x=>!x[2]||ROLE.write);
+  const tabs=[['reg','등록 및 관리',1],['chk','케이블 확인',0],['ins','상태점검',1],['rep','점검 리포트',0],['map','전체 도면',0]].filter(x=>!x[2]||ROLE.write);
   app.append(h('div',{class:'ctabs'},...tabs.map(([k,l])=>h('button',{class:t===k?'on':'',onclick:()=>{cabDraft=null;cabSel=null;route={v:'cables',t:k};render();}},l))));
   ({reg:cabReg,chk:cabChk,ins:cabIns,rep:cabRep,map:cabMap}[t]||cabChk)(app);
 }
 const cabNew=()=>({isNew:true,code:'',name:'',siteId:'',type:'',length:'',from:'',to:'',installer:'',installedAt:'',spec:'',memo:'',status:'정상',points:[]});
 /* ---- 등록 ---- */
 function cabReg(app){
+  if(!cabDraft&&route.s==='new')cabDraft=cabNew();
+  cabSubTabs(app);
   if(!cabDraft){cabRegList(app);return;}
   const c=cabDraft;c.points=c.points||[];
   const codeIn=bind(c,'code',{ph:'비워 두면 자동 생성 (또는 QR 스캔)',dis:!c.isNew});
@@ -631,7 +633,7 @@ function cabReg(app){
       h('div',{class:'row',style:'margin-top:6px'},fld('지점 설명',bind(p,'note',{ph:'예: 2층 천장 분기점, 맨홀 #3'}),3),h('button',{class:'dng',style:'align-self:flex-end',onclick:()=>{c.points.splice(i,1);draw();}},'삭제')));}),
     h('button',{onclick:()=>{if(!(c.code||'').trim()){c.code=cabAutoId();codeIn.value=c.code;}c.points.push({qr:ptId(c.code,c.points.length),m:'',note:''});draw();}},'+ 지점 추가'));};
   draw();box.append(list);app.append(box);
-  app.append(h('div',{class:'row'},h('button',{onclick:()=>{cabDraft=null;render();}},'← 이전'),h('div',{class:'grow'}),h('button',{class:'pri',onclick:saveCab},'저장')));
+  app.append(h('div',{class:'row'},h('button',{onclick:()=>{stopCam();cabDraft=null;route={v:'cables',t:'reg',s:'list'};render();}},'← 목록으로'),h('div',{class:'grow'}),h('button',{class:'pri',onclick:saveCab},'저장')));
 }
 async function saveCab(){const c=cabDraft;stopCam();
   const code=qrId(c.code)||cabAutoId();
@@ -652,10 +654,11 @@ async function saveCab(){const c=cabDraft;stopCam();
 function cabRegList(app){
   const box=h('div'),f=h('input',{type:'file',accept:'.xlsx,.xls',style:'display:none'});
   f.addEventListener('change',()=>{const x=f.files[0];if(x)parseCabXlsx(x,box);f.value='';});
-  app.append(h('div',{class:'card'},h('h3',{},'엑셀로 케이블 일괄 등록'),
+  if(route.s==='xls')app.append(h('div',{class:'card'},h('h3',{},'엑셀로 케이블 일괄 등록'),
     h('div',{class:'muted',style:'margin-bottom:10px'},'케이블 시트와 지점 시트를 한 파일로 올립니다. 같은 케이블 번호는 덮어씁니다. 사이트명은 이미 등록된 사이트와 같아야 합니다.'),
     h('div',{class:'row'},h('button',{onclick:()=>cabXlsx(box,false)},'양식 다운로드'),h('button',{onclick:()=>cabXlsx(box,true)},'현재 데이터 내려받기'),h('button',{class:'pri',onclick:()=>f.click()},'엑셀 업로드'),f),h('div',{style:'margin-top:10px'},box)));
-  const l=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'등록된 케이블 ('+visCables().length+')'),h('button',{class:'pri',onclick:()=>{cabDraft=cabNew();render();}},'+ 케이블 등록')));
+  if(route.s==='xls')return;
+  const l=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'등록된 케이블 ('+visCables().length+')'),h('button',{class:'pri',onclick:()=>{route={v:'cables',t:'reg',s:'new'};render();}},'+ 케이블 등록')));
   if(!cables.length)l.append(h('div',{class:'muted',style:'margin-top:8px'},'등록된 케이블이 없습니다. QR을 스캔해 케이블을 등록하세요.'));
   visCables().slice().sort((a,b)=>cabCode(a).localeCompare(cabCode(b))).forEach(c=>l.append(h('div',{class:'item'},h('div',{class:'row sb'},h('b',{},cabName(c)),h('span',{class:'st '+cabCls(c.status)},c.status||'정상')),
     h('div',{class:'muted sm'},['ID '+cabCode(c),'지점 '+pts(c).length+'곳'].filter(Boolean).join(' · ')),
@@ -1815,5 +1818,11 @@ function adminSettings(app){
   app.append(locCard());
   app.append(excelCard());
   app.append(memoManager('*','공통 메모','모든 점검자의 메모 칸에 점선 칩으로 나옵니다. (각자의 내 메모가 먼저 나옵니다.)'));
+}
+/* ---------- 케이블: '등록 및 관리' 탭 안의 하위 메뉴 (케이블 등록 · 엑셀 일괄 등록 · 등록 케이블 관리) ---------- */
+function cabSubTabs(app){
+  const cur=cabDraft&&!cabDraft.isNew?'list':(route.s||'list');
+  const subs=[['new','케이블 등록'],['xls','엑셀 일괄 등록'],['list','등록 케이블 관리 ('+visCables().length+')']];
+  app.append(h('div',{class:'ctabs csub'},...subs.map(([k,l])=>h('button',{class:cur===k?'on':'',onclick:()=>{stopCam();cabDraft=null;cabSel=null;route={v:'cables',t:'reg',s:k};render();}},l))));
 }
 init();
