@@ -215,7 +215,7 @@ async function navTo(k,p){
 }
 function go(v,p){route={v,...(p||{})};renderNav();render();window.scrollTo(0,0);}
 const NAVALL={dash:['홈','grid'],sites:['사이트','building'],insp:['점검','check'],issues:['이슈','alert'],reports:['리포트','doc'],settings:['설정','gear'],cables:['케이블','cable']};
-const navKeys=()=>roleKey==='manager'?['insp','reports','dash','issues','settings','cables']:roleKey==='engineer'?['insp','reports','dash','issues','settings']:['dash','issues','settings'];
+const navKeys=()=>roleKey==='manager'?['insp','reports','dash','issues','settings','cables']:roleKey==='engineer'?['insp','reports','dash','issues','settings']:['dash','issues','settings','cables'];
 const ICON={cable:'<path d="M4 8h4v8H4zM16 8h4v8h-4z"/><path d="M8 12h8"/><path d="M4 4v2M8 4v2M16 4v2M20 4v2"/>',
  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
  building:'<path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16"/><path d="M14 10h5a1 1 0 0 1 1 1v10"/><path d="M8 8h2M8 12h2M8 16h2M3 21h18"/>',
