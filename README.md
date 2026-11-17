@@ -86,11 +86,18 @@ npm run import-backup -- backups/easy-ict-master.json --photos-dir backups/photo
 
 > `service_role` 키는 절대 Vercel 환경변수(VITE_*)나 코드에 넣지 마세요. 서버 스크립트(.env.server)와 Edge Function에서만 씁니다.
 
+## 배포 (자동)
+
+- GitHub `taeli74/ictms`(비공개)의 **`supabase-deploy` 브랜치**가 운영 브랜치입니다.
+- 이 브랜치에 push하면 Vercel이 자동으로 빌드해 https://ictms-seven.vercel.app 에 반영합니다.
+- 다른 브랜치에 push하면 미리보기 주소로만 배포되고 운영에는 영향이 없습니다.
+- 급할 때 수동 배포: `npx vercel deploy --prod`
+
 ## 아티팩트를 고친 뒤 반영하기
 
 1. 아티팩트 HTML을 `artifact/source.html`에 덮어씁니다.
 2. `npm run split` — 패치가 맞지 않으면 어느 패치인지 알려 주고 멈춥니다.
-3. 커밋·푸시하면 Vercel이 자동 배포합니다.
+3. `npm run build`로 확인 → 커밋 → `git push` 하면 자동 배포됩니다.
 
 ## 알려진 제한 / 다음 단계
 
