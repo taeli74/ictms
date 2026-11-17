@@ -3,6 +3,7 @@
    고객사 문서(clients)에 저장하는 필드: deploy('cloud'|'onprem'), ownerId(담당 점검업체), personIds(담당 점검자 id 목록) */
 const DEPLOY_OPTS=[['cloud','클라우드 (구독형)','이 서비스 서버에서 운영합니다. 고객사는 구독해서 접속합니다.'],
   ['onprem','설치형 (고객사 서버)','고객사 서버에 따로 설치해 운영합니다. 그 고객사와 담당 점검업체 정보만 다룹니다.']];
+const numT=(i,n)=>(i+1)+'. '+(((n||'').trim())||'(이름 입력 전)');
 const deployLabel=v=>((DEPLOY_OPTS.find(o=>o[0]===v)||DEPLOY_OPTS[0])[1]);
 function adminSettings(app){
   const wr=(col,r)=>{const {id,...b}=r;b.updatedAt=new Date().toISOString();setSave('저장 중…');return db.collection(col).doc(id).set(b).then(()=>setSave('저장됨 '+hhmm())).catch(e=>setSave('저장 실패: '+(e.code||e.message)));};
@@ -18,7 +19,7 @@ function adminSettings(app){
       h('button',{class:'pri',onclick:()=>wr('clients',openNew({id:uid(),name:'',biz:'',mgr:'',tel:'',addr:'',deploy:'cloud',ownerId:'',personIds:[]}))},'+ 고객사 추가')),
     h('div',{class:'muted',style:'margin-top:6px'},'고객사를 펼쳐 ① 고객사 정보 → ② 사이트 → ③ 서버 운영방식 → ④ 점검업체·점검자 순서로 입력하세요.'));
   if(!clients.length)kc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 고객사가 없습니다. 고객사를 추가하세요.'));
-  clients.slice().sort(byName).forEach(k=>{
+  clients.slice().sort(byName).forEach((k,ki)=>{
     const sv0=deb('clients',k);let F;const sv=()=>{sv0();F&&F.upd();};
     const kSites=()=>sites.filter(x=>x.clientId===k.id).sort((a,b)=>(a.name||'').localeCompare(b.name||'','ko'));
     const kPeople=()=>(k.personIds||[]).map(id=>people.find(p=>p.id===id)).filter(p=>p&&p.companyId===k.ownerId);
@@ -72,7 +73,7 @@ function adminSettings(app){
       if(raw.sites.some(x=>x.clientId===k.id)){alert2('이 고객사에 연결된 사이트가 있어 삭제할 수 없습니다.');return;}
       dropAccts('client',k.id);db.collection('clients').doc(k.id).delete();}));
     const B=h('div',{},s1,s2,s3,s4,del);
-    F=foldItem(k.id,'k-'+k.id,()=>k.name,()=>[k.mgr,k.tel].filter(Boolean).join(' · ')||'담당자 미입력',
+    F=foldItem(k.id,'k-'+k.id,()=>numT(ki,k.name),()=>[k.mgr,k.tel].filter(Boolean).join(' · ')||'담당자 미입력',
       ()=>[deployLabel(k.deploy).replace(/ \(.*\)/,''),(companies.find(c=>c.id===k.ownerId)||{}).name,'사이트 '+kSites().length,kPeople().length?'점검자 '+kPeople().length:''].filter(Boolean),B);
     kc.append(F);});
   // 고객사가 지정되지 않은 사이트
@@ -85,19 +86,19 @@ function adminSettings(app){
   app.append(h('h3',{style:'margin:18px 6px 8px'},'기초 자료'));
   const cc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검업체 ('+companies.length+')'),h('button',{class:'pri',onclick:()=>wr('companies',openNew({id:uid(),name:'',biz:'',tel:''}))},'+ 업체 추가')));
   if(!companies.length)cc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 업체가 없습니다. 업체를 먼저 추가하세요.'));
-  companies.slice().sort(byName).forEach(c=>{const sv0=deb('companies',c);let F;const sv=()=>{sv0();F&&F.upd();};
+  companies.slice().sort(byName).forEach((c,ci)=>{const sv0=deb('companies',c);let F;const sv=()=>{sv0();F&&F.upd();};
     const B=(h('div',{class:'item'},fld('업체명',bind(c,'name',{on:sv,ph:'예: 제이솔루션'}),2),fld('사업자등록번호',bind(c,'biz',{on:sv})),fld('연락처',bind(c,'tel',{on:sv})),
       twoStep('삭제',()=>{if(people.some(p=>p.companyId===c.id)){alert2('소속 점검자를 먼저 삭제하거나 다른 업체로 옮기세요.');return;}db.collection('companies').doc(c.id).delete();})));
-    F=foldItem(c.id,'co-'+c.id,()=>c.name,()=>c.tel||'연락처 미입력',()=>['고객사 '+clients.filter(k=>k.ownerId===c.id).length,'점검자 '+people.filter(p=>p.companyId===c.id).length],B);cc.append(F);});
+    F=foldItem(c.id,'co-'+c.id,()=>numT(ci,c.name),()=>c.tel||'연락처 미입력',()=>['고객사 '+clients.filter(k=>k.ownerId===c.id).length,'점검자 '+people.filter(p=>p.companyId===c.id).length],B);cc.append(F);});
   app.append(cc);
   const pc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검자 ('+people.length+')'),h('button',{class:'pri',disabled:!companies.length,onclick:()=>wr('people',openNew({id:uid(),name:'',companyId:'',grade:'특급',tel:''}))},'+ 점검자 추가')));
   if(!people.length)pc.append(h('div',{class:'muted',style:'margin-top:10px'},companies.length?'등록된 점검자가 없습니다.':'점검업체를 먼저 등록하세요.'));
-  people.slice().sort(byName).forEach(p=>{const sv0=deb('people',p);let F;const sv=()=>{sv0();F&&F.upd();};
+  people.slice().sort(byName).forEach((p,pi)=>{const sv0=deb('people',p);let F;const sv=()=>{sv0();F&&F.upd();};
     const B=(h('div',{class:'item'},fld('성명',bind(p,'name',{on:sv}),2),fld('소속 업체',selBox(p,'companyId',companies.slice().sort(byName).map(c=>[c.id,c.name||'(이름 없음)']),'업체 선택',sv),2),
       fld('등급',selBox(p,'grade',GRADES,'등급 선택',sv),2),fld('연락처',bind(p,'tel',{on:sv})),
       acctBlock('person',p,'engineer'),
       twoStep('삭제',()=>{dropAccts('person',p.id);db.collection('people').doc(p.id).delete();})));
-    F=foldItem(p.id,'pe-'+p.id,()=>p.name,()=>[(companies.find(c=>c.id===p.companyId)||{}).name,p.tel].filter(Boolean).join(' · ')||'소속 미지정',
+    F=foldItem(p.id,'pe-'+p.id,()=>numT(pi,p.name),()=>[(companies.find(c=>c.id===p.companyId)||{}).name,p.tel].filter(Boolean).join(' · ')||'소속 미지정',
       ()=>[p.grade,...clients.filter(k=>(k.personIds||[]).includes(p.id)).map(k=>k.name)].filter(Boolean),B);pc.append(F);});
   app.append(pc);
   app.append(locCard());
