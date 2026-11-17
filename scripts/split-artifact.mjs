@@ -65,6 +65,9 @@ const patches = [
   ['둘러보기의 고정 데모 계정 제거 (데모 배포에서만 환경변수로 켬)',
     "[['통합관리자','admin','12345'],['고객','guest','guest123'],['점검업체','jsolution','jsol1234']].forEach(",
     '(ICTMS.demoAccounts||[]).forEach('],
+  ['통합관리자 메뉴: 홈·이슈·설정만 (점검·리포트·케이블 메뉴 제외)',
+    /:\['insp','reports','dash','issues','settings','cables'\];(\nfunction renderNav)?/,
+    ":['dash','issues','settings'];"],
 ];
 for (const [name, from, to] of patches) {
   const hit = typeof from === 'string' ? app.split(from).length - 1 : (app.match(new RegExp(from.source, 'g')) || []).length;
