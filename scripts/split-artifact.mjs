@@ -76,6 +76,9 @@ const patches = [
     "h('button',{class:'big',style:'width:100%;margin-top:-4px',onclick:startTour},'로그인 없이 둘러보기'),\n" +
     "    ICTMS.quickLogin?h('button',{class:'pri big',id:'quick-btn',style:'width:100%;margin-top:-4px',onclick:async()=>{const b=$('#quick-btn');b.disabled=true;b.textContent='들어가는 중…';" +
     "try{startSession(await ICTMS.quickLogin(),false);}catch(e){b.disabled=false;b.textContent='로그인 없이 사용 (테스트)';const g=$('#gerr');if(g)g.replaceChildren(h('div',{class:'note err'},e.message||'실패'));}}},'로그인 없이 사용 (테스트)'):null,"],
+  ['통합관리자 설정을 고객사 → 사이트 → 서버 운영방식 → 점검업체·점검자 순서로 (src/patches/admin-settings.js)',
+    '  if(ROLE.admin)app.append(deployCard());',
+    '  if(ROLE.admin){adminSettings(app);return;}'],
 ];
 for (const [name, from, to] of patches) {
   const hit = typeof from === 'string' ? app.split(from).length - 1 : (app.match(new RegExp(from.source, 'g')) || []).length;
@@ -87,6 +90,11 @@ const n4 = (app.match(/length<4\)/g) || []).length;
 app = app.replace(/(\.value\.length)<4\)/g, '$1<8)').replace(/4자 이상/g, '8자 이상');
 if (n4 < 3) throw new Error('비밀번호 길이 규칙 패치 실패');
 
+{ // 추가 화면 코드는 마지막 init(); 앞에 넣습니다 (const 선언이 init 보다 먼저 실행되도록)
+  const tail = app.trimEnd(), k = tail.lastIndexOf('\ninit();');
+  if (k < 0 || tail.slice(k).trim() !== 'init();') throw new Error('끝의 init(); 를 찾지 못했습니다.');
+  app = tail.slice(0, k + 1) + readFileSync(join(root, 'src/patches/admin-settings.js'), 'utf8') + 'init();\n';
+}
 writeFileSync(join(root, 'public/app.js'), '/* Easy ICT Master — artifact/source.html 에서 생성됨 (npm run split). 직접 고치지 말고 원본을 고친 뒤 다시 생성하세요. */\n' + app.trim() + '\n');
 
 // 4) index.html

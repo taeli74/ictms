@@ -29,3 +29,19 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 @media (max-width: 360px) {
   .top .brand b { display: none; }   /* 아주 좁은 기기는 로고 아이콘만 */
 }
+
+/* 통합관리자 설정: 고객사별 ①~④ 단계 */
+.ksec{border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:10px;background:#fff}
+.ksec>.item{border:0;padding:0;margin-top:6px}
+.ksec-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.ksec-h b{font-size:14.5px}
+.ksec-n{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#111;color:#fff;font-size:12px;flex:none}
+.ksite{display:flex;align-items:center;gap:8px;padding:9px 4px;border-top:1px solid var(--line);cursor:pointer}
+.ksite:first-of-type{border-top:0}
+.kopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.kopt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.kopt.on{border-color:#111;box-shadow:inset 0 0 0 1px #111}
+.kopt input{margin-top:3px}
+.kpeople{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.kchk{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.kchk:has(input:checked){border-color:#111;background:#f3f3f2}
