@@ -495,6 +495,73 @@ table.t2 td button{min-height:30px;padding:0 12px;font-size:12.5px}
  .stats{gap:12px}.stat{border-radius:10px;padding:12px 14px}.stat b{font-size:26px}.stat span{font-size:12px;margin-top:4px}
  button{border-radius:7px}.sitecard{border-radius:10px}.area{border-radius:10px}
 }
+
+/* v6: 설정 화면 — 상단 엑셀 막대, 한 줄 계정, 분명한 삭제 버튼 */
+.xbar{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 0 10px;flex-wrap:wrap}
+.xbar .xl{margin-right:auto;font-size:12.5px;color:var(--mut)}
+.xbar button{min-height:30px;padding:0 11px;font-size:12.5px}
+.xmsg:empty{display:none}.xmsg{margin-bottom:10px}
+.acct2{flex:0 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-top:1px dashed var(--line2);padding-top:8px;margin-top:8px}
+.acct2 .al{font-size:12.5px;color:var(--mut);margin-right:2px;white-space:nowrap}
+.acct2 input{width:132px;min-height:32px;padding:4px 8px;font-size:13px}
+.acct2 button{min-height:32px;padding:0 12px;font-size:12.5px;font-weight:600}
+.acct2 .am{font-size:12.5px}
+button.dng,.item button.dng,.fold-b button.dng{color:#b3261e;border:1.5px solid #b3261e;background:#fff;font-weight:600}
+button.dng:hover,.item button.dng:hover,.fold-b button.dng:hover{background:#b3261e;color:#fff}
+.dangerbar{flex:0 0 100%;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.dangerbar button{min-height:34px;padding:0 14px;font-size:13px}
+.subsec{flex:0 0 100%;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)}
+.sitebar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin:8px 0 2px}
+.sitebar select{min-width:180px}
+.chk{display:inline-flex;gap:6px;align-items:center;font-size:13px;min-height:34px;cursor:pointer}
+.chk input{width:auto;min-height:0}
+.tab.k-billing{order:8}
+@media(max-width:999px){.tab.k-billing{display:none}}
+.chk input{width:18px;height:18px;min-height:0;padding:0;margin:0;accent-color:#111;-webkit-appearance:checkbox;appearance:auto;flex:0 0 auto}
+.sitebar>label.f{flex:0 1 340px;min-width:200px}
+
+/* v7: 대시보드 고객 카드 */
+.card.kc{padding:0;overflow:hidden;border:1.5px solid #111;border-radius:10px}
+.kc-h{background:#111;color:#fff;padding:14px 18px;cursor:pointer}
+.kc-h h3{margin:2px 0 0;font-size:19px;color:#fff;letter-spacing:-.01em}
+.kc-lab{font-size:11px;letter-spacing:.04em;color:#b9b9b6}
+.kc-m{font-size:13px;color:#d6d6d3;margin-top:2px}
+.kc-d{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:10px;padding-top:9px;border-top:1px solid #3a3a3a;font-size:13.5px;color:#fff}
+.kc-h .pill{background:#fff;color:#111;border:1px solid #fff}
+.kc-h .pill.ng{background:#fff;color:#b3261e;font-weight:700}
+.kc-b{padding:14px 18px 18px;background:#fff}
+.kc-co{background:#f1f1ef;border:1px solid #d6d6d2;border-left:5px solid #111;border-radius:8px;padding:11px 13px;margin-top:12px}
+.kc-co.kc-free{border-left-color:#999;background:#f7f7f6}
+.kc-lab2{font-size:11px;color:#595959;letter-spacing:.03em}
+.kc-site{background:#fff;border:1px solid #dcdcd8;border-radius:8px;padding:9px 11px;margin-top:8px}
+.kc-site .relrow{cursor:pointer;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.duegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:9px}
+@media(max-width:700px){.duegrid{grid-template-columns:1fr}}
+.certbox{flex:0 0 100%;margin-top:10px}
+
+/* PDF 변환용 숨은 영역 (A4 본문 폭) */
+.pdfwrap{position:fixed;left:-10000px;top:0;width:718px;background:#fff;z-index:-1}
+.pdfwrap .rpt{border:0;box-shadow:none;padding:0;border-radius:0;width:718px}
+.pdfwrap .rpt .pg{grid-template-columns:1fr 1fr!important}
+.pdfwrap .rpt table{font-size:11.5px}
+.segs button.on{background:#111;color:#fff}
+@media print{.rpt{border:0;box-shadow:none;padding:0}.rpt tr,.rpt figure{break-inside:avoid}.rpt h3,.rpt h4{break-after:avoid}}
+
+@media(min-width:1000px){body.adm .k-dash{order:1}body.adm .k-issues{order:2}body.adm .k-reports{order:3}body.adm .grp.g1{order:4}body.adm .k-settings{order:5}body.adm .k-cables{order:6}body.adm .k-billing{order:7}}
+.iss-c{padding:0;overflow:hidden}.iss-ch{display:flex;gap:10px;align-items:center;padding:12px 16px;cursor:pointer;background:#111;color:#fff;list-style:none}.iss-ch .muted{color:#bbb;flex:1}
+.iss-s{padding:10px 16px;border-top:1px solid #eee}.iss-sh{margin-bottom:6px}
+.iss-i{margin:0 0 8px 10px;padding-left:10px;border-left:3px solid #ddd}.iss-it{font-weight:600;margin-bottom:2px}.iss-ar{display:inline-block;margin-right:8px;font-weight:500;color:#555;font-size:.85em;background:#f1f1f1;border-radius:4px;padding:1px 6px}
+.iss-r{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:0;background:none;padding:6px 4px;border-radius:6px;cursor:pointer}.iss-r:hover{background:#f6f6f6}.iss-n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:700px){.iss-r{flex-wrap:wrap}.iss-n{flex-basis:100%;white-space:normal}}
+
+.bill .t2 td,.bill .t2 th{padding:6px 8px}.billsum{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:12px}
+.billsum>div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;background:#fafafa}.billsum b{font-size:17px}.billsum .cur{background:#111;color:#fff;border-color:#111}.billsum .cur .muted{color:#bbb}
+
+.quote{max-width:920px}.qhead{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:2px solid #111;padding-bottom:10px}.qtitle{font-size:26px;font-weight:800;letter-spacing:.3em}
+.qmeta{text-align:right;line-height:1.6}.qt .sub td{background:#fafafa;font-weight:600}.qt .disc td{color:#c0392b}.qt .grand td{background:#111;color:#fff;font-size:17px;font-weight:800}.qt .grand .muted{color:#ccc}
+.qin{display:inline-flex;align-items:center;gap:4px;justify-content:flex-end}.mini{padding:0 6px;min-height:0;line-height:1.4}
+label.f.pin{display:flex!important;flex-direction:column;gap:6px;align-items:flex-start;margin-right:10px}label.f.pin input{width:150px}table.t2.qt td{vertical-align:middle!important}
+.mny{display:flex;flex-direction:column;gap:4px;align-items:flex-end}.krw{min-height:1.2em;color:#555}
 </style>
 </head>
 <body>
@@ -654,10 +721,11 @@ const ROLES={manager:{ko:'고객',en:'Client',d:'발주한 사이트의 점검 �
   engineer:{ko:'점검자',en:'Engineer',d:'현장 점검을 입력하고 보고서를 만듭니다.',ic:'check'},
   supervisor:{ko:'통합관리자',en:'Admin',d:'고객·점검업체·점검자·계정을 등록하고 전체를 관리합니다.',ic:'shield'}};
 let roleKey='manager',entered=false;
+const linkedTo=(c,kid)=>c.clientId===kid||(c.clientIds||[]).includes(kid);
 function applyScope(){
   const co=myCo();
   if(acct&&acct.role==='client'){const ids=new Set(raw.sites.filter(x=>x.clientId===acct.refId).map(x=>x.id));
-    sites=raw.sites.filter(x=>ids.has(x.id));insps=raw.insps.filter(x=>ids.has(x.siteId));issues=raw.issues.filter(x=>ids.has(x.siteId));clients=raw.clients.filter(k=>k.id===acct.refId);locations=raw.locs.filter(l=>ids.has(l.siteId));companies=raw.cos.filter(c=>c.clientId===acct.refId);}
+    sites=raw.sites.filter(x=>ids.has(x.id));insps=raw.insps.filter(x=>ids.has(x.siteId));issues=raw.issues.filter(x=>ids.has(x.siteId));clients=raw.clients.filter(k=>k.id===acct.refId);locations=raw.locs.filter(l=>ids.has(l.siteId));companies=raw.cos.filter(c=>linkedTo(c,acct.refId));}
   else if(co){const ids=new Set(raw.sites.filter(x=>x.ownerId===co).map(x=>x.id));
     sites=raw.sites.filter(x=>ids.has(x.id));insps=raw.insps.filter(x=>ids.has(x.siteId));issues=raw.issues.filter(x=>ids.has(x.siteId));clients=raw.clients.filter(k=>k.ownerId===co||sites.some(x=>x.clientId===k.id));locations=raw.locs.filter(l=>ids.has(l.siteId));companies=raw.cos;}
   else if(deployOn()){const ids=new Set(raw.sites.filter(x=>x.clientId===DEPLOY.clientId).map(x=>x.id)),k=raw.clients.find(x=>x.id===DEPLOY.clientId)||{};
@@ -667,6 +735,20 @@ function applyScope(){
 async function sha(pw,salt){const t=salt+':'+pw;
   try{const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(d)].map(x=>x.toString(16).padStart(2,'0')).join('');}
   catch(e){let v=5381;for(const c of t)v=((v<<5)+v+c.charCodeAt(0))|0;return 'f'+(v>>>0).toString(16);}}
+async function delCustomer(k){
+  const ss=raw.sites.filter(x=>x.clientId===k.id),ids=new Set(ss.map(x=>x.id));
+  const mine=(arr)=>arr.filter(x=>ids.has(x.siteId));
+  const ni=mine(raw.insps).length;
+  const msg=ss.length?'고객 "'+(k.name||'')+'"에 연결된 사이트 '+ss.length+'곳과 점검 기록 '+ni+'건, 위치·이슈·케이블 기록을 모두 삭제합니다.\n삭제하면 되돌릴 수 없습니다. 삭제할까요?':'고객 "'+(k.name||'')+'"을(를) 삭제합니다. 삭제할까요?';
+  if(!await confirm2(msg,'삭제'))return;
+  try{
+    for(const [col,arr] of [['issues',raw.issues],['inspections',raw.insps],['locations',raw.locs],['cables',cables],['cabchecks',cabchecks]])for(const x of mine(arr))await db.collection(col).doc(x.id).delete();
+    for(const x of ss)await db.collection('sites').doc(x.id).delete();
+    dropAccts('client',k.id);
+    await db.collection('clients').doc(k.id).delete();
+    const n=h('div',{class:'note'},'고객 "'+(k.name||'')+'"을(를) 삭제했습니다.');$('#app').prepend(n);setTimeout(()=>n.remove(),4000);
+  }catch(e){alert2('삭제 실패: '+(e.code||e.message));}
+}
 async function putAccount(id,f,pw,old){
   if(window.SB){await SB.upsertAccount({loginId:id,oldLoginId:old&&old.id,role:f.role,name:f.name||'',refType:f.refType||null,refId:f.refId||'',password:pw||null});return;}
   let salt=old&&old.salt,hash=old&&old.hash;if(pw){salt=uid();hash=await sha(pw,salt);}
@@ -683,7 +765,8 @@ let cables=[],cabchecks=[];let route={v:'dash'};let cur=null;               // c
 let sheet={mode:'areas',area:null,idx:-1};
 let siteDraft=null;
 
-const canDraft=i=>ROLE.write&&(!acct||acct.role!=='client'||i.createdBy===acct.id);
+const canInsp=()=>ROLE.write&&roleKey!=='supervisor';
+const canDraft=i=>canInsp()&&(!acct||acct.role!=='client'||i.createdBy===acct.id);
 const visInsps=()=>insps.filter(i=>i.status==='submitted'||canDraft(i)).sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||'').localeCompare(a.createdAt||''));
 function dueInfo(site,type){
   if(!site.completed) return null;
@@ -719,15 +802,16 @@ let resume=null;try{resume=JSON.parse(lsGet('resume')||'null');}catch(e){}
 const setResume=r=>{resume=r;lsSet('resume',r?JSON.stringify(r):'');};
 function resumeOf(){if(!resume)return null;const i=insps.find(x=>x.id===resume.id)||(cur&&cur.id===resume.id?cur:null);return i&&i.status!=='submitted'?{i,sheet:resume.sheet}:null;}
 async function navTo(k,p){
+  if(k==='insp'&&roleKey==='supervisor')k='dash';
   if(route.v==='sheet'&&cur&&cur.status!=='submitted'){if(k==='insp')return;setResume({id:cur.id,sheet:{...sheet}});}
   await flush();
   if(k==='insp'&&route.v!=='sheet'&&ROLE.write){const r=resumeOf();if(r){cur=clone(r.i);sheet=r.sheet||{mode:'areas',area:null,idx:-1};go('sheet');return;}}
   go(k,p);
 }
 function go(v,p){route={v,...(p||{})};renderNav();render();window.scrollTo(0,0);}
-const NAVALL={dash:['홈','grid'],sites:['사이트','building'],insp:['점검','check'],issues:['이슈','alert'],reports:['리포트','doc'],settings:['설정','gear'],cables:['케이블','cable']};
-const navKeys=()=>roleKey==='manager'?['insp','reports','dash','issues','settings','cables']:roleKey==='engineer'?['insp','reports','dash','issues','settings','cables']:['insp','reports','dash','issues','settings','cables'];
-const ICON={cable:'<path d="M4 8h4v8H4zM16 8h4v8h-4z"/><path d="M8 12h8"/><path d="M4 4v2M8 4v2M16 4v2M20 4v2"/>',
+const NAVALL={dash:['홈','grid'],sites:['사이트','building'],insp:['점검','check'],issues:['이슈','alert'],reports:['리포트','doc'],settings:['설정','gear'],cables:['케이블','cable'],billing:['고객과금','card']};
+const navKeys=()=>roleKey==='manager'?['insp','reports','dash','issues','settings','cables']:roleKey==='engineer'?['insp','reports','dash','issues','settings','cables']:['dash','issues','settings','reports','cables','billing'];
+const ICON={card:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>',cable:'<path d="M4 8h4v8H4zM16 8h4v8h-4z"/><path d="M8 12h8"/><path d="M4 4v2M8 4v2M16 4v2M20 4v2"/>',
  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
  building:'<path d="M4 21V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v16"/><path d="M14 10h5a1 1 0 0 1 1 1v10"/><path d="M8 8h2M8 12h2M8 16h2M3 21h18"/>',
  check:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 14l2 2 4-4"/>',alert:'<path d="M12 3 2.5 20h19z"/><path d="M12 10v4M12 17.5v.01"/>',doc:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>'};
@@ -736,24 +820,25 @@ function svg(n){const e=document.createElementNS('http://www.w3.org/2000/svg','s
 function setRole(t){$('#role').textContent=t;}
 function logo(inv){const e=document.createElementNS('http://www.w3.org/2000/svg','svg');e.setAttribute('viewBox','0 0 32 32');e.innerHTML='<rect x="1" y="5" width="30" height="22" rx="6" fill="'+(inv?'#fff':'#111')+'"/><g fill="'+(inv?'#111':'#fff')+'"><rect x="6" y="10" width="4" height="6" rx="1"/><rect x="12" y="10" width="4" height="6" rx="1"/><rect x="18" y="10" width="4" height="6" rx="1"/><rect x="24" y="10" width="2" height="6" rx="1" opacity=".5"/></g><rect x="6" y="20" width="20" height="2" rx="1" fill="'+(inv?'#111':'#fff')+'" opacity=".6"/>';return e;}
 function renderNav(){
-  const grp={dash:'dash',sites:'settings',siteview:roleKey==='supervisor'?'settings':'dash',siteedit:'settings',insp:'insp',sheet:'insp',issues:'issues',issue:'issues',reports:'reports',report:'reports',settings:'settings',cables:'cables',cable:'cables'}[route.v];
+  const grp={dash:'dash',sites:'settings',siteview:roleKey==='supervisor'?'settings':'dash',siteedit:'settings',insp:'insp',sheet:'insp',issues:'issues',issue:'issues',reports:'reports',report:'reports',settings:'settings',cables:'cables',cable:'cables',billing:'billing'}[route.v];
   const vs=visInsps(),CN={issues:openIssues().length,insp:vs.filter(i=>i.status!=='submitted').length,reports:vs.filter(i=>i.status==='submitted').length};
-  $('#nav').replaceChildren(...navKeys().map(k=>{const [t,ic]=NAVALL[k],n=CN[k]||0;
+  $('#nav').replaceChildren(...navKeys().map(k=>{const [t0,ic]=NAVALL[k],n=CN[k]||0,t=t0;
     return h('button',{class:'tab k-'+k+(grp===k?' on':''),'aria-current':grp===k?'page':null,onclick:()=>navTo(k)},svg(ic),(k==='dash'&&roleKey!=='engineer')?h('span',{},h('span',{class:'ml'},t),h('span',{class:'wl'},'대시보드')):h('span',{},t),k==='cables'?h('em',{class:'beta'},'Beta'):null,n?h('em',{class:'cnt'+(k==='issues'?'':' pc')},n):null);}));
   $('#nav').prepend(h('div',{class:'navbrand'},logo(false),h('b',{},'Easy ICT Master'),h('small',{},'정보통신 유지보수 관리')),h('div',{class:'grp g0'},'업무'));
   if(navKeys().some(k=>k==='settings'||k==='cables'))$('#nav').append(h('div',{class:'grp g1'},'관리'));
   document.body.classList.toggle('focus',route.v==='sheet');
   document.body.classList.toggle('ord',roleKey!=='engineer');
+  document.body.classList.toggle('adm',roleKey==='supervisor');
   document.body.classList.toggle('wide',['report','siteedit','settings','cables'].includes(route.v));
 }
-const HEAD={dash:['홈','사이트별 점검 기한과 미조치 이슈'],sites:['사이트','점검 대상 건축물과 설비 현황'],insp:['점검','반기별 유지보수관리 점검, 연 1회 성능점검'],issues:['이슈 리포트','부적합 항목의 개선 조치 관리'],reports:['점검 리포트','제출된 점검 이력 조회와 출력'],cables:['케이블 관리 (Beta)','케이블 정보 등록과 QR 확인'],me:['내 계정','권한과 점검자 정보'],settings:['환경설정','고객·점검 사이트·점검 위치 관리']};
+const HEAD={dash:['홈','사이트별 점검 기한과 미조치 이슈'],sites:['사이트','점검 대상 건축물과 설비 현황'],insp:['점검','반기별 유지보수관리 점검, 연 1회 성능점검'],issues:['이슈 리포트','부적합 항목의 개선 조치 관리'],reports:['점검 리포트','제출된 점검 이력 조회와 출력'],cables:['케이블 관리 (Beta)','케이블 정보 등록과 QR 확인'],billing:['고객과금관리','클라우드 월 과금과 On-premise 구축 금액'],me:['내 계정','권한과 점검자 정보'],settings:['환경설정','고객·점검 사이트·점검 위치 관리']};
 function render(){
   const app=$('#app');app.replaceChildren();
   if(!Object.values(loaded).every(Boolean)){app.append(h('div',{class:'card muted'},'불러오는 중…'));return;}
   if(acct&&acct.role!=='client'&&!CAP.write)app.append(h('div',{class:'note err'},'이 링크의 공유 권한이 보기 전용이라 저장·등록이 되지 않습니다. 소유자에게 "기여" 이상 권한을 요청하세요.'));
   const hd=route.v==='dash'?['안녕하세요'+((ME.name||(acct&&acct.name))?', '+(ME.name||acct.name)+'님':''),ROLES[roleKey].ko+' · '+new Date().toLocaleDateString('ko-KR',{month:'long',day:'numeric',weekday:'short'})]:HEAD[route.v];if(hd)app.append(h('div',{class:'pagehead'},h('h2',{},hd[0]),h('p',{},hd[1])));
   const _fc=route.focus;
-  ({dash:vDash,sites:vSites,siteview:vSiteView,siteedit:vSiteEdit,insp:vInsp,sheet:vSheet,issues:vIssues,issue:vIssue,reports:vReports,report:vReport,cables:vCables,me:vMe,settings:vSettings}[route.v]||vDash)(app);
+  ({dash:vDash,sites:vSites,siteview:vSiteView,siteedit:vSiteEdit,insp:vInsp,sheet:vSheet,issues:vIssues,issue:vIssue,reports:vReports,report:vReport,cables:vCables,billing:vBilling,me:vMe,settings:vSettings}[route.v]||vDash)(app);
   if(_fc){const e=document.getElementById(_fc);if(e){if(e.tagName==='DETAILS')e.open=true;e.scrollIntoView({block:'center'});e.classList.add('flash');}route.focus=null;}
 }
 
@@ -857,7 +942,7 @@ function startSession(a,dpw){
   if((a.role==='engineer'||a.role==='client')&&!ME.name){ME.name=nm;if(a.refType==='company'||a.role==='client')ME.org=nm;}
   lsSet('last_id',a.id);applyScope();
   entered=true;$('#gate').hidden=true;document.body.classList.remove('gated');
-  setRole(ROLES[roleKey].ko+' · '+nm);route={v:'dash'};renderNav();render();window.scrollTo(0,0);hashCable();hashSite();
+  setRole(roleKey==='supervisor'?ROLES[roleKey].ko:ROLES[roleKey].ko+' · '+nm);route={v:'dash'};renderNav();render();window.scrollTo(0,0);hashCable();hashSite();
 }
 async function logout(){await flush();if(window.SB)await SB.logout();acct=null;ROLE.write=false;ROLE.admin=false;ROLE.site=false;ME.personId='';ME.name='';ME.org='';ME.grade='';applyScope();entered=false;renderGate();}
 function pwCard(){
@@ -886,7 +971,7 @@ function vMe(app){
   app.append(h('div',{class:'card'},h('div',{class:'rolecard me',style:'border-color:#111'},h('div',{class:'ico'},svg(r.ic)),h('div',{},h('b',{},r.ko+' · '+acct.name),h('span',{class:'d'},r.d)))));
   app.append(pwCard());
   if(window.backupCard&&roleKey==='supervisor')app.append(backupCard());
-  if(roleKey==='supervisor'&&ROLE.write){const msg=h('div');app.append(h('div',{class:'card'},h('h3',{},'점검자 정보 (직접 점검할 때)'),identityPicker(),
+  if(false){const msg=h('div');app.append(h('div',{class:'card'},h('h3',{},'점검자 정보 (직접 점검할 때)'),identityPicker(),
     h('div',{class:'row',style:'margin-top:12px'},h('button',{class:'pri',onclick:()=>{saveMe();msg.replaceChildren(h('div',{class:'note'},'저장했습니다.'));}},'저장'),h('div',{class:'grow'}),msg)));}
   if(ROLE.write)app.append(memoManager(myKey(),'자주 쓰는 메모 (내 메모)','점검 화면의 메모 칸에 맨 먼저 나옵니다. 눌러서 바로 입력할 수 있습니다.'));
   app.append(h('div',{class:'card'},h('button',{onclick:logout},'로그아웃'),h('p',{class:'muted',style:'margin:10px 0 0'},'정보통신공사업법 제37조의2·3 기준')));
@@ -916,49 +1001,67 @@ function foldItem(id,anchor,title,sub,tags,body){
   d.upd=()=>{t.textContent=(title()||'').trim()||'(이름 입력 전)';u.textContent=sub()||'';tg.replaceChildren(...tags().map(x=>h('span',{class:'pill'},x)));};d.upd();
   d.append(h('summary',{},h('div',{class:'grow'},t,u),tg,h('span',{class:'fold-i','aria-hidden':'true'},'▾')),h('div',{class:'fold-b'},body));
   return d;}
+const MODES=[['cloud','클라우드 이용'],['onprem','고객사 내 설치']];
+const modeLabel=m=>(MODES.find(x=>x[0]===m)||[])[1]||'';
 function acctBlock(refType,ref,role){
-  const a=accounts.find(x=>x.refType===refType&&x.refId===ref.id);const msg=h('span',{class:'muted sm'},a?'계정 있음':'계정 없음');
-  const idEl=h('input',{type:'text',autocapitalize:'none',placeholder:'로그인 ID (영문·숫자)'});idEl.value=a?a.id:'';
-  const pwEl=h('input',{type:'password',autocomplete:'new-password',placeholder:a?'새 비밀번호(바꿀 때만)':'비밀번호('+MINPW+'자 이상)'});
+  const a=accounts.find(x=>x.refType===refType&&x.refId===ref.id);const msg=h('span',{class:'muted am'},'');
+  const idEl=h('input',{type:'text',autocapitalize:'none',placeholder:'아이디 (영문·숫자)','aria-label':'로그인 아이디'});idEl.value=a?a.id:'';
+  const pwEl=h('input',{type:'password',autocomplete:'new-password',placeholder:a?'새 비밀번호 (바꿀 때만)':'비밀번호 ('+MINPW+'자 이상)','aria-label':'비밀번호'});
   const say=(m,e)=>msg.replaceChildren(e?h('b',{},m):m);
   const save=async()=>{const nid=(idEl.value||'').trim().toLowerCase();
-    if(!validId(nid)){say('ID는 영문 소문자·숫자·._- 3~20자',1);return;}
-    if(nid!==(a&&a.id)&&accounts.some(x=>x.id===nid)){say('이미 사용 중인 ID',1);return;}
+    if(!validId(nid)){say('아이디는 영문 소문자·숫자·._- 3~20자',1);return;}
+    if(nid!==(a&&a.id)&&accounts.some(x=>x.id===nid)){say('이미 사용 중인 아이디',1);return;}
     if(!a&&pwEl.value.length<MINPW){say('비밀번호 '+MINPW+'자 이상',1);return;}
     if(pwEl.value&&pwEl.value.length<MINPW){say('비밀번호 '+MINPW+'자 이상',1);return;}
     try{await putAccount(nid,{role,refType,refId:ref.id,name:ref.name},pwEl.value||null,a);if(a&&a.id!==nid&&!window.SB)await db.collection('accounts').doc(a.id).delete();pwEl.value='';say('저장됨');}
     catch(e){say('실패: '+(e.code||e.message),1);}};
-  return h('div',{class:'acct'},h('div',{class:'grow'},h('label',{class:'f'},'로그인 계정 ('+ROLES[role==='client'?'manager':'engineer'].ko+')'),idEl),h('div',{class:'grow'},h('label',{class:'f'},'비밀번호'),pwEl),
-    h('button',{onclick:save},a?'계정 저장':'계정 만들기'),a?twoStep('계정 삭제',()=>db.collection('accounts').doc(a.id).delete()):null,msg);}
+  return h('div',{class:'acct2'},h('span',{class:'al'},'로그인 계정 '+(a?'(있음)':'(없음)')),idEl,pwEl,
+    h('button',{class:'pri',onclick:save},a?'계정 저장':'계정 만들기'),a?twoStep('계정 삭제',()=>db.collection('accounts').doc(a.id).delete()):null,msg);}
 const dropAccts=(refType,id)=>accounts.filter(a=>a.refType===refType&&a.refId===id).forEach(a=>db.collection('accounts').doc(a.id).delete());
 const XLSX_MIME='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 const XL_HEAD={
- site:['사이트명*','고객(발주처)*','주소','완공일(YYYY-MM-DD)','연면적(㎡)','관리주체 담당자*','연락처*','건축물 용도','지상 층수','지하 층수','추가 안전수칙'],
+ site:['사이트명*','고객(발주처)*','주소','완공일(YYYY-MM-DD)','연면적(㎡)','관리주체 담당자*','연락처*','건축물 용도','지상 층수','지하 층수','추가 안전수칙','점검업체(업체명)'],
+ cl:['고객명*','사업자등록번호','담당자','연락처','이메일','주소','운영방식(클라우드 이용 / 고객사 내 설치)','점검업체(업체명, 전체 사이트 통일)','사이트별 개별 등록(Y)','계약 시작일','계약 종료일','메모','등록일(최초 등록일)'],
+ co:['업체명*','사업자등록번호','연락처'],
+ pe:['성명*','소속 점검업체*','등급(특급/고급/중급/초급)','연락처'],
  loc:['사이트명*','위치명*','GPS(위도, 경도)','점검 영역 (번호를 쉼표로 / 전체)'],
  ct:['사이트명*','구분(예: 관리주체, CCTV 업체)','이름/업체명','연락처'],
  eq:['사이트명*','장비명','수량','사용 설비·용도'],
  fac:['사이트명*','영역 번호*','영역명(참고)','설비명','규격(모델)','수량','제조사','설치위치','설치연도','내구연한(년)'],
  sf:['사이트명*','영역 번호*','영역명(참고)','기준인원(별표 3 표 1)']};
+const orgSheets=()=>({cl:roleKey!=='manager',co:roleKey==='supervisor',pe:roleKey==='supervisor'});
 function buildSiteWb(X,list){
   const wb=X.utils.book_new(),ws=(rows,w)=>{const t=X.utils.aoa_to_sheet(rows);t['!cols']=w.map(x=>({wch:x}));return t;};
   const aname=no=>(AREAS.find(a=>a.no===+no)||{}).name||'';
-  const R={site:[],loc:[],ct:[],eq:[],fac:[],sf:[]};
+  const R={site:[],loc:[],ct:[],eq:[],fac:[],sf:[],cl:[],co:[],pe:[]};const O=orgSheets();
   if(!list){
-    R.site.push(['예) 테스트시청 본관','한빛자산관리','부산광역시 연제구 중앙대로 1001','2020-03-15','12000','홍길동','010-0000-0000','업무시설','12','2','옥상 작업 시 2인 1조']);
+    R.cl.push(['예) 한빛자산관리','123-45-67890','홍길동','010-0000-0000','hong@example.com','부산광역시 연제구 중앙대로 1001','클라우드 이용','제이솔루션','','2026-01-01','2026-12-31','','2026-10-29']);
+    R.co.push(['예) 제이솔루션','123-45-67890','051-000-0000']);
+    R.pe.push(['예) 김점검','제이솔루션','특급','010-1111-2222']);
+    R.site.push(['예) 테스트시청 본관','한빛자산관리','부산광역시 연제구 중앙대로 1001','2020-03-15','12000','홍길동','010-0000-0000','업무시설','12','2','옥상 작업 시 2인 1조','제이솔루션']);
     R.loc.push(['예) 테스트시청 본관','본관 1층 MDF실','35.1796, 129.0756','1,10,32'],['예) 테스트시청 본관','별관 서버실','35.1801, 129.0760','전체']);
     R.ct.push(['예) 테스트시청 본관','관리주체','홍길동','010-0000-0000'],['예) 테스트시청 본관','CCTV 업체','○○시스템','051-000-0000']);
     R.eq.push(['예) 테스트시청 본관','광파워미터','1','케이블설비 광 손실 측정']);
     R.fac.push(['예) 테스트시청 본관',10,aname(10),'코어스위치','C9500','2','Cisco','본관 MDF실','2022','10']);
     R.sf.push(['예) 테스트시청 본관',11,aname(11),'0.52']);
-  }else list.forEach(({s,ls})=>{
-    R.site.push([s.name,s.client||'',s.address||'',s.completed||'',s.area||'',s.mgr||'',s.mgrTel||'',s.use||'',s.floorsUp||'',s.floorsDown||'',s.safetyExtra||'']);
+  }else{
+    const cn=id=>(companies.find(c=>c.id===id)||{}).name||'';
+    clients.slice().sort(byName).forEach(k=>R.cl.push([k.name||'',k.biz||'',k.mgr||'',k.tel||'',k.email||'',k.addr||'',modeLabel(k.mode),k.perSite?'':cn(k.ownerId),k.perSite?'Y':'',k.contractFrom||'',k.contractTo||'',k.note||'',regDateOf(k)]));
+    companies.slice().sort(byName).forEach(c=>R.co.push([c.name||'',c.biz||'',c.tel||'']));
+    people.slice().sort(byName).forEach(q=>R.pe.push([q.name||'',cn(q.companyId),q.grade||'',q.tel||'']));
+  }
+  if(list)list.forEach(({s,ls})=>{
+    R.site.push([s.name,s.client||'',s.address||'',s.completed||'',s.area||'',s.mgr||'',s.mgrTel||'',s.use||'',s.floorsUp||'',s.floorsDown||'',s.safetyExtra||'',(companies.find(c=>c.id===s.ownerId)||{}).name||'']);
     ls.forEach(l=>R.loc.push([s.name,l.name||'',l.gps||'',(l.areas||[]).length===AREAS.length?'전체':(l.areas||[]).join(',')]));
     (s.contacts||[]).forEach(c=>R.ct.push([s.name,c.g||'',c.name||'',c.tel||'']));
     (s.equip||[]).forEach(c=>R.eq.push([s.name,c.n||'',c.q||'',c.u||'']));
     Object.keys(s.fac||{}).sort((a,b)=>a-b).forEach(no=>(s.fac[no]||[]).forEach(r=>R.fac.push([s.name,+no,aname(no),r.n||'',r.m||'',r.q||'',r.k||'',r.l||'',r.y||'',r.life||''])));
     Object.keys(s.staff||{}).sort((a,b)=>a-b).forEach(no=>{if(s.staff[no]!==''&&s.staff[no]!=null)R.sf.push([s.name,+no,aname(no),s.staff[no]]);});
   });
-  X.utils.book_append_sheet(wb,ws([XL_HEAD.site,...R.site],[26,18,36,20,12,16,16,16,10,10,36]),'사이트');
+  if(O.cl)X.utils.book_append_sheet(wb,ws([XL_HEAD.cl,...R.cl],[22,16,14,16,22,34,30,30,18,14,14,30,18]),'고객');
+  if(O.co)X.utils.book_append_sheet(wb,ws([XL_HEAD.co,...R.co],[24,16,18]),'점검업체');
+  if(O.pe)X.utils.book_append_sheet(wb,ws([XL_HEAD.pe,...R.pe],[16,24,26,18]),'점검자');
+  X.utils.book_append_sheet(wb,ws([XL_HEAD.site,...R.site],[26,18,36,20,12,16,16,16,10,10,36,22]),'사이트');
   X.utils.book_append_sheet(wb,ws([XL_HEAD.loc,...R.loc],[26,22,24,36]),'위치');
   X.utils.book_append_sheet(wb,ws([XL_HEAD.ct,...R.ct],[26,24,22,18]),'비상연락망');
   X.utils.book_append_sheet(wb,ws([XL_HEAD.eq,...R.eq],[26,22,8,36]),'계측장비');
@@ -966,7 +1069,9 @@ function buildSiteWb(X,list){
   X.utils.book_append_sheet(wb,ws([XL_HEAD.sf,...R.sf],[26,10,22,16]),'기준인원');
   X.utils.book_append_sheet(wb,ws([['No','점검 영역(설비)'],...AREAS.map(a=>[a.no,a.name])],[6,40]),'영역코드표');
   X.utils.book_append_sheet(wb,ws([['작성 안내'],
-    ['1. 모든 시트의 첫 칸은 "사이트명"입니다. "사이트" 시트에 있는 이름과 같게 적으세요. 사이트명만 필수입니다.'],
+    ['0. 순서: 점검업체 → 점검자 → 고객 → 사이트(위치 등). 고객·점검업체·점검자 시트는 통합관리자(고객·사이트는 점검업체도)만 올릴 수 있습니다. 계정·비밀번호는 엑셀로 올리지 않고 설정 화면에서 만듭니다.'],
+    ['0-1. 고객: 운영방식은 "클라우드 이용" 또는 "고객사 내 설치"로 적습니다. 점검업체(업체명)를 적으면 그 고객의 모든 사이트가 그 업체로 통일되고, "사이트별 개별 등록"에 Y를 적으면 사이트마다 점검업체를 따로 지정합니다.'],
+    ['1. 사이트 상세 시트의 첫 칸은 "사이트명"입니다. "사이트" 시트에 있는 이름과 같게 적으세요. 사이트명만 필수입니다.'],
     ['2. 사이트: 고객사(건물) 기본 정보와 건축물 용도·층수·추가 안전수칙. 비워 둔 칸은 기존 값을 그대로 둡니다.'],
     ['3. 위치: 사이트 안에서 점검할 위치. 점검 영역은 "영역코드표"의 번호를 쉼표로 적거나 "전체"라고 적습니다.'],
     ['4. 비상연락망 / 계측장비 / 설비현황 / 기준인원: 해당 사이트에 줄이 하나라도 있으면 그 사이트의 목록을 올린 내용으로 바꿉니다. (설비현황은 영역 번호별로 바꿉니다.)'],
@@ -979,14 +1084,14 @@ async function downloadSiteXlsx(box,list,fname){const X=window.XLSX;
   if(!X){box.replaceChildren(h('div',{class:'note err'},'엑셀 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.'));return;}
   try{await downloads.save({filename:fname,data:new Blob([X.write(buildSiteWb(X,list),{bookType:'xlsx',type:'array'})],{type:XLSX_MIME})});}
   catch(e){if(!e||e.code!=='declined')box.replaceChildren(h('div',{class:'note err'},'파일 저장 실패: '+(e.message||e.code)));}}
-const downloadSiteTemplate=box=>downloadSiteXlsx(box,null,'Easy-ICT-사이트등록-양식.xlsx');
+const downloadSiteTemplate=box=>downloadSiteXlsx(box,null,'Easy-ICT-등록-양식.xlsx');
 const downloadSiteData=(box,only)=>{const arr=(only?sites.filter(s=>s.id===only):sites.slice().sort((a,b)=>a.name.localeCompare(b.name,'ko'))).map(s=>({s,ls:locsOfSite(s.id)}));
-  if(!arr.length){box.replaceChildren(h('div',{class:'note err'},'내려받을 사이트가 없습니다.'));return;}downloadSiteXlsx(box,arr,'Easy-ICT-사이트-현재데이터.xlsx');};
+  if(!arr.length&&!clients.length&&!companies.length&&!people.length){box.replaceChildren(h('div',{class:'note err'},'내려받을 데이터가 없습니다.'));return;}downloadSiteXlsx(box,arr,'Easy-ICT-현재데이터-'+today()+'.xlsx');};
 async function parseSiteXlsx(file,box,opt={}){
   const X=window.XLSX,err=m=>box.replaceChildren(h('div',{class:'note err'},m));if(!X){err('엑셀 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.');return;}
   let wb;try{wb=X.read(await file.arrayBuffer(),{type:'array'});}catch(e){err('엑셀 파일을 읽을 수 없습니다. 양식 파일(.xlsx)인지 확인하세요.');return;}
   const named=n=>{const nm=wb.SheetNames.find(x=>x.replace(/\s/g,'').startsWith(n));return nm?wb.Sheets[nm]:null;};
-  const sheet=(n,i)=>named(n)||((n==='사이트'||n==='위치')&&wb.SheetNames[i]?wb.Sheets[wb.SheetNames[i]]:null);
+  const sheet=(n,i)=>named(n)||((n==='사이트'||n==='위치')&&wb.SheetNames[i]&&!/^(고객|점검업체|점검자)/.test(wb.SheetNames[i])?wb.Sheets[wb.SheetNames[i]]:null);
   const rowsOf=ws=>ws?X.utils.sheet_to_json(ws,{header:1,defval:'',raw:true}).slice(1):[];
   const str=v=>String(v==null?'':v).trim(),pick=r=>{const a=str(r[0]);return a&&!a.startsWith('예)');};
   const dt=v=>{if(typeof v==='number'&&v>20000&&v<80000)return X.SSF.format('yyyy-mm-dd',v);const m=str(v).match(/^(\d{4})\D(\d{1,2})\D(\d{1,2})/);return m?m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0'):'';};
@@ -994,7 +1099,15 @@ async function parseSiteXlsx(file,box,opt={}){
   const areaNo=(v,tag)=>{const t=str(v),n=+t;if(Number.isInteger(n)&&nos.includes(n))return n;const a=AREAS.find(x=>x.name===t||x.code===t);if(a)return a.no;warn.push(tag+': 알 수 없는 영역 "'+t+'"');return null;};
   const parseAreas=(v,tag)=>{const t=str(v);if(!t)return[];if(/^전체|^all$/i.test(t))return nos.slice();const out=new Set();
     t.split(/[,，、;/\s]+/).filter(Boolean).forEach(k=>{const n=areaNo(k,tag);if(n!=null)out.add(n);});return[...out].sort((a,b)=>a-b);};
-  const sp=new Map();rowsOf(sheet('사이트',0)).filter(pick).forEach(r=>{sp.set(str(r[0]),{name:str(r[0]),client:str(r[1]),address:str(r[2]),completed:dt(r[3]),area:str(r[4]),mgr:str(r[5]),mgrTel:str(r[6]),use:str(r[7]),floorsUp:str(r[8]),floorsDown:str(r[9]),safetyExtra:str(r[10])});});
+  const O=orgSheets(),modeOf=v=>{const t=str(v).replace(/\s/g,'');return /클라우드|cloud/i.test(t)?'cloud':/설치|onprem/i.test(t)?'onprem':'';};
+  const gradeOf=v=>{const t=str(v),g=GRADES.find(x=>x[0]===t||x[1]===t||(t&&t.startsWith(x[0])));return g?g[0]:'';};
+  const cop=new Map(),pep=[],clp=new Map();
+  if(O.co)rowsOf(named('점검업체')).filter(pick).forEach(r=>{const n=str(r[0]);if(n)cop.set(n,{name:n,biz:str(r[1]),tel:str(r[2])});});
+  if(O.pe)rowsOf(named('점검자')).filter(pick).forEach(r=>{const n=str(r[0]),cn=str(r[1]);if(!n)return;if(!cn){warn.push('점검자 "'+n+'": 소속 점검업체가 비어 건너뜀');return;}pep.push({name:n,company:cn,grade:gradeOf(r[2]),tel:str(r[3])});});
+  if(O.cl)rowsOf(named('고객')).filter(pick).forEach(r=>{const n=str(r[0]);if(!n)return;clp.set(n,{name:n,biz:str(r[1]),mgr:str(r[2]),tel:str(r[3]),email:str(r[4]),addr:str(r[5]),mode:modeOf(r[6]),company:str(r[7]),perSite:/^(y|yes|o|예|v|1|true|개별)/i.test(str(r[8])),from:dt(r[9]),to:dt(r[10]),note:str(r[11]),reg:dt(r[12])});});
+  const coKnown=n=>cop.has(n)||companies.some(c=>c.name===n);
+  pep.forEach(q=>{if(!coKnown(q.company))warn.push('점검자 "'+q.name+'": 점검업체 "'+q.company+'"를 찾을 수 없어 건너뜀');});
+  const sp=new Map();rowsOf(sheet('사이트',0)).filter(pick).forEach(r=>{sp.set(str(r[0]),{name:str(r[0]),company:str(r[11]),client:str(r[1]),address:str(r[2]),completed:dt(r[3]),area:str(r[4]),mgr:str(r[5]),mgrTel:str(r[6]),use:str(r[7]),floorsUp:str(r[8]),floorsDown:str(r[9]),safetyExtra:str(r[10])});});
   if(acct&&acct.role==='client'){const own=(clients.find(k=>k.id===acct.refId)||{}).name||'';sp.forEach(x=>{x.client=own;});}
   [...sp.keys()].forEach(n=>{if(sites.some(s=>s.name===n))return;const x=sp.get(n),miss=[!x.client&&'고객(발주처)',!x.mgr&&'관리주체 담당자',!x.mgrTel&&'연락처'].filter(Boolean);
     if(miss.length){warn.push('신규 사이트 "'+n+'": 필수 항목('+miss.join(', ')+')이 비어 있어 건너뜀');sp.delete(n);}});
@@ -1015,17 +1128,28 @@ async function parseSiteXlsx(file,box,opt={}){
   each('기준인원',(sn,r)=>{const no=areaNo(r[1],'기준인원 / '+sn);if(no==null)return;const v=str(r[3]);if(v===''||isNaN(+v)){if(v!=='')warn.push('기준인원 / '+sn+': 숫자가 아님 ('+v+')');return;}
     sf.set(sn,{...(sf.get(sn)||{}),[no]:+v});});
   const names=new Set([...sp.keys(),...lp.map(l=>l.sn),...ct.keys(),...eq.keys(),...fc.keys(),...sf.keys()]);
-  if(!names.size){box.replaceChildren(h('div',{class:'note err'},'등록할 내용이 없습니다. 시트에 내용을 적었는지, 필수 항목(*)이 채워졌는지 확인하세요.'),...warn.slice(0,8).map(w=>h('div',{class:'sm'},'· '+w)));return;}
+  if(!names.size&&!cop.size&&!pep.length&&!clp.size){box.replaceChildren(h('div',{class:'note err'},'등록할 내용이 없습니다. 시트에 내용을 적었는지, 필수 항목(*)이 채워졌는지 확인하세요.'),...warn.slice(0,8).map(w=>h('div',{class:'sm'},'· '+w)));return;}
   const newSites=[...names].filter(n=>!sites.some(s=>s.name===n)).length,upSites=names.size-newSites;
   const newLocs=lp.filter(l=>!locations.some(o=>o.siteId===(sites.find(s=>s.name===l.sn)||{}).id&&o.name===l.name)).length;
   const n2=m=>[...m.values()].reduce((a,v)=>a+(v instanceof Map?[...v.values()].reduce((x,y)=>x+y.length,0):Array.isArray(v)?v.length:Object.keys(v).length),0);
   const run=async b=>{if(b){b.disabled=true;b.textContent='저장 중…';}
-    try{const ts=new Date().toISOString(),written=new Map(),newC=new Map();let nc=0;
+    try{const ts=new Date().toISOString(),written=new Map(),newC=new Map();let nc=0,nco=0,npe=0;
+      const strip=o=>(({id:_,...r})=>r)(clone(o)),coMap=new Map(companies.map(c=>[c.name,c.id])),kInfo=new Map();
+      for(const [n,x] of cop){const ex=companies.find(c=>c.name===n),id=ex?ex.id:uid(),base=ex?strip(ex):{};coMap.set(n,id);if(!ex)nco++;
+        await db.collection('companies').doc(id).set({...base,name:n,biz:x.biz||base.biz||'',tel:x.tel||base.tel||'',updatedAt:ts});}
+      for(const q of pep){const cid=coMap.get(q.company);if(!cid)continue;const ex=people.find(o=>o.name===q.name&&o.companyId===cid),id=ex?ex.id:uid(),base=ex?strip(ex):{};if(!ex)npe++;
+        await db.collection('people').doc(id).set({...base,name:q.name,companyId:cid,grade:q.grade||base.grade||'특급',tel:q.tel||base.tel||'',updatedAt:ts});}
+      for(const [n,x] of clp){const ex=clients.find(c=>c.name===n),id=ex?ex.id:uid(),base=ex?strip(ex):{};
+        let oid=base.ownerId||myCo()||'';if(roleKey==='supervisor'&&x.company){const v=coMap.get(x.company);if(v)oid=v;else warn.push('고객 "'+n+'": 점검업체 "'+x.company+'"를 찾을 수 없음');}if(roleKey==='engineer')oid=myCo();
+        const body={...base,name:n,biz:x.biz||base.biz||'',mgr:x.mgr||base.mgr||'',tel:x.tel||base.tel||'',email:x.email||base.email||'',addr:x.addr||base.addr||'',mode:x.mode||base.mode||'',contractFrom:x.from||base.contractFrom||'',contractTo:x.to||base.contractTo||'',note:x.note||base.note||'',regDate:x.reg||base.regDate||(ex?'':today()),createdAt:base.createdAt||(ex?undefined:ts),ownerId:oid,updatedAt:ts};
+        if(roleKey==='supervisor')body.perSite=x.perSite?true:(x.company?false:!!base.perSite);
+        await db.collection('clients').doc(id).set(body);kInfo.set(id,body);if(!ex){newC.set(n,{id,name:n});nc++;}}
       for(const name of names){const ex=sites.find(s=>s.name===name),x=sp.get(name)||{};if(!ex&&!sp.has(name))continue;
         let cid=ex?ex.clientId||'':'';
-        if(x.client){let k=clients.find(c=>c.name===x.client)||newC.get(x.client);if(!k){k={id:uid(),name:x.client};newC.set(x.client,k);nc++;await db.collection('clients').doc(k.id).set({name:x.client,biz:'',mgr:'',tel:'',addr:'',ownerId:myCo(),updatedAt:ts});}cid=k.id;}
+        if(x.client){let k=clients.find(c=>c.name===x.client)||newC.get(x.client);if(!k){k={id:uid(),name:x.client};newC.set(x.client,k);nc++;await db.collection('clients').doc(k.id).set({name:x.client,biz:'',mgr:'',tel:'',addr:'',mode:'cloud',regDate:today(),createdAt:ts,ownerId:myCo(),updatedAt:ts});}cid=k.id;}
         const id=ex?ex.id:uid(),base=ex?(({id:_,...r})=>r)(clone(ex)):{areas:[],fac:{},createdAt:ts};
-        const body={...base,name,updatedAt:ts};if(!ex&&myCo())body.ownerId=myCo();if(!ex)body.src=acct?(acct.role==='client'?'client':acct.role==='engineer'?'company':'admin'):'admin';if(x.client){body.client=x.client;body.clientId=cid;}
+        const body={...base,name,updatedAt:ts};if(!ex&&myCo())body.ownerId=myCo();
+        if(roleKey==='supervisor'){let oid=ex?ex.ownerId:'';if(x.company){const v=coMap.get(x.company);if(v)oid=v;else warn.push('사이트 "'+name+'": 점검업체 "'+x.company+'"를 찾을 수 없음');}else if(!ex){const ki=kInfo.get(cid)||clients.find(c=>c.id===cid)||{};if(!ki.perSite&&ki.ownerId)oid=ki.ownerId;}if(oid)body.ownerId=oid;}if(!ex)body.src=acct?(acct.role==='client'?'client':acct.role==='engineer'?'company':'admin'):'admin';if(x.client){body.client=x.client;body.clientId=cid;}
         ['address','completed','area','mgr','mgrTel','use','floorsUp','floorsDown','safetyExtra'].forEach(k=>{if(x[k])body[k]=x[k];});
         if(ct.has(name))body.contacts=ct.get(name);if(eq.has(name))body.equip=eq.get(name);
         body.fac={...(body.fac||{})};if(fc.has(name))for(const [no,rows] of fc.get(name))body.fac[no]=rows;
@@ -1036,21 +1160,14 @@ async function parseSiteXlsx(file,box,opt={}){
       for(const l of lp){const sid=written.get(l.sn).id,old=locations.find(o=>o.siteId===sid&&o.name===l.name),id=old?old.id:uid();
         const order=old?old.order:locations.filter(o=>o.siteId===sid).length+1+lp.slice(0,lp.indexOf(l)).filter(q=>q.sn===l.sn).length;
         await db.collection('locations').doc(id).set({siteId:sid,name:l.name,gps:l.gps||(old?old.gps:''),areas:l.areas.length?l.areas:(old?old.areas||[]:[]),order,updatedAt:ts});}
-      box.replaceChildren(h('div',{class:'note'},'저장했습니다. 사이트 '+written.size+'곳 (신규 '+newSites+' · 수정 '+upSites+'), 위치 '+lp.length+'곳, 설비 '+n2(fc)+'줄, 비상연락 '+n2(ct)+'건, 계측장비 '+n2(eq)+'건, 새 고객 '+nc+'곳.'+(warn.length?' 확인 필요 '+warn.length+'건: '+warn.slice(0,3).join(' / ')+(warn.length>3?' …':''):'')));
+      box.replaceChildren(h('div',{class:'note'},'저장했습니다. '+(cop.size?'점검업체 '+cop.size+'곳, ':'')+(pep.length?'점검자 '+pep.length+'명, ':'')+(clp.size?'고객 '+clp.size+'곳, ':'')+'사이트 '+written.size+'곳 (신규 '+newSites+' · 수정 '+upSites+'), 위치 '+lp.length+'곳, 설비 '+n2(fc)+'줄, 비상연락 '+n2(ct)+'건, 계측장비 '+n2(eq)+'건, 새 고객 '+nc+'곳.'+(warn.length?' 확인 필요 '+warn.length+'건: '+warn.slice(0,3).join(' / ')+(warn.length>3?' …':''):'')));
       if(opt.onDone)opt.onDone(written);
     }catch(e){err('저장 실패: '+(e.code||e.message));}};
   if(opt.auto){await run(null);return;}
   const go1=h('button',{class:'pri'},'등록 실행');go1.addEventListener('click',()=>run(go1));
-  box.replaceChildren(h('div',{class:'note'},'확인: 사이트 '+names.size+'곳 (신규 '+newSites+' · 기존 수정 '+upSites+'), 위치 '+lp.length+'곳 (신규 '+newLocs+'), 설비 '+n2(fc)+'줄, 비상연락 '+n2(ct)+'건, 계측장비 '+n2(eq)+'건'),
+  box.replaceChildren(h('div',{class:'note'},'확인: '+(cop.size?'점검업체 '+cop.size+'곳, ':'')+(pep.length?'점검자 '+pep.length+'명, ':'')+(clp.size?'고객 '+clp.size+'곳, ':'')+'사이트 '+names.size+'곳 (신규 '+newSites+' · 기존 수정 '+upSites+'), 위치 '+lp.length+'곳 (신규 '+newLocs+'), 설비 '+n2(fc)+'줄, 비상연락 '+n2(ct)+'건, 계측장비 '+n2(eq)+'건'),
     warn.length?h('div',{class:'note err'},h('b',{},'확인이 필요한 항목 '+warn.length+'건'),...warn.slice(0,12).map(w=>h('div',{class:'sm'},'· '+w)),warn.length>12?h('div',{class:'sm'},'… 외 '+(warn.length-12)+'건'):null):null,
     h('div',{class:'row',style:'margin-top:8px'},go1,h('button',{onclick:()=>box.replaceChildren()},'취소')));
-}
-function excelCard(){
-  const box=h('div'),f=h('input',{type:'file',accept:'.xlsx,.xls',style:'display:none'});
-  f.addEventListener('change',()=>{const x=f.files[0];if(x)parseSiteXlsx(x,box);f.value='';});
-  return h('div',{class:'card'},h('h3',{},'엑셀로 사이트 정보 일괄 등록'),
-    h('div',{class:'muted',style:'margin-bottom:10px'},'사이트·위치·비상연락망·계측장비·설비현황·기준인원을 한 파일로 올립니다. 같은 사이트명·위치명은 덮어쓰고, 비워 둔 칸은 기존 값을 그대로 둡니다. 새 고객(발주처) 이름은 고객으로도 등록합니다.'),
-    h('div',{class:'row'},h('button',{onclick:()=>downloadSiteTemplate(box)},'양식 다운로드'),h('button',{onclick:()=>downloadSiteData(box)},'현재 데이터 내려받기'),h('button',{class:'pri',onclick:()=>f.click()},'엑셀 업로드'),f),h('div',{style:'margin-top:10px'},box));
 }
 function siteExcelBar(s){
   const box=h('div'),f=h('input',{type:'file',accept:'.xlsx,.xls',style:'display:none'});
@@ -1106,7 +1223,7 @@ function hashCable(){const m=(location.hash||'').match(/^#cable=([^&]+)/);if(!m|
   const f=()=>{const r=cabFind(id);route={v:'cables',t:'chk',id:r?r.c.id:'',q:id,pt:r&&r.p?r.p.qr:''};renderNav();render();};if(Object.values(loaded).every(Boolean))f();else setTimeout(f,600);return true;}
 window.addEventListener('hashchange',hashCable);
 let pendSite=null;
-function hashSite(){const m=(location.hash||'').match(/^#site=([^&]+)/);if(!m||!entered||!ROLE.write)return false;pendSite=location.hash;
+function hashSite(){const m=(location.hash||'').match(/^#site=([^&]+)/);if(!m||!entered||!canInsp())return false;pendSite=location.hash;
   const f=()=>{newInspDialog();};if(Object.values(loaded).every(Boolean))f();else setTimeout(f,600);return true;}
 window.addEventListener('hashchange',hashSite);
 function vCables(app){
@@ -1343,24 +1460,23 @@ function vCoSettings(app){
   const co=myCo(),mine=clients.filter(k=>k.ownerId===co);
   const wr=(r)=>{const {id,...b}=r;b.ownerId=co;b.updatedAt=new Date().toISOString();setSave('저장 중…');return db.collection('clients').doc(id).set(b).then(()=>setSave('저장됨 '+hhmm())).catch(e=>setSave('저장 실패: '+(e.code||e.message)));};
   const deb=r=>{let t;return()=>{clearTimeout(t);setSave('저장 대기…');t=setTimeout(()=>wr(r),600);};};
-  app.append(h('div',{class:'muted',id:'savestate',style:'margin:0 4px 10px'},'변경 내용은 자동 저장됩니다.'));
-  const kc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'내 고객 ('+mine.length+')'),ROLE.write?h('button',{class:'pri',onclick:()=>wr(openNew({id:uid(),name:'',biz:'',mgr:'',tel:'',email:'',addr:'',contractFrom:'',contractTo:'',note:''}))},'+ 고객 추가'):null),
+  app.append(topBar());
+  const kc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'내 고객 ('+mine.length+')'),ROLE.write?h('button',{class:'pri',onclick:()=>wr(openNew({id:uid(),name:'',biz:'',mgr:'',tel:'',email:'',addr:'',contractFrom:'',contractTo:'',note:'',mode:'cloud',regDate:today(),createdAt:new Date().toISOString()}))},'+ 고객 추가'):null),
     h('div',{class:'muted',style:'margin-top:6px'},'점검 계약을 맺은 고객(발주처)입니다. 고객 로그인 계정은 필요 없고, 여기에 입력한 고객의 사이트·점검 위치·점검 항목을 직접 관리합니다. 등록 고객 수에 따른 과금은 아직 적용하지 않습니다.'));
   if(!mine.length)kc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 고객이 없습니다. 고객 추가를 눌러 첫 고객을 등록하세요.'));
   mine.slice().sort(byName).forEach(k=>{const sv0=deb(k);let F;const sv=()=>{sv0();F&&F.upd();};
     const B=(h('div',{class:'item'},h('h3',{style:'flex:0 0 100%;margin:6px 0 0;font-size:14px'},'고객 정보'),
-      h('div',{class:'row'},fld('고객명(발주처) *',bind(k,'name',{on:sv,ph:'예: 한빛자산관리'}),2),fld('사업자등록번호',bind(k,'biz',{on:sv}))),
+      h('div',{class:'row'},fld('고객명(발주처) *',bind(k,'name',{on:sv,ph:'예: 한빛자산관리'}),2),fld('사업자등록번호',bind(k,'biz',{on:sv})),fld('운영방식',selBox(k,'mode',MODES,'선택',sv)),fld('등록일',bind(k,'regDate',{type:'date',on:sv}))),
       h('div',{class:'row',style:'margin-top:8px'},fld('담당자',bind(k,'mgr',{on:sv})),fld('연락처',bind(k,'tel',{on:sv})),fld('이메일',bind(k,'email',{on:sv}))),
       h('div',{class:'row',style:'margin-top:8px'},fld('주소',bind(k,'addr',{on:sv}),2)),
       h('div',{class:'row',style:'margin-top:8px'},fld('계약 시작일',bind(k,'contractFrom',{type:'date',on:sv})),fld('계약 종료일',bind(k,'contractTo',{type:'date',on:sv}))),
       h('div',{class:'row',style:'margin-top:8px'},fld('계약·특이사항 메모',bind(k,'note',{area:true,on:sv}),2)),
-      h('div',{class:'row sb',style:'margin-top:8px'},h('span',{class:'muted sm'},'고객 정보는 입력하면 자동 저장됩니다.'),
-        twoStep('삭제',()=>{if(sites.some(x=>x.clientId===k.id)){alert2('이 고객에 연결된 사이트가 있어 삭제할 수 없습니다. 사이트를 먼저 삭제하세요.');return;}db.collection('clients').doc(k.id).delete();})),
+      h('div',{class:'dangerbar'},h('span',{class:'muted sm'},'고객 정보는 입력하면 자동 저장됩니다.'),
+        h('button',{class:'dng',onclick:()=>delCustomer(k)},'고객 삭제')),
       custSites(k)));
-    F=foldItem(k.id,'k-'+k.id,()=>k.name,()=>[k.mgr,k.tel].filter(Boolean).join(' · ')||'담당자 미입력',()=>['사이트 '+sites.filter(x=>x.clientId===k.id).length],B);kc.append(F);});
+    F=foldItem(k.id,'k-'+k.id,()=>k.name,()=>[k.mgr,k.tel].filter(Boolean).join(' · ')||'담당자 미입력',()=>[modeLabel(k.mode),'사이트 '+sites.filter(x=>x.clientId===k.id).length].filter(Boolean),B);kc.append(F);});
   app.append(kc);
   orphanSites(app);
-  if(ROLE.write)app.append(excelCard());
 }
 /* ---------- 고객관리자 설정: 우리 정보 · 점검업체 계정 공급 · 사이트 ---------- */
 function vCliSettings(app){
@@ -1368,67 +1484,168 @@ function vCliSettings(app){
   if(!me){app.append(h('div',{class:'card muted'},'고객 정보를 찾을 수 없습니다. 통합관리자에게 문의하세요.'));return;}
   const wr=(col,r)=>{const {id,...b}=r;b.updatedAt=new Date().toISOString();setSave('저장 중…');return db.collection(col).doc(id).set(b).then(()=>setSave('저장됨 '+hhmm())).catch(e=>setSave('저장 실패: '+(e.code||e.message)));};
   const deb=(col,r)=>{let t;return()=>{clearTimeout(t);setSave('저장 대기…');t=setTimeout(()=>wr(col,r),600);};};
-  app.append(h('div',{class:'muted',id:'savestate',style:'margin:0 4px 10px'},'변경 내용은 자동 저장됩니다.'));
+  app.append(topBar());
   const sv=deb('clients',me);
-  app.append(h('div',{class:'card'},h('h3',{},'우리 기관 정보'),
-    h('div',{class:'row'},fld('기관명',bind(me,'name',{on:sv}),2),fld('사업자등록번호',bind(me,'biz',{on:sv}))),
-    h('div',{class:'row',style:'margin-top:8px'},fld('담당자',bind(me,'mgr',{on:sv})),fld('연락처',bind(me,'tel',{on:sv})),fld('이메일',bind(me,'email',{on:sv}))),
-    h('div',{class:'row',style:'margin-top:8px'},fld('주소',bind(me,'addr',{on:sv}),2))));
   me.staff=me.staff||[];
   const sb=h('div'),sdraw=()=>{sb.replaceChildren(...me.staff.map((x,i)=>h('div',{class:'row',style:'margin:6px 0'},fld('이름',bind(x,'name',{on:sv}),1.2),fld('부서·직책',bind(x,'dept',{on:sv}),1.2),fld('연락처',bind(x,'tel',{on:sv})),fld('이메일',bind(x,'email',{on:sv})),
     h('button',{class:'dng',style:'align-self:flex-end',onclick:()=>{me.staff.splice(i,1);sv();sdraw();}},'삭제'))),
-    h('button',{onclick:()=>{me.staff.push({id:uid(),name:'',dept:'',tel:'',email:''});sv();sdraw();}},'+ 담당자 추가'));};sdraw();
-  app.append(h('div',{class:'card'},h('h3',{},'우리 기관 담당자'),h('div',{class:'muted sm',style:'margin-bottom:6px'},'점검업체를 맡길 때 업체별로 연결할 우리 기관 담당자를 먼저 등록하세요.'),sb));
+    h('button',{onclick:()=>{me.staff.push({id:uid(),name:'',dept:'',tel:'',email:''});sv();sdraw();}},'+ 기관 담당자 추가'));};sdraw();
+  app.append(h('div',{class:'card'},h('h3',{},'우리 기관 정보'),
+    h('div',{class:'row'},fld('기관명',bind(me,'name',{on:sv}),2),fld('사업자등록번호',bind(me,'biz',{on:sv}))),
+    h('div',{class:'row',style:'margin-top:8px'},fld('대표 담당자',bind(me,'mgr',{on:sv})),fld('연락처',bind(me,'tel',{on:sv})),fld('이메일',bind(me,'email',{on:sv}))),
+    h('div',{class:'row',style:'margin-top:8px'},fld('주소',bind(me,'addr',{on:sv}),2)),
+    h('div',{style:'margin-top:14px;padding-top:10px;border-top:1px solid var(--line)'},h('label',{class:'f'},'기관 담당자 ('+me.staff.length+'명)'),h('div',{class:'muted sm',style:'margin-bottom:6px'},'점검업체별로 연결하고, 리포트 최종 확인자로 선택할 담당자를 등록하세요.'),sb)));
   const cc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검업체 계정 ('+companies.length+')'),h('button',{class:'pri',onclick:()=>wr('companies',openNew({id:uid(),name:'',tel:'',clientId:me.id}))},'+ 점검업체 추가')),
-    h('div',{class:'muted',style:'margin-top:6px'},'우리 시설을 점검할 업체에 로그인 계정을 만들어 드립니다. 그 계정으로 로그인한 업체는 우리가 지정한 사이트의 점검 위치·항목을 입력하고 점검합니다. 사이트 등록 화면에서 담당 점검업체를 지정하세요.'));
-  if(!companies.length)cc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 점검업체가 없습니다.'));
-  companies.slice().sort(byName).forEach(c=>{const s20=deb('companies',c);let F;const s2=()=>{s20();F&&F.upd();};
+    h('div',{class:'muted',style:'margin-top:6px'},'통합관리자가 연결해 준 점검업체는 아래에 표시되고 사이트 등록 때 바로 선택할 수 있습니다. 연결된 업체가 없거나 다른 업체를 쓰려면 직접 추가하세요. 직접 추가한 업체에는 로그인 계정을 만들어 드립니다.'));
+  if(!companies.length)cc.append(h('div',{class:'muted',style:'margin-top:10px'},'연결된 점검업체가 없습니다. 직접 추가하세요.'));
+  companies.filter(c=>c.clientId!==me.id).sort(byName).forEach(c=>cc.append(h('div',{class:'item row sb',style:'align-items:center'},h('div',{},h('b',{},c.name||'(이름 없음)'),h('span',{class:'muted sm',style:'margin-left:8px'},c.tel||'')),h('span',{class:'pill ok'},'통합관리자 연결 · 선택 가능'))));
+  companies.filter(c=>c.clientId===me.id).slice().sort(byName).forEach(c=>{const s20=deb('companies',c);let F;const s2=()=>{s20();F&&F.upd();};
     const B=(h('div',{class:'item'},h('div',{class:'row'},fld('업체명',bind(c,'name',{on:s2}),2),fld('연락처',bind(c,'tel',{on:s2})),fld('우리 기관 담당자',selBox(c,'staffId',me.staff.map(x=>[x.id,(x.name||'(이름 없음)')+(x.dept?' · '+x.dept:'')]),'담당자 선택',s2))),
       acctBlock('company',c,'engineer'),
-      h('div',{class:'row sb',style:'margin-top:6px'},h('span',{class:'muted sm'},'담당 사이트 '+sites.filter(x=>x.ownerId===c.id).length+'곳'),twoStep('삭제',()=>{dropAccts('company',c.id);db.collection('companies').doc(c.id).delete();}))));
+      h('div',{class:'row sb',style:'margin-top:6px'},h('span',{class:'muted sm'},'담당 사이트 '+sites.filter(x=>x.ownerId===c.id).length+'곳'),twoStep('업체 삭제',()=>{dropAccts('company',c.id);db.collection('companies').doc(c.id).delete();}))));
     F=foldItem(c.id,'co-'+c.id,()=>c.name,()=>[c.tel,(me.staff.find(x=>x.id===c.staffId)||{}).name&&'담당 '+me.staff.find(x=>x.id===c.staffId).name].filter(Boolean).join(' · ')||'연락처 미입력',()=>['사이트 '+sites.filter(x=>x.ownerId===c.id).length],B);cc.append(F);});
   app.append(cc);
-  app.append(h('h3',{style:'margin:14px 6px 8px'},'사이트 (우리 건물)'));app.append(excelCard());vSites(app);
+  {const w=custSites(me);w.style.cssText='margin:0';app.append(h('div',{class:'card'},w));}
   app.append(locCard());
 }
+function topBar(){
+  const box=h('div',{class:'xmsg'}),f=h('input',{type:'file',accept:'.xlsx,.xls',style:'display:none'});
+  f.addEventListener('change',()=>{const x=f.files[0];if(x)parseSiteXlsx(x,box);f.value='';});
+  return h('div',{},h('div',{class:'xbar'},h('span',{class:'xl',id:'savestate'},'변경 내용은 자동 저장됩니다.'),
+    h('button',{onclick:()=>downloadSiteTemplate(box)},'엑셀 양식'),h('button',{onclick:()=>f.click()},'엑셀 업로드'),h('button',{onclick:()=>downloadSiteData(box)},'엑셀 내보내기'),f),box);
+}
+function linkBox(c,sv){
+  c.clientIds=c.clientIds||[];const box=h('div',{style:'flex:0 0 100%;width:100%'}),cl=clients.slice().sort(byName);
+  const draw=()=>{box.replaceChildren(h('label',{class:'f'},'연결 고객 ('+c.clientIds.length+') — 연결된 고객은 사이트 등록 때 이 업체를 선택할 수 있습니다'),
+    cl.length?h('div',{class:'row',style:'gap:6px;flex-wrap:wrap'},...cl.map(k=>{const on=c.clientIds.includes(k.id);return h('button',{class:on?'on pri':'','aria-pressed':String(on),onclick:()=>{c.clientIds=on?c.clientIds.filter(x=>x!==k.id):[...c.clientIds,k.id];sv();draw();}},(on?'✓ ':'')+(k.name||'(이름 없음)'));})):h('div',{class:'muted sm'},'등록된 고객이 없습니다.'));};
+  draw();return box;}
 function vSettings(app){
   if(roleKey==='engineer'){vCoSettings(app);return;}
   if(roleKey==='manager'){vCliSettings(app);return;}
-  if(ROLE.admin)app.append(deployCard());
   if(!ROLE.admin){go('dash');return;}
   const wr=(col,r)=>{const {id,...b}=r;b.updatedAt=new Date().toISOString();setSave('저장 중…');return db.collection(col).doc(id).set(b).then(()=>setSave('저장됨 '+hhmm())).catch(e=>setSave('저장 실패: '+(e.code||e.message)));};
   const deb=(col,r)=>{let t;return()=>{clearTimeout(t);setSave('저장 대기…');t=setTimeout(()=>wr(col,r),600);};};
-  app.append(h('div',{class:'muted',id:'savestate',style:'margin:0 4px 10px'},'변경 내용은 자동 저장됩니다.'));
-  const kc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'고객(발주처) ('+clients.length+')'),h('button',{class:'pri',onclick:()=>wr('clients',openNew({id:uid(),name:'',biz:'',mgr:'',tel:'',addr:''}))},'+ 고객 추가')),
-    h('div',{class:'muted',style:'margin-top:6px'},'유지보수 관리 업무를 발주한 고객입니다. 고객 계정으로 로그인하면 이 고객의 사이트 점검 결과만 볼 수 있습니다.'));
+  app.append(topBar());
+  const kc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'고객(발주처) ('+clients.length+')'),h('button',{class:'pri',onclick:()=>wr('clients',openNew({id:uid(),name:'',biz:'',mgr:'',tel:'',addr:'',mode:'cloud',regDate:today(),createdAt:new Date().toISOString()}))},'+ 고객 추가')),
+    h('div',{class:'muted',style:'margin-top:6px'},'유지보수 관리 업무를 발주한 고객입니다. 운영방식은 통합 클라우드를 쓰는 "클라우드 이용"(과금 대상)과 고객사 안에 설치하는 "고객사 내 설치"로 나눕니다. 고객 계정으로 로그인하면 이 고객의 사이트 점검 결과만 볼 수 있습니다.'));
   if(!clients.length)kc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 고객이 없습니다. 고객(발주처)을 추가하세요.'));
   clients.slice().sort(byName).forEach(k=>{const sv0=deb('clients',k);let F;const sv=()=>{sv0();F&&F.upd();};
-    const B=(h('div',{class:'item'},h('h3',{style:'flex:0 0 100%;margin:6px 0 0;font-size:14px'},'고객 정보'),fld('고객명(발주처)',bind(k,'name',{on:sv,ph:'예: 한빛자산관리'}),2),fld('사업자등록번호',bind(k,'biz',{on:sv})),fld('담당자',bind(k,'mgr',{on:sv})),fld('연락처',bind(k,'tel',{on:sv})),fld('주소',bind(k,'addr',{on:sv}),2),fld('관리 점검업체',selBox(k,'ownerId',companies.slice().sort(byName).map(c=>[c.id,c.name]),'지정 안 함',sv)),
+    const B=(h('div',{class:'item'},h('h3',{style:'flex:0 0 100%;margin:6px 0 0;font-size:14px'},'고객 정보'),
+      fld('고객명(발주처)',bind(k,'name',{on:sv,ph:'예: 한빛자산관리'}),2),fld('사업자등록번호',bind(k,'biz',{on:sv})),fld('운영방식',selBox(k,'mode',MODES,'선택',sv)),fld('등록일',bind(k,'regDate',{type:'date',on:sv})),
+      fld('담당자',bind(k,'mgr',{on:sv})),fld('연락처',bind(k,'tel',{on:sv})),fld('주소',bind(k,'addr',{on:sv}),2),
       acctBlock('client',k,'client'),
-      twoStep('삭제',()=>{if(raw.sites.some(x=>x.clientId===k.id)){alert2('이 고객에 연결된 사이트가 있어 삭제할 수 없습니다.');return;}dropAccts('client',k.id);db.collection('clients').doc(k.id).delete();}),
+      h('div',{class:'dangerbar'},h('span',{class:'muted sm'},'고객 정보는 입력하면 자동 저장됩니다.'),
+        h('button',{class:'dng',onclick:()=>delCustomer(k)},'고객 삭제')),
       custSites(k)));
-    F=foldItem(k.id,'k-'+k.id,()=>k.name,()=>[k.mgr,k.tel].filter(Boolean).join(' · ')||'담당자 미입력',()=>[(companies.find(c=>c.id===k.ownerId)||{}).name,'사이트 '+sites.filter(x=>x.clientId===k.id).length].filter(Boolean),B);kc.append(F);});
+    F=foldItem(k.id,'k-'+k.id,()=>k.name,()=>[k.mgr,k.tel].filter(Boolean).join(' · ')||'담당자 미입력',
+      ()=>[modeLabel(k.mode),k.perSite?'점검업체 개별':((companies.find(c=>c.id===k.ownerId)||{}).name||''),'사이트 '+sites.filter(x=>x.clientId===k.id).length].filter(Boolean),B);kc.append(F);});
   app.append(kc);
   orphanSites(app);
-  app.append(excelCard());
-  const cc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검업체 ('+companies.length+')'),h('button',{class:'pri',onclick:()=>wr('companies',openNew({id:uid(),name:'',biz:'',tel:''}))},'+ 업체 추가')));
+  const cc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검업체 ('+companies.length+') · 점검자 ('+people.length+')'),h('button',{class:'pri',onclick:()=>wr('companies',openNew({id:uid(),name:'',biz:'',tel:''}))},'+ 업체 추가')),
+    h('div',{class:'muted',style:'margin-top:6px'},'점검업체를 누르면 소속 점검자를 함께 관리합니다. 점검자 계정으로 로그인하면 점검 화면에서 본인이 자동으로 선택됩니다.'));
   if(!companies.length)cc.append(h('div',{class:'muted',style:'margin-top:10px'},'등록된 업체가 없습니다. 업체를 먼저 추가하세요.'));
   companies.slice().sort(byName).forEach(c=>{const sv0=deb('companies',c);let F;const sv=()=>{sv0();F&&F.upd();};
-    const B=(h('div',{class:'item'},fld('업체명',bind(c,'name',{on:sv,ph:'예: 제이솔루션'}),2),fld('사업자등록번호',bind(c,'biz',{on:sv})),fld('연락처',bind(c,'tel',{on:sv})),
-      twoStep('삭제',()=>{if(people.some(p=>p.companyId===c.id)){alert2('소속 점검자를 먼저 삭제하거나 다른 업체로 옮기세요.');return;}db.collection('companies').doc(c.id).delete();})));
+    const ps=people.filter(p=>p.companyId===c.id).sort(byName);
+    const sub=h('div',{class:'subsec'},h('div',{class:'row sb'},h('h3',{style:'margin:0;font-size:14px'},'소속 점검자 ('+ps.length+')'),
+      h('button',{class:'pri',onclick:()=>wr('people',openNew({id:uid(),name:'',companyId:c.id,grade:'특급',tel:''}))},'+ 점검자 추가')));
+    if(!ps.length)sub.append(h('div',{class:'muted',style:'margin-top:8px'},'등록된 점검자가 없습니다.'));
+    ps.forEach(p=>{const sp0=deb('people',p);let G;const sp=()=>{sp0();G&&G.upd();};
+      p.certs=p.certs||[];
+      const PB=h('div',{class:'item'},fld('성명',bind(p,'name',{on:sp}),2),fld('등급',selBox(p,'grade',GRADES,'등급 선택',sp),2),fld('연락처',bind(p,'tel',{on:sp})),
+        h('div',{class:'certbox'},h('label',{class:'f'},'정보통신기술자 자격증 사본 ('+p.certs.length+'장)'),h('div',{class:'muted sm',style:'margin-bottom:6px'},'경력수첩·자격증 등 기술자 증빙 이미지를 올립니다. 통합관리자와 소속 점검업체만 볼 수 있습니다.'),
+          photoBlock(p.certs,()=>{sp();},'자격증 사본','', 'people/'+p.id)),
+        acctBlock('person',p,'engineer'),
+        h('div',{class:'dangerbar'},h('span',{class:'muted sm'},'입력하면 자동 저장됩니다.'),twoStep('점검자 삭제',()=>{dropAccts('person',p.id);db.collection('people').doc(p.id).delete();})));
+      G=foldItem(p.id,'pe-'+p.id,()=>p.name,()=>p.tel||'연락처 미입력',()=>[p.grade].filter(Boolean),PB);sub.append(G);});
+    const B=(h('div',{class:'item'},fld('업체명',bind(c,'name',{on:sv,ph:'예: 제이솔루션'}),2),fld('사업자등록번호',bind(c,'biz',{on:sv})),fld('연락처',bind(c,'tel',{on:sv})),linkBox(c,sv),sub,
+      h('div',{class:'dangerbar'},h('span',{class:'muted sm'},'입력하면 자동 저장됩니다.'),
+        twoStep('업체 삭제',()=>{if(people.some(p=>p.companyId===c.id)){alert2('소속 점검자를 먼저 삭제하세요.');return;}db.collection('companies').doc(c.id).delete();}))));
     F=foldItem(c.id,'co-'+c.id,()=>c.name,()=>c.tel||'연락처 미입력',()=>['점검자 '+people.filter(p=>p.companyId===c.id).length,'사이트 '+sites.filter(x=>x.ownerId===c.id).length],B);cc.append(F);});
   app.append(cc);
-  const pc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'점검자 ('+people.length+')'),h('button',{class:'pri',disabled:!companies.length,onclick:()=>wr('people',openNew({id:uid(),name:'',companyId:'',grade:'특급',tel:''}))},'+ 점검자 추가')));
-  if(!people.length)pc.append(h('div',{class:'muted',style:'margin-top:10px'},companies.length?'등록된 점검자가 없습니다.':'점검업체를 먼저 등록하세요.'));
-  people.slice().sort(byName).forEach(p=>{const sv0=deb('people',p);let F;const sv=()=>{sv0();F&&F.upd();};
-    const B=(h('div',{class:'item'},fld('성명',bind(p,'name',{on:sv}),2),fld('소속 업체',selBox(p,'companyId',companies.slice().sort(byName).map(c=>[c.id,c.name||'(이름 없음)']),'업체 선택',sv),2),
-      fld('등급',selBox(p,'grade',GRADES,'등급 선택',sv),2),fld('연락처',bind(p,'tel',{on:sv})),
-      acctBlock('person',p,'engineer'),
-      twoStep('삭제',()=>{dropAccts('person',p.id);db.collection('people').doc(p.id).delete();})));
-    F=foldItem(p.id,'pe-'+p.id,()=>p.name,()=>[(companies.find(c=>c.id===p.companyId)||{}).name,p.tel].filter(Boolean).join(' · ')||'소속 미지정',()=>[p.grade].filter(Boolean),B);pc.append(F);});
-  app.append(pc);
   app.append(memoManager('*','공통 메모','모든 점검자의 메모 칸에 점선 칩으로 나옵니다. (각자의 내 메모가 먼저 나옵니다.)'));
-  app.append(h('div',{class:'muted',style:'margin:4px 6px 0'},'점검 시작 화면에서 업체 → 점검자 순으로 고르면 등급이 자동으로 입력됩니다. 점검자 계정으로 로그인하면 본인이 자동 선택됩니다.'));
+}
+/* ---------- 고객과금관리 ---------- */
+const WON=n=>Math.round(n||0).toLocaleString('ko-KR')+'원';
+function krWon(n){n=Math.floor(+n||0);if(n<=0)return'영 원';const D='영일이삼사오육칠팔구',sm=['','십','백','천'],big=['','만','억','조'];let out=[],g=0;
+  while(n>0&&g<4){const q=n%10000;n=Math.floor(n/10000);if(q){let t='';for(let i=3;i>=0;i--){const d=Math.floor(q/Math.pow(10,i))%10;if(d)t+=(d===1&&i>0?'':D[d])+sm[i];}
+    if(g===1&&q===1)t='';out.unshift(t+big[g]);}g++;}
+  return out.join(' ').trim()+' 원';}
+const BILL_DEF={cloud:{site:50000,area:3000,co:30000,ppl:10000},onprem:{server:0,kvm:0,site:0,co:0},co:{cl:20000,site:10000,area:1000}};
+const billP=()=>{const m=memos.find(x=>x.id==='billprices')||{};return{cloud:{...BILL_DEF.cloud,...(m.cloud||{})},onprem:{...BILL_DEF.onprem,...(m.onprem||{})},co:{...BILL_DEF.co,...(m.co||{})}};};
+const saveBillP=P=>db.collection('memos').doc('billprices').set({owner:'u:billing',kind:'billprices',cloud:P.cloud,onprem:P.onprem,co:P.co,updatedAt:new Date().toISOString()});
+function billQty(k){
+  const ss=sites.filter(x=>x.clientId===k.id),cos=new Set([k.ownerId,...ss.map(x=>x.ownerId),...companies.filter(c=>linkedTo(c,k.id)).map(c=>c.id)].filter(Boolean));
+  return{site:ss.length,area:ss.reduce((n,x)=>n+(x.areas||[]).length,0),co:cos.size,ppl:people.filter(q=>cos.has(q.companyId)).length};}
+const billUnit=(k,P,kind,key)=>{const o=k.bill&&k.bill.unit&&k.bill.unit[kind+'_'+key];return(o!==undefined&&o!==''&&o!==null)?+o:P[kind][key];};
+const addMon=(d,n)=>{const t=new Date(d+'T00:00:00');if(isNaN(t))return'';const day=t.getDate();t.setMonth(t.getMonth()+n);if(t.getDate()<day)t.setDate(0);return ymd(t);};
+function nextBill(from,cycle){if(!from)return'';const step=cycle==='yearly'?12:1;let n=0,d=from;while(d<today()&&n<2400){n+=step;d=addMon(from,n);}return d;}
+const CO_ITEMS=[['cl','관리 고객','곳'],['site','사이트','곳'],['area','점검 영역','개']];
+function billQtyCo(c){const ss=sites.filter(x=>x.ownerId===c.id),cl=new Set([...ss.map(x=>x.clientId),...clients.filter(k=>k.ownerId===c.id).map(k=>k.id)].filter(Boolean));
+  return{cl:cl.size,site:ss.length,area:ss.reduce((n,x)=>n+(x.areas||[]).length,0)};}
+const CLOUD_ITEMS=[['site','사이트','곳'],['area','점검 영역','개'],['co','점검업체','곳'],['ppl','점검자','명']];
+const ONPREM_ITEMS=[['server','서버 구매','대'],['kvm','KVM 구매','대'],['site','점검 사이트','곳'],['co','점검업체','곳']];
+function vBilling(app){
+  if(!ROLE.admin){go('dash');return;}
+  const grp=route.g||'cust',tab=grp==='co'?'co':(route.t||'cloud'),isM=tab==='cloud'||tab==='co',P=billP(),isCo=tab==='co';
+  const moneyIn=(val,on,w)=>{const wrap=h('span',{class:'mny'}),i=h('input',{type:'text',inputmode:'numeric',value:(val===undefined||val===null||val==='')?'':Number(val).toLocaleString('ko-KR'),style:'width:'+(w||150)+'px;text-align:right'}),kr=h('span',{class:'krw muted sm'},'');
+    const raw=()=>i.value.replace(/[^0-9]/g,'');const upd=()=>{const r=raw();i.value=r?Number(r).toLocaleString('ko-KR'):'';kr.textContent=r?krWon(+r):'';};
+    i.addEventListener('input',upd);i.addEventListener('change',()=>on(raw()));upd();wrap.append(i,kr);return wrap;};
+  const numIn=(val,on,w)=>{const i=h('input',{type:'number',min:'0',step:'any',value:val===undefined||val===null?'':String(val),style:'width:'+(w||110)+'px;text-align:right'});i.addEventListener('change',()=>on(i.value));return i;};
+  app.append(h('div',{class:'segs gsel',style:'margin-bottom:10px'},...[['cust','고객 과금'],['co','점검업체(점검자) 과금']].map(([k,t])=>h('button',{class:grp===k?'on':'',onclick:()=>{route.g=k;render();}},t))));
+  if(!isCo)app.append(h('div',{class:'segs',style:'margin-bottom:12px'},...[['cloud','클라우드 이용 (월 과금)'],['onprem','On-premise 구축']].map(([k,t])=>h('button',{class:tab===k?'on':'',onclick:()=>{route.t=k;render();}},t))));
+  const items=isCo?CO_ITEMS:isM?CLOUD_ITEMS:ONPREM_ITEMS,kind=tab;
+  const pc=h('div',{class:'card'},h('h3',{},isM?'기본 단가 (월, 원)':'기본 단가 (원)'),
+    h('div',{class:'muted sm',style:'margin-bottom:8px'},'처음 들어 있는 금액은 예시입니다. 직접 입력해 바꾸면 모든 '+(isCo?'점검업체':'고객')+'에 적용되고, 아래 견적서의 단가 조정에서 개별로 바꿀 수 있습니다.'),
+    h('div',{class:'row',style:'gap:14px;flex-wrap:wrap'},...items.map(([key,lab,u])=>h('label',{class:'f pin'},h('span',{},lab+' 단가 (1'+u+')'),moneyIn(P[kind][key],async v=>{P[kind][key]=+v||0;try{await saveBillP(P);}catch(e){alert2('저장 실패: '+(e.code||e.message));}render();})))));
+  app.append(pc);
+  const list=(isCo?companies.slice():clients.filter(k=>tab==='cloud'?k.mode==='cloud':k.mode==='onprem')).sort(byName);
+  const calc=k=>{const q=isCo?billQtyCo(k):billQty(k),b=k.bill||{},rows=items.map(([key,lab,u])=>{const n=(tab==='onprem'&&(key==='server'||key==='kvm'))?(+b[key]||0):((b.qty&&b.qty[key]!==undefined)?+b.qty[key]:q[key]),pr=billUnit(k,P,kind,key);return{key,lab,u,n,pr,amt:n*pr};});
+    return{q,rows,sum:rows.reduce((a,r)=>a+r.amt,0)};};
+  const all=list.map(calc),tot=all.reduce((a,c)=>a+c.sum,0);
+  if(isM){const yr=list.reduce((a,k,i)=>a+((k.bill&&k.bill.cycle==='yearly')?all[i].sum*12*.8:all[i].sum*12),0);
+    app.append(h('div',{class:'stats s3'},h('div',{class:'stat'},h('b',{},WON(tot)),h('span',{},'월 과금 합계 ('+list.length+'곳)')),h('div',{class:'stat'},h('b',{},WON(yr)),h('span',{},'연 환산 (납부방식 반영)')),h('div',{class:'stat'},h('b',{},WON(all.reduce((a,c)=>a+c.sum*12*.8,0))),h('span',{},'전체 연 일시납 시 (20% 할인)'))));}
+  else app.append(h('div',{class:'stats s3'},h('div',{class:'stat'},h('b',{},WON(tot)),h('span',{},'구축 금액 합계 ('+list.length+'곳)'))));
+  {const un=isCo?[]:clients.filter(k=>!k.mode);if(un.length)app.append(h('div',{class:'card'},h('h3',{},'운영방식 미지정 고객 ('+un.length+')'),h('div',{class:'muted sm',style:'margin-bottom:6px'},'운영방식을 정하면 해당 탭의 과금 대상으로 들어오고, 사이트·영역·점검업체·점검자 수가 자동으로 반영됩니다.'),
+    ...un.map(k=>h('div',{class:'row sb',style:'align-items:center;margin:4px 0'},h('span',{},k.name||'(이름 없음)'),h('span',{class:'row',style:'gap:6px'},...[['cloud','클라우드 이용'],['onprem','고객사 내 설치']].map(([v,l])=>h('button',{onclick:async()=>{const {id,...b}=k;b.mode=v;b.updatedAt=new Date().toISOString();try{await db.collection('clients').doc(id).set(b);}catch(e){alert2('저장 실패: '+(e.code||e.message));}}},l)))))));}
+  if(!list.length)app.append(h('div',{class:'card empty'},isCo?'등록된 점검업체가 없습니다. 설정에서 점검업체를 등록하세요.':isM?'클라우드 이용 고객이 없습니다. 설정 > 고객 정보에서 운영방식을 "클라우드 이용"으로 지정하세요.':'고객사 내 설치(On-premise) 고객이 없습니다. 설정 > 고객 정보에서 운영방식을 "고객사 내 설치"로 지정하세요.'));
+  const R=(cls,l,v,sub,sp)=>h('tr',{class:cls},h('td',{colspan:sp||4,style:'text-align:right'},l,sub?h('div',{class:'muted sm'},sub):null),h('td',{style:'text-align:right'},v));
+  list.forEach((k,idx)=>{
+    const c=all[idx];k.bill=k.bill||{};const b=k.bill;let t;
+    const sv=()=>{clearTimeout(t);t=setTimeout(async()=>{const {id,...body}=k;body.updatedAt=new Date().toISOString();try{await db.collection(isCo?'companies':'clients').doc(id).set(body);setSave('저장됨 '+hhmm());}catch(e){alert2('저장 실패: '+(e.code||e.message));}render();},300);};
+    const setB=(key,v)=>{b[key]=v;sv();};
+    const head=h('div',{class:'row sb',style:'align-items:center;flex-wrap:wrap;gap:8px'},h('div',{},h('b',{style:'font-size:16px'},k.name||'(이름 없음)'),h('span',{class:'muted sm',style:'margin-left:10px'},[k.mgr,k.tel].filter(Boolean).join(' · '))),
+      h('span',{class:'muted sm'},isCo?'관리 고객 '+c.q.cl+' · 사이트 '+c.q.site+' · 점검 영역 '+c.q.area:'사이트 '+c.q.site+' · 영역 '+c.q.area+' · 점검업체 '+c.q.co+' · 점검자 '+c.q.ppl));
+    const yr=isM&&b.cycle==='yearly',m12=c.sum*12,lump=m12*.8,disc=m12-lump;
+    c.yr=yr;
+    const fromIn=h('input',{type:'date',value:b.from||''});fromIn.addEventListener('change',()=>setB('from',fromIn.value));
+    const cond=h('div',{class:'row',style:'gap:14px;align-items:flex-end;flex-wrap:wrap;margin:10px 0'},h('label',{class:'f'},isM?'적용 시작일':'구축(적용)일',fromIn));
+    if(isM){const nb=nextBill(b.from,yr?'yearly':'monthly'),st=!b.from?['warn','적용일 미설정']:b.from>today()?['warn','적용 예정']:['ok','적용 중'];
+      cond.append(h('div',{},h('label',{class:'f'},'납부 방식'),h('div',{class:'segs'},...[['monthly','월납'],['yearly','연 일시납 (20% 할인)']].map(([v,l])=>h('button',{class:(yr?'yearly':'monthly')===v?'on':'',onclick:()=>setB('cycle',v)},l)))),h('div',{},h('label',{class:'f'},'계약 기간'),h('div',{class:'segs'},...[1,2,3,4,5].map(y=>h('button',{class:(+b.years||1)===y?'on':'',onclick:()=>setB('years',y)},y+'년')))),h('span',{class:'pill '+st[0]},st[1]+(b.from&&nb?' · 다음 청구일 '+nb:'')));}
+    const qrows=c.rows.map((r,i)=>h('tr',{},h('td',{class:'nw'},String(i+1)),h('td',{},r.lab),
+      h('td',{style:'text-align:right'},(tab==='onprem'&&(r.key==='server'||r.key==='kvm'))?numIn(b[r.key]||0,v=>setB(r.key,+v||0),70):h('span',{class:'qin'},numIn(r.n,v=>{b.qty=b.qty||{};if(v==='')delete b.qty[r.key];else b.qty[r.key]=+v;sv();},70),r.u,(b.qty&&b.qty[r.key]!==undefined)?h('button',{class:'mini',title:'자동 집계값으로 되돌리기',onclick:()=>{delete b.qty[r.key];sv();}},'↺'):h('span',{class:'muted sm'},' 자동'))),h('td',{style:'text-align:right'},WON(r.pr)),h('td',{style:'text-align:right'},WON(r.amt))));
+    const foot=[],yrs=+b.years||1,total=isM?(yr?lump:m12)*yrs:c.sum;
+    c.total=total;c.m12=m12;c.annual=yr?lump:m12;c.yrs=yrs;
+    if(isM){foot.push(R('sub','월 과금 (최종)',WON(c.sum)),R('sub','연 환산 (× 12개월)',WON(m12)));
+      if(yr)foot.push(R('sub disc','연 일시납 할인 20%','− '+WON(disc)),R('sub','연 일시납 청구액 (연 1회)',WON(lump),'월 '+WON(lump/12)+' 상당'));
+      foot.push(R('grand','총합계 (계약기간 '+yrs+'년)',WON(total),(yr?'연 '+WON(lump)+' × '+yrs+'년':'연 '+WON(m12)+' × '+yrs+'년 (월 '+WON(c.sum)+' × '+(12*yrs)+'개월)')+(b.from?' · '+b.from+' ~ '+addMon(b.from,12*yrs):'')));}
+    else foot.push(R('sub','소계',WON(c.sum)),R('grand','총합계',WON(c.sum)));
+    const body=h('div',{class:'card bill quote'},
+      h('div',{class:'qhead'},h('div',{},h('div',{class:'qtitle'},'견 적 서'),h('div',{class:'muted sm'},isCo?'Easy ICT Master 점검업체(점검자) 이용':isM?'Easy ICT Master 클라우드 이용':'Easy ICT Master On-premise 구축')),
+        h('div',{class:'qmeta'},h('div',{},h('span',{class:'muted sm'},'견적일 '),today()),h('div',{},h('span',{class:'muted sm'},'수신 '),h('b',{},(k.name||'(이름 없음)')+' 귀하')),k.mgr||k.tel?h('div',{class:'muted sm'},[k.mgr,k.tel].filter(Boolean).join(' · ')):null)),
+      h('div',{class:'muted sm',style:'margin-top:6px'},(isCo?'관리 고객 '+c.q.cl+' · 사이트 '+c.q.site+' · 점검 영역 '+c.q.area:'사이트 '+c.q.site+' · 점검 영역 '+c.q.area+' · 점검업체 '+c.q.co+' · 점검자 '+c.q.ppl)+' (등록 정보에서 자동 집계 · 수량은 직접 수정 가능)'),
+      cond,
+      h('div',{class:'tbl2'},h('table',{class:'t2 qt'},h('thead',{},h('tr',{},h('th',{style:'width:44px'},'No'),h('th',{},'품목'),h('th',{style:'text-align:right'},'수량'),h('th',{style:'text-align:right'},'단가'),h('th',{style:'text-align:right'},isM?'월 금액':'금액'))),h('tbody',{},...qrows,...foot))),
+      h('div',{class:'muted sm',style:'margin-top:6px'},'금액은 부가세 별도입니다.'));
+    const det=h('details',{style:'margin-top:8px'},h('summary',{style:'cursor:pointer'},'단가 조정 (비우면 기본 단가)'),
+      h('div',{class:'row',style:'gap:12px;flex-wrap:wrap;margin-top:8px'},...items.map(([key,lab])=>h('label',{class:'f pin'},h('span',{},lab+' 단가'),moneyIn((b.unit||{})[kind+'_'+key],v=>{b.unit=b.unit||{};if(v==='')delete b.unit[kind+'_'+key];else b.unit[kind+'_'+key]=+v;sv();},110)))),
+      h('div',{style:'margin-top:8px'},h('label',{class:'f'},'메모'),(()=>{const i=h('input',{type:'text',value:b.note||'',placeholder:'계약·청구 관련 메모'});i.addEventListener('change',()=>setB('note',i.value));return i;})()));
+    body.append(det);app.append(body);});
+  if(list.length){const rows=list.map((k,i)=>({k,c:all[i]})),sm=f=>rows.reduce((a,r)=>a+f(r.c),0);
+    app.append(h('div',{class:'card bill quote qsum'},h('div',{class:'qtitle',style:'font-size:18px'},'전체 총합계'),
+      h('div',{class:'tbl2'},h('table',{class:'t2 qt'},h('thead',{},h('tr',{},h('th',{},isCo?'점검업체':'고객'),h('th',{},isM?'납부 방식 · 계약기간':'구분'),h('th',{style:'text-align:right'},isM?'월 과금':''),h('th',{style:'text-align:right'},'총합계'))),
+        h('tbody',{},...rows.map(r=>h('tr',{},h('td',{},r.k.name||'(이름 없음)'),h('td',{},isM?(r.c.yr?'연 일시납':'월납')+' · '+r.c.yrs+'년':'구축'),h('td',{style:'text-align:right'},isM?WON(r.c.sum):''),h('td',{style:'text-align:right'},WON(r.c.total)))),
+          ...(isM?[R('sub','월 과금 합계',WON(sm(c=>c.sum)),null,3),R('sub','연 환산 합계 (납부방식 반영)',WON(sm(c=>c.annual)),null,3),R('grand','계약기간 총액 합계',WON(sm(c=>c.total)),null,3)]:[R('grand','구축 금액 총합계',WON(sm(c=>c.total)),null,3)])))),
+      h('div',{class:'muted sm',style:'margin-top:6px'},'부가세 별도')));}
 }
 /* ---------- 위치 / 점검 단위 ---------- */
 const unitsOf=i=>i.units||(i.areas||[]).map(no=>({u:String(no),no,loc:''}));
@@ -1442,7 +1659,7 @@ const lwr=l=>{const {id,...b}=l;b.updatedAt=new Date().toISOString();setSave('�
 const ldeb=l=>{let t;return()=>{clearTimeout(t);setSave('저장 대기…');t=setTimeout(()=>lwr(l),600);};};
 function siteLocBox(st,rich){
   const ls=locsOfSite(st.id),d=dueInfo(st,'maint');
-  const box=h('details',{class:'sitebox'},h('summary',{},h('b',{style:'font-weight:600;font-size:15px'},st.name||'(이름 없음)'),h('span',{class:'muted sm'},rich?[st.address,st.completed?'완공 '+st.completed:''].filter(Boolean).join(' · '):(st.client||'')),h('div',{class:'grow'}),
+  const box=h('details',{class:'sitebox'},h('summary',{},h('b',{style:'font-weight:600;font-size:15px'},st.name||'(이름 없음)'),h('span',{class:'muted sm'},rich?[st.address,st.completed?'완공 '+st.completed:'',((companies.find(c=>c.id===st.ownerId)||{}).name||'')?'점검 '+(companies.find(c=>c.id===st.ownerId)||{}).name:''].filter(Boolean).join(' · '):(st.client||'')),h('div',{class:'grow'}),
     rich&&d?h('span',{class:'pill '+(d.done?'ok':tone(d))},d.done?'점검 완료':dlabel(d.dday)):null,h('span',{class:'pill'+(ls.length?' pri':'')},'위치 '+ls.length+'곳')));
   if(openSet.has(st.id))box.open=true;
   box.addEventListener('toggle',()=>{box.open?openSet.add(st.id):openSet.delete(st.id);lsSet('open_sites',JSON.stringify([...openSet]));});
@@ -1453,6 +1670,10 @@ function siteLocBox(st,rich){
       h('div',{class:'muted sm grow'},[st.mgr?'담당 '+st.mgr+(st.mgrTel?' '+st.mgrTel:''):'',st.use||'','점검 영역 '+(st.areas||[]).length+'개',oi?'미조치 이슈 '+oi:'미조치 없음'].filter(Boolean).join(' · ')),
       h('button',{onclick:()=>go('siteview',{id:st.id})},'상세·점검 이력'),
       ROLE.site?h('button',{onclick:()=>{siteDraft=clone(st);go('siteedit');}},'정보·설비 수정'):null));
+    const kk=clients.find(c=>c.id===st.clientId);
+    if(roleKey==='supervisor'&&ROLE.admin&&kk&&kk.perSite){const sl=h('select',{},h('option',{value:''},'점검업체 선택'),...companies.slice().sort(byName).map(c=>h('option',{value:c.id},c.name||'(이름 없음)')));sl.value=st.ownerId||'';
+      sl.addEventListener('change',()=>{const {id,...b}=st;b.ownerId=sl.value;b.updatedAt=new Date().toISOString();db.collection('sites').doc(id).set(b).catch(e=>alert2('저장 실패: '+(e.code||e.message)));});
+      body.append(h('div',{class:'row',style:'margin:0 0 10px'},fld('이 사이트의 점검업체',sl)));}
   }
   if(!ls.length)body.append(h('div',{class:'muted',style:'margin:4px 0 8px'},'등록된 점검 위치가 없습니다.'));
   ls.forEach(l=>{const sv=ldeb(l);const gp=bind(l,'gps',{ph:'위도, 경도',on:sv});const am=h('span',{class:'muted sm'},'');
@@ -1477,8 +1698,28 @@ function locCard(){
 function custSites(k){
   const ss=sites.filter(x=>x.clientId===k.id).sort((a,b)=>(a.name||'').localeCompare(b.name||'','ko'));
   const wrap=h('div',{style:'flex:0 0 100%;width:100%;order:-1;margin-bottom:6px;border-bottom:1px solid var(--line);padding-bottom:14px'});
+  const adm=(roleKey==='supervisor'&&ROLE.admin)||(roleKey==='manager'&&ROLE.site);
   wrap.append(h('div',{class:'row sb'},h('h3',{style:'margin:0'},'사이트 · 점검 위치 ('+ss.length+')'),
-    ROLE.site?h('button',{class:'pri',onclick:()=>{siteDraft={id:uid(),isNew:true,name:'',client:k.name||'',clientId:k.id,address:k.addr||'',completed:'',area:'',mgr:k.mgr||'',mgrTel:k.tel||'',areas:[],fac:{}};go('siteedit');}},'+ 사이트 추가'):null));
+    ROLE.site?h('button',{class:'pri',onclick:()=>{siteDraft={id:uid(),isNew:true,name:'',client:k.name||'',clientId:k.id,address:k.addr||'',completed:'',area:'',mgr:k.mgr||'',mgrTel:k.tel||'',areas:k.areaMode==='all'?(k.areas||[]).slice():[],fac:{},ownerId:(adm&&!k.perSite&&k.ownerId)||''};go('siteedit');}},'+ 사이트 추가'):null));
+  if(adm){
+    const saveK=()=>{const {id,...b}=k;b.updatedAt=new Date().toISOString();return db.collection('clients').doc(id).set(b);};
+    const sel=h('select',{'aria-label':'사이트 점검업체'},h('option',{value:''},'지정 안 함'),...companies.slice().sort(byName).map(c=>h('option',{value:c.id},c.name||'(이름 없음)')));sel.value=k.ownerId||'';sel.disabled=!!k.perSite;
+    sel.addEventListener('change',async()=>{const v=sel.value,nm=(companies.find(c=>c.id===v)||{}).name||'';
+      if(v&&ss.some(s=>s.ownerId&&s.ownerId!==v)&&!await confirm2('이 고객의 모든 사이트 점검업체를 "'+nm+'"(으)로 통일합니다. 계속할까요?')){sel.value=k.ownerId||'';return;}
+      k.ownerId=v;try{await saveK();for(const s of ss){const {id,...b}=s;b.ownerId=v;b.updatedAt=new Date().toISOString();await db.collection('sites').doc(id).set(b);}}catch(e){alert2('저장 실패: '+(e.code||e.message));}});
+    const cb=h('input',{type:'checkbox'});cb.checked=!!k.perSite;
+    cb.addEventListener('change',async()=>{k.perSite=cb.checked;try{await saveK();}catch(e){alert2('저장 실패: '+(e.code||e.message));}render();});
+    wrap.append(h('div',{class:'sitebar'},fld('점검업체 (이 고객의 모든 사이트에 동일 적용)',sel),h('label',{class:'chk'},cb,'사이트별 개별 등록'),
+      h('span',{class:'muted sm'},k.perSite?'사이트마다 점검업체를 따로 지정합니다. 아래 각 사이트에서 고르세요.':'')));
+    const all=k.areaMode==='all',segA=h('div',{class:'segs'},...[['each','사이트별 개별'],['all','모든 사이트 동일']].map(([v,t])=>h('button',{class:(all?'all':'each')===v?'on':'',onclick:async()=>{
+      if(v==='all'&&ss.length&&!await confirm2('모든 사이트의 점검 대상 영역을 아래 선택값으로 통일합니다. 계속할까요?'))return;
+      k.areaMode=v;if(v==='all'&&!k.areas)k.areas=[];try{await saveK();if(v==='all')await applyAreas();}catch(e){alert2('저장 실패: '+(e.code||e.message));}render();}},t)));
+    const applyAreas=async()=>{for(const x of ss){const {id,...b}=x;b.areas=(k.areas||[]).slice().sort((p,q)=>p-q);b.updatedAt=new Date().toISOString();await db.collection('sites').doc(id).set(b);}};
+    const ab=h('div',{class:'sitebar',style:'flex-direction:column;align-items:stretch;gap:8px'},h('div',{class:'row',style:'align-items:center;gap:10px'},h('b',{},'점검 대상 영역'),segA,h('span',{class:'muted sm'},all?'아래에서 고른 영역이 이 고객의 모든 사이트에 적용됩니다.':'사이트 정보에서 사이트마다 영역을 고릅니다.')));
+    if(all){let t;const det=h('details',{},h('summary',{style:'cursor:pointer;font-weight:600'},'공통 점검 영역 ('+(k.areas||[]).length+'/'+AREAS.length+')'));
+      det.append(areaTable(k,()=>{det.querySelector('summary').textContent='공통 점검 영역 ('+(k.areas||[]).length+'/'+AREAS.length+')';clearTimeout(t);t=setTimeout(async()=>{try{await saveK();await applyAreas();}catch(e){alert2('저장 실패: '+(e.code||e.message));}},700);}));ab.append(det);}
+    wrap.append(ab);
+  }
   if(!ss.length)wrap.append(h('div',{class:'muted',style:'margin-top:8px'},'이 고객의 사이트가 없습니다. 사이트 추가를 눌러 등록하세요. (엑셀 일괄 등록도 가능합니다.)'));
   ss.forEach(s=>{const b=siteLocBox(s,true);b.style.marginTop='8px';wrap.append(b);});
   return wrap;
@@ -1532,29 +1773,44 @@ const srcOf=x=>x.src||(x.ownerId?'company':'client');
 function relStats(ss){const ids=new Set(ss.map(x=>x.id)),is=issues.filter(x=>ids.has(x.siteId)),ins=insps.filter(i=>ids.has(i.siteId)&&i.status==='submitted');
   return{open:is.filter(x=>x.status!=='done').length,done:is.filter(x=>x.status==='done').length,sub:ins.length,conf:ins.filter(i=>i.confirm).length,pend:ins.filter(i=>!i.confirm).length,last:ins.map(i=>i.date).sort().pop()||''};}
 const chip=(t,tone)=>h('span',{class:'pill '+(tone||'')},t);
+const pad2=n=>String(n).padStart(2,'0');
+function fmtKo(d){const m=String(d||'').match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);return m?m[1]+'년 '+(+m[2])+'월 '+(+m[3])+'일':'';}
+function spanKo(from,to){const a=String(from||'').match(/^(\d{4})-(\d{1,2})-(\d{1,2})/),b=String(to||today()).match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(!a||!b)return '';
+  let y=+b[1]-+a[1],m=+b[2]-+a[2],d=+b[3]-+a[3];if(d<0){m--;d+=new Date(+b[1],+b[2]-1,0).getDate();}if(m<0){y--;m+=12;}if(y<0)return '';return y+'년 '+pad2(m)+'월 '+pad2(d)+'일';}
+const regDateOf=k=>k.regDate||(k.createdAt||'').slice(0,10)||(sites.filter(x=>x.clientId===k.id).map(x=>(x.createdAt||'').slice(0,10)).filter(Boolean).sort()[0])||'';
 function adminHome(app){
   const dep=deployOn(),dk=dep?clients[0]:null,all=relStats(sites);
-  app.append(h('div',{class:'sechead'},h('h3',{},dep?'설치형 운영 현황':'클라우드 운영 현황'),h('span',{},dep?((dk&&dk.name)||'')+' 전용 설치 · 이 고객사와 담당 점검업체만 표시':'모든 고객사·점검업체·사이트의 연결 관계')));
+  app.append(h('div',{class:'sechead'},h('h3',{},dep?'설치형 운영 현황':'통합 운영 현황'),h('span',{},dep?((dk&&dk.name)||'')+' 전용 설치 · 이 고객사와 담당 점검업체만 표시':'모든 고객사·점검업체·사이트의 연결 관계')));
   app.append(h('div',{class:'stats s3'},stat('고객사',clients.length,'',()=>go('settings')),stat('점검업체',companies.length,'',()=>go('settings')),stat('사이트',sites.length,'',()=>go('settings')),
     stat('미조치 이슈',all.open,all.open?'ng':'ok',()=>navTo('issues')),stat('확인 대기 리포트',all.pend,all.pend?'warn':'ok',()=>navTo('reports')),stat('해결 완료 이슈',all.done,'ok',()=>navTo('issues'))));
-  app.append(h('div',{class:'muted sm',style:'margin:2px 4px 10px'},'고객사 → 점검업체 → 사이트 순으로 연결해 보여 줍니다. '+(dep?'':'점검업체가 올린 내용과 고객사가 직접 관리하는 내용을 함께 확인할 수 있습니다. ')+'이름을 누르면 상세로 이동합니다.'));
+  app.append(upcomingCard(),submittedCard());
+  {const gc=ganttCard();if(gc)app.append(gc);}
+  app.append(h('div',{class:'sechead'},h('h3',{},'고객별 현황'),h('span',{},'고객 → 점검업체 → 사이트 순서 · 사이트별 점검 기한 포함 · 이름을 누르면 상세로 이동합니다.')));
   const ks=clients.slice().sort(byName);
   if(!ks.length)app.append(h('div',{class:'card empty'},'등록된 고객사가 없습니다.'));
   ks.forEach(k=>{
-    const ss=sites.filter(x=>x.clientId===k.id),st=relStats(ss),cids=new Set([...companies.filter(c=>c.clientId===k.id).map(c=>c.id),...ss.map(x=>x.ownerId).filter(Boolean),k.ownerId].filter(Boolean));
+    const ss=sites.filter(x=>x.clientId===k.id),st=relStats(ss),cids=new Set([...companies.filter(c=>linkedTo(c,k.id)).map(c=>c.id),...ss.map(x=>x.ownerId).filter(Boolean),k.ownerId].filter(Boolean));
     const cos=companies.filter(c=>cids.has(c.id)).sort(byName),free=ss.filter(x=>!x.ownerId||!companies.some(c=>c.id===x.ownerId));
-    const siteRow=x=>{const q=relStats([x]);return h('div',{class:'relrow',onclick:()=>go('siteview',{id:x.id})},h('span',{class:'grow'},x.name),chip(SRC[srcOf(x)]||'',''),q.open?chip('미조치 '+q.open,'ng'):chip('미조치 없음','ok'),q.pend?chip('확인 대기 '+q.pend,'warn'):null,h('span',{class:'muted sm'},q.last?'최근 점검 '+q.last:'점검 없음'));};
-    const card=h('div',{class:'card rel',id:'rel-'+k.id});
-    card.append(h('div',{class:'row sb',style:'cursor:pointer',onclick:()=>go('settings',{focus:'k-'+k.id})},h('div',{},h('h3',{style:'margin:0'},k.name||'(이름 없음)'),h('div',{class:'muted sm'},[k.mgr,k.tel].filter(Boolean).join(' · ')||'담당자 미입력')),
-      h('div',{class:'row',style:'gap:6px'},st.open?chip('미조치 '+st.open,'ng'):chip('미조치 없음','ok'),st.pend?chip('확인 대기 '+st.pend,'warn'):null)));
-    card.append(h('div',{class:'relstat'},h('div',{},h('b',{},ss.length),h('span',{},'사이트')),h('div',{},h('b',{},st.sub),h('span',{},'제출 리포트')),h('div',{},h('b',{},st.conf),h('span',{},'확인 완료')),h('div',{},h('b',{},st.pend),h('span',{},'확인 대기')),h('div',{},h('b',{},st.open),h('span',{},'미조치 이슈')),h('div',{},h('b',{},st.done),h('span',{},'해결 완료'))));
-    cos.forEach(c=>{const cs=ss.filter(x=>x.ownerId===c.id),sf=((k.staff||[]).find(x=>x.id===c.staffId))||null;
-      card.append(h('div',{class:'relco'},h('div',{class:'row sb',style:'cursor:pointer',onclick:()=>go('settings',{focus:'co-'+c.id})},h('b',{},'점검업체 · '+c.name),h('span',{class:'muted sm'},[c.tel,sf?'고객 담당자 '+sf.name:''].filter(Boolean).join(' · '))),
-        cs.length?h('div',{},...cs.map(siteRow)):h('div',{class:'muted sm',style:'padding:4px 0'},'담당 사이트 없음')));});
-    if(free.length)card.append(h('div',{class:'relco'},h('b',{},'업체 미배정 사이트'),h('div',{},...free.map(siteRow))));
-    if(!cos.length&&!free.length)card.append(h('div',{class:'muted sm',style:'margin-top:8px'},'연결된 점검업체와 사이트가 없습니다.'));
-    app.append(card);});
-  const lone=companies.filter(c=>!clients.some(k=>k.id===c.clientId||sites.some(x=>x.clientId===k.id&&x.ownerId===c.id)||k.ownerId===c.id));
+    const siteRow=x=>{const q=relStats([x]);return h('div',{class:'kc-site'},
+      h('div',{class:'relrow',onclick:()=>go('siteview',{id:x.id})},h('span',{class:'grow'},h('b',{},x.name)),chip(SRC[srcOf(x)]||'',''),q.open?chip('미조치 '+q.open,'ng'):chip('미조치 없음','ok'),q.pend?chip('확인 대기 '+q.pend,'warn'):null,h('span',{class:'muted sm'},q.last?'최근 점검 '+q.last:'점검 없음')),
+      h('div',{class:'duegrid'},dueBar(dueInfo(x,'maint'),'유지보수관리 점검'),dueBar(dueInfo(x,'perf'),'성능점검')));};
+    const reg=regDateOf(k),span=reg?spanKo(reg):'';
+    const card=h('div',{class:'card rel kc',id:'rel-'+k.id});
+    card.append(h('div',{class:'kc-h',onclick:()=>go('settings',{focus:'k-'+k.id})},
+      h('div',{class:'row sb',style:'align-items:flex-start;gap:10px'},
+        h('div',{},h('div',{class:'kc-lab'},'고객'),h('h3',{},k.name||'(이름 없음)'),h('div',{class:'kc-m'},[k.mgr,k.tel].filter(Boolean).join(' · ')||'담당자 미입력')),
+        h('div',{class:'row',style:'gap:6px;justify-content:flex-end'},k.mode?h('span',{class:'pill'},modeLabel(k.mode)):null,st.open?chip('미조치 '+st.open,'ng'):chip('미조치 없음','ok'),st.pend?chip('확인 대기 '+st.pend,'warn'):null)),
+      h('div',{class:'kc-d'},h('span',{},'등록일 : '+(reg?fmtKo(reg):'미기록')),h('span',{},'기간 : '+(span||'-')))));
+    const body=h('div',{class:'kc-b'});
+    body.append(h('div',{class:'relstat'},h('div',{},h('b',{},ss.length),h('span',{},'사이트')),h('div',{},h('b',{},st.sub),h('span',{},'제출 리포트')),h('div',{},h('b',{},st.conf),h('span',{},'확인 완료')),h('div',{},h('b',{},st.pend),h('span',{},'확인 대기')),h('div',{},h('b',{},st.open),h('span',{},'미조치 이슈')),h('div',{},h('b',{},st.done),h('span',{},'해결 완료'))));
+    cos.forEach(c=>{const cs=ss.filter(x=>x.ownerId===c.id),sf=((k.staff||[]).find(x=>x.id===c.staffId))||null,np=people.filter(q=>q.companyId===c.id).length;
+      body.append(h('div',{class:'kc-co'},h('div',{class:'row sb',style:'cursor:pointer;gap:8px',onclick:()=>go('settings',{focus:'co-'+c.id})},h('div',{},h('div',{class:'kc-lab2'},'점검업체'),h('b',{style:'font-size:15px'},c.name||'(이름 없음)')),
+        h('div',{class:'row',style:'gap:6px;justify-content:flex-end'},c.tel?h('span',{class:'pill'},c.tel):null,np?h('span',{class:'pill'},'점검자 '+np+'명'):null,h('span',{class:'pill'},'담당 사이트 '+cs.length+'곳'),sf?h('span',{class:'pill'},'고객 담당 '+sf.name):null)),
+        cs.length?h('div',{},...cs.map(siteRow)):h('div',{class:'muted sm',style:'padding:6px 0 2px'},'담당 사이트 없음')));});
+    if(free.length)body.append(h('div',{class:'kc-co kc-free'},h('div',{class:'kc-lab2'},'점검업체 미배정'),h('div',{},...free.map(siteRow))));
+    if(!cos.length&&!free.length)body.append(h('div',{class:'muted sm',style:'margin-top:8px'},'연결된 점검업체와 사이트가 없습니다.'));
+    card.append(body);app.append(card);});
+  const lone=companies.filter(c=>!clients.some(k=>linkedTo(c,k.id)||sites.some(x=>x.clientId===k.id&&x.ownerId===c.id)||k.ownerId===c.id));
   if(lone.length){app.append(h('div',{class:'sechead'},h('h3',{},'연결된 고객사가 없는 점검업체 ('+lone.length+')')));app.append(h('div',{class:'sitegrid'},...lone.map(c=>pcard(c.name,c.tel||'',[['담당 사이트',sites.filter(x=>x.ownerId===c.id).length+'곳'],['점검자',people.filter(p=>p.companyId===c.id).length+'명']],null,()=>go('settings',{focus:'co-'+c.id})))));}
 }
 function deployCard(){
@@ -1583,10 +1839,7 @@ function roleHome(app){
     if(!clients.length&&ROLE.write)app.append(h('div',{class:'card empty'},h('b',{},'등록된 고객이 없습니다'),h('div',{},'설정에서 계약한 고객을 입력하고, 그 고객의 사이트와 점검 위치를 등록하세요.'),h('div',{style:'margin-top:12px'},h('button',{class:'pri',onclick:()=>navTo('settings')},'고객 등록하러 가기'))));
   }
 }
-function vDash(app){
-  const sub=insps.filter(i=>i.status==='submitted'),drs=insps.filter(i=>i.status!=='submitted'&&canDraft(i)),oi=openIssues().length;
-  if(!ROLE.admin)app.append(h('div',{class:'stats s3'},stat('제출된 점검',sub.length,'',()=>navTo('reports')),ROLE.write?stat('작성 중',drs.length,drs.length?'warn':'',()=>navTo('insp')):null,stat('미조치 이슈',oi,oi?'ng':'ok',()=>navTo('issues'))));
-  roleHome(app);
+function upcomingCard(){
   const up=upcoming().slice(0,6);
   const uc=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'다가오는 점검'),h('span',{class:'muted sm'},'완공일 기준 · 유지보수 반기 1회, 성능점검 연 1회')));
   if(!up.length)uc.append(h('div',{class:'muted',style:'margin-top:10px'},'없음'));
@@ -1596,10 +1849,21 @@ function vDash(app){
         h('td',{},r.d.next+' 까지',h('div',{class:'muted sm'},r.d.start+' ~')),
         h('td',{},r.dr?h('span',{class:'lk',onclick:e=>{e.stopPropagation();openInsp(r.dr.id);}},'작성 중 '+pct+'%'):h('span',{class:'muted'},'미착수')),
         h('td',{},h('span',{class:'pill '+tn},dd(r.d.dday))));}))));
-  app.append(uc);{const gc=ganttCard();if(gc)app.append(gc);}
+  return uc;
+}
+function submittedCard(){
+  const sub=insps.filter(i=>i.status==='submitted');
+  const c=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'제출된 점검'),sub.length>5?h('button',{onclick:()=>navTo('reports')},'전체 보기'):null));
+    if(!sub.length)c.append(h('div',{class:'muted',style:'margin-top:8px'},'없음'));sub.sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5).forEach(i=>c.append(inspRow(i)));
+  return c;
+}
+function vDash(app){
+  const sub=insps.filter(i=>i.status==='submitted'),drs=insps.filter(i=>i.status!=='submitted'&&canDraft(i)),oi=openIssues().length;
+  if(!ROLE.admin)app.append(h('div',{class:'stats s3'},stat('제출된 점검',sub.length,'',()=>navTo('reports')),ROLE.write?stat('작성 중',drs.length,drs.length?'warn':'',()=>navTo('insp')):null,stat('미조치 이슈',oi,oi?'ng':'ok',()=>navTo('issues'))));
+  roleHome(app);
+  if(!ROLE.admin){app.append(upcomingCard());const gc=ganttCard();if(gc)app.append(gc);}
   if(ROLE.write&&drs.length){const c=h('div',{class:'card'},h('h3',{},'작성 중인 점검 ('+drs.length+')'));drs.slice(0,5).forEach(i=>c.append(inspRow(i)));app.append(c);}
-  {const c=h('div',{class:'card'},h('div',{class:'row sb'},h('h3',{style:'margin:0'},'제출된 점검'),sub.length>5?h('button',{onclick:()=>navTo('reports')},'전체 보기'):null));
-    if(!sub.length)c.append(h('div',{class:'muted',style:'margin-top:8px'},'없음'));sub.sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5).forEach(i=>c.append(inspRow(i)));app.append(c);}
+  if(!ROLE.admin){app.append(submittedCard());
   app.append(h('div',{class:'sechead'},h('h3',{},'사이트별 점검 기한'),h('span',{},'완공일 기준 · 유지보수 반기 1회, 성능점검 연 1회')));
   if(!sites.length)app.append(h('div',{class:'card empty'},h('b',{},'등록된 사이트가 없습니다'),ROLE.write?h('div',{},'사이트 탭에서 첫 사이트를 등록하세요.'):h('div',{},'점검 업체가 사이트를 등록하면 여기에 표시됩니다.'),
     ROLE.write?h('div',{style:'margin-top:12px'},h('button',{class:'pri',onclick:()=>go('settings')},'설정에서 사이트 등록')):null));
@@ -1607,7 +1871,7 @@ function vDash(app){
     return h('div',{class:'sitecard',role:'button',tabindex:0,onclick:()=>go('siteview',{id:s.id}),onkeydown:e=>{if(e.key==='Enter')go('siteview',{id:s.id});}},
       h('div',{},h('h4',{},s.name),h('div',{class:'muted'},[s.client,s.address].filter(Boolean).join(' · ')||'-')),
       dueBar(dueInfo(s,'maint'),'유지보수관리 점검'),dueBar(dueInfo(s,'perf'),'성능점검'),
-      h('div',{class:'row sb sm'},h('span',{class:'muted'},last?'최근 점검 '+last.date:'점검 이력 없음'),oi2?h('span',{class:'pill ng'},'미조치 '+oi2):h('span',{class:'pill ok'},'미조치 없음')));})));
+      h('div',{class:'row sb sm'},h('span',{class:'muted'},last?'최근 점검 '+last.date:'점검 이력 없음'),oi2?h('span',{class:'pill ng'},'미조치 '+oi2):h('span',{class:'pill ok'},'미조치 없음')));})));}
 }
 async function delInsp(i){
   try{await db.collection('inspections').doc(i.id).delete();
@@ -1675,7 +1939,7 @@ function vSiteView(app){
   const s=sites.find(x=>x.id===route.id);if(!s){go(BK);return;}
   app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go(BK)},'← 뒤로'),h('div',{class:'grow'}),
     ROLE.site?h('button',{onclick:()=>{siteDraft=clone(s);go('siteedit');}},'정보·설비 수정'):null,
-    ROLE.write?h('button',{class:'pri',onclick:()=>newInspDialog(s.id)},'+ 새 점검'):null));
+    canInsp()?h('button',{class:'pri',onclick:()=>newInspDialog(s.id)},'+ 새 점검'):null));
   app.append(h('div',{class:'card'},h('h3',{},s.name),
     h('div',{class:'muted'},[s.client&&'고객사: '+s.client,s.address,s.completed&&'완공일 '+s.completed,s.area&&'연면적 '+s.area+'㎡',s.mgr&&'관리주체 '+s.mgr+(s.mgrTel?' ('+s.mgrTel+')':'')].filter(Boolean).join(' · ')),
     h('div',{class:'row',style:'margin-top:10px'},h('div',{},h('div',{class:'muted'},'유지보수관리 점검 기한'),dayPill(dueInfo(s,'maint'))),h('div',{},h('div',{class:'muted'},'성능점검 기한'),dayPill(dueInfo(s,'perf'))))));
@@ -1712,7 +1976,9 @@ function vSiteEdit(app){
   app.append(siteExcelBar(s));
   app.append(h('div',{class:'card'},h('h3',{},'사이트 기본 정보'),
     h('div',{class:'row'},fld('고객(발주처) *',clients.length?selBox(s,'clientId',clients.slice().sort(byName).map(k=>[k.id,k.name||'(이름 없음)']),'고객 선택',()=>{const k=clients.find(x=>x.id===s.clientId);if(k){s.client=k.name;if(!s.mgr)s.mgrTel=s.mgrTel||'';if(!s.mgr)s.mgr=k.mgr||'';if(!s.mgrTel)s.mgrTel=k.tel||'';render();}}):bind(s,'client',{ph:'환경설정에서 고객을 먼저 등록하세요'})),fld('건축물 상호(명칭) *',bind(s,'name'))),
-    (ROLE.admin||roleKey==='manager')?h('div',{class:'row',style:'margin-top:8px'},fld('담당 점검업체 (선택)',selBox(s,'ownerId',companies.slice().sort(byName).map(c=>[c.id,c.name]),'지정 안 함'))):null,
+    (ROLE.admin||roleKey==='manager')?(()=>{const kk=clients.find(x=>x.id===s.clientId);
+      if(kk&&!kk.perSite&&kk.ownerId){s.ownerId=kk.ownerId;return h('div',{class:'row',style:'margin-top:8px'},fld('담당 점검업체',h('div',{class:'muted',style:'padding:8px 0'},((companies.find(c=>c.id===kk.ownerId)||{}).name||'')+' (고객 단위 일괄 지정 · 변경은 고객의 사이트 목록 위에서)')));}
+      return h('div',{class:'row',style:'margin-top:8px'},fld('담당 점검업체 (사이트별 개별 지정)',selBox(s,'ownerId',companies.slice().sort(byName).map(c=>[c.id,c.name]),'지정 안 함')));})():null,
     h('div',{class:'row',style:'margin-top:8px'},fld('관리주체 담당자 *',bind(s,'mgr')),fld('연락처 *',bind(s,'mgrTel',{ph:'010-0000-0000'}))),
     h('div',{class:'row',style:'margin-top:8px'},fld('현장 주소 (선택)',bind(s,'address'),2),fld('완공일(사용승인일) (선택)',bind(s,'completed',{type:'date'})),fld('연면적(㎡) (선택)',bind(s,'area',{type:'number'}))),
     h('div',{class:'row',style:'margin-top:8px'},fld('건축물 용도 (선택)',bind(s,'use',{ph:'예: 공동주택, 업무시설'})),fld('지상 층수 (선택)',bind(s,'floorsUp',{type:'number'})),fld('지하 층수 (선택)',bind(s,'floorsDown',{type:'number'})))));
@@ -1733,7 +1999,9 @@ function vSiteEdit(app){
         fld('설비명',bind(r,'n'),2),fld('규격(모델)',bind(r,'m')),fld('수량',bind(r,'q')),fld('제조사',bind(r,'k')),fld('설치위치',bind(r,'l')),fld('연도',bind(r,'y')),fld('내구연한(년)',bind(r,'life')),
         h('button',{class:'dng',onclick:()=>{rows.splice(i,1);draw();}},'삭제'))),h('button',{onclick:()=>{rows.push({n:'',m:'',q:'',k:'',l:'',y:'',life:''});draw();}},'+ 설비 추가'));};
       draw();d.append(tb);facBox.append(d);});};
-  box.append(areaTable(s,drawFac),facBox);
+  {const kk=clients.find(x=>x.id===s.clientId);
+   if(kk&&kk.areaMode==='all'){s.areas=(kk.areas||[]).slice();box.append(h('div',{class:'note'},'이 고객은 모든 사이트의 점검 대상 영역을 동일하게 쓰도록 설정되어 있습니다 ('+s.areas.length+'개). 바꾸려면 고객의 사이트 목록 위 "점검 대상 영역"에서 수정하세요.'),h('div',{class:'row',style:'margin:8px 0'},s.areas.map(no=>h('span',{class:'chip'},areaOf(no).name))),facBox);}
+   else box.append(areaTable(s,drawFac),facBox);}
   app.append(box);drawFac();
 }
 
@@ -1758,13 +2026,19 @@ async function saveSite(){
   if(!(s.name||'').trim()){alert2('건축물 상호(명칭)를 입력하세요.');return;}
   if(!(s.mgr||'').trim()){alert2('관리주체 담당자를 입력하세요.');return;}
   if(!(s.mgrTel||'').trim()){alert2('관리주체 연락처를 입력하세요.');return;}
-  const {isNew,...body}=s;if(!body.src)body.src=acct?(acct.role==='client'?'client':acct.role==='engineer'?'company':'admin'):'admin';if(myCo()&&!body.ownerId)body.ownerId=myCo();if(acct&&acct.role==='client'){body.clientId=acct.refId;body.client=(clients.find(k=>k.id===acct.refId)||{}).name||body.client;}body.areas=(body.areas||[]).slice().sort((a,b)=>a-b);body.updatedAt=new Date().toISOString();if(isNew)body.createdAt=body.updatedAt;
+  const {isNew,...body}=s;if(!body.src)body.src=acct?(acct.role==='client'?'client':acct.role==='engineer'?'company':'admin'):'admin';if(myCo()&&!body.ownerId)body.ownerId=myCo();if(acct&&acct.role==='client'){body.clientId=acct.refId;body.client=(clients.find(k=>k.id===acct.refId)||{}).name||body.client;}{const kk=clients.find(x=>x.id===body.clientId);if(kk&&kk.areaMode==='all')body.areas=(kk.areas||[]).slice();if(kk&&!kk.perSite&&kk.ownerId)body.ownerId=kk.ownerId;}body.areas=(body.areas||[]).slice().sort((a,b)=>a-b);body.updatedAt=new Date().toISOString();if(isNew)body.createdAt=body.updatedAt;
   try{await db.collection('sites').doc(s.id).set(body);go('siteview',{id:s.id});}catch(e){alert2('저장 실패: '+(e.code||e.message));}
 }
+function confirm2(msg,ok){return new Promise(res=>{const done=v=>{ov.remove();res(v);};
+  const ov=h('div',{role:'dialog','aria-modal':'true',style:'position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px'},
+    h('div',{class:'card',style:'max-width:460px;width:100%;margin:0'},h('div',{style:'white-space:pre-line;line-height:1.55'},msg),
+      h('div',{class:'row',style:'margin-top:14px;justify-content:flex-end;gap:8px'},h('button',{onclick:()=>done(false)},'취소'),h('button',{class:'pri',id:'c2ok',onclick:()=>done(true)},ok||'확인'))));
+  document.body.append(ov);const b=ov.querySelector('#c2ok');b&&b.focus();});}
 function alert2(msg){const n=h('div',{class:'note err'},msg);const a=$('#app');a.prepend(n);setTimeout(()=>n.remove(),4000);window.scrollTo(0,0);}
 
 /* ---------- 점검 목록/생성 ---------- */
 function vInsp(app){
+  if(roleKey==='supervisor'){go('dash');return;}
   const list=visInsps().sort((a,b)=>(b.date||'').localeCompare(a.date||'')),drafts=list.filter(i=>i.status!=='submitted'),done=list.filter(i=>i.status==='submitted');
   if(drafts.length){const c=h('div',{class:'card'},h('h3',{},'작성 중인 점검 ('+drafts.length+')'));drafts.forEach(i=>c.append(inspRow(i)));app.append(c);}
   const last={};done.slice().reverse().forEach(i=>(i.locs||[]).forEach(l=>{last[l.id]=i.date;}));
@@ -2012,20 +2286,36 @@ async function submitInsp(){
 /* ---------- 이슈 리포트 ---------- */
 const ISTAT={open:['미조치','ng'],doing:['조치 중','warn'],done:['완료','ok']};
 function vIssues(app){
-  const f=route.f||'open';
+  const f=route.f||'open',q=(route.q||'').trim().toLowerCase();
   const seg=h('div',{class:'segs'},...[['open','미완료'],['all','전체'],['done','완료']].map(([k,t])=>h('button',{class:f===k?'on':'',onclick:()=>{route.f=k;render();}},t)));
-  const list=issues.filter(x=>f==='all'||(f==='done'?x.status==='done':x.status!=='done')).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
-  app.append(listView({key:'issues',rows:list,lead:seg,ph:'사이트·항목·사유 검색',empty:'해당하는 이슈가 없습니다.',
-    text:x=>[siteName(x.siteId),ai(x),x.title,x.note,x.handler].join(' '),on:x=>go('issue',{id:x.id}),
-    filters:[{label:'사이트',get:x=>siteName(x.siteId)}],
-    cols:[{h:'사이트',f:x=>siteName(x.siteId)},{h:'영역',f:x=>ai(x)},{h:'항목',f:x=>x.title},{h:'부적합 사유',f:x=>x.note},
-      {h:'상태',f:x=>h('span',{class:'pill '+ISTAT[x.status][1]},ISTAT[x.status][0])},{h:'해결일',c:'nw',f:x=>x.actionDate||'-'},{h:'담당자',f:x=>x.handler||'-'}],
-    extra:[h('button',{onclick:()=>exportIssues(f)},'엑셀 내려받기')]}));
+  const qi=h('input',{type:'search',placeholder:'고객·사이트·항목·사유 검색',value:route.q||'',style:'flex:1;min-width:160px'});
+  qi.addEventListener('change',()=>{route.q=qi.value;render();});
+  const list=issues.filter(x=>(f==='all'||(f==='done'?x.status==='done':x.status!=='done'))&&(!q||[custOf(x.siteId),siteName(x.siteId),ai(x),x.title,x.note,x.handler].join(' ').toLowerCase().includes(q)));
+  app.append(h('div',{class:'row',style:'margin-bottom:10px;gap:8px;align-items:center;flex-wrap:wrap'},seg,qi,h('span',{class:'muted sm'},list.length+'건'),h('div',{class:'grow'}),h('button',{onclick:()=>exportIssues(f)},'엑셀 내려받기')));
+  if(!list.length){app.append(h('div',{class:'card empty'},'해당하는 이슈가 없습니다.'));return;}
+  const G=new Map();
+  list.forEach(x=>{const c=custOf(x.siteId),sn=siteName(x.siteId);if(!G.has(c))G.set(c,new Map());const S=G.get(c);if(!S.has(x.siteId))S.set(x.siteId,{name:sn,items:new Map()});
+    const key=ai(x)+'｜'+(x.title||'');const I=S.get(x.siteId).items;if(!I.has(key))I.set(key,{area:ai(x),title:x.title||'(항목 없음)',list:[]});I.get(key).list.push(x);});
+  const open=x=>x.status!=='done',many=list.length<=30||!!q;
+  [...G.entries()].sort((a,b)=>a[0].localeCompare(b[0],'ko')).forEach(([cn,S])=>{
+    const all=[...S.values()].flatMap(v=>[...v.items.values()].flatMap(i=>i.list)),no=all.filter(open).length;
+    const box=h('details',{class:'card iss-c',open:many||null},h('summary',{class:'iss-ch'},h('b',{},cn),h('span',{class:'muted sm'},'사이트 '+S.size+'곳 · 이슈 '+all.length+'건'),h('span',{class:'pill '+(no?'ng':'ok')},no?'미조치 '+no:'모두 완료')));
+    [...S.entries()].sort((a,b)=>a[1].name.localeCompare(b[1].name,'ko')).forEach(([sid,v])=>{
+      const sl=[...v.items.values()].flatMap(i=>i.list),sno=sl.filter(open).length;
+      const sb=h('div',{class:'iss-s'},h('div',{class:'row sb iss-sh'},h('b',{},v.name),h('span',{class:'pill '+(sno?'ng':'ok')},sno?'미조치 '+sno:'완료')));
+      [...v.items.values()].sort((a,b)=>a.area.localeCompare(b.area,'ko')||a.title.localeCompare(b.title,'ko')).forEach(it=>{
+        const ib=h('div',{class:'iss-i'},h('div',{class:'iss-it'},h('span',{class:'iss-ar'},it.area),h('span',{},it.title),it.list.length>1?h('span',{class:'muted sm'},' × '+it.list.length+'회'):null));
+        it.list.sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||'')).forEach(x=>ib.append(h('button',{class:'iss-r',onclick:()=>go('issue',{id:x.id})},
+          h('span',{class:'nw muted sm'},(x.createdAt||'').slice(0,10)),h('span',{class:'iss-n'},x.note||'(사유 없음)'),
+          h('span',{class:'pill '+ISTAT[x.status][1]},ISTAT[x.status][0]),h('span',{class:'nw muted sm'},x.status==='done'?(x.actionDate||'')+(x.handler?' · '+x.handler:''):''))));
+        sb.append(ib);});
+      box.append(sb);});
+    app.append(box);});
 }
 async function exportIssues(f){const X=window.XLSX;if(!X){alert2('엑셀 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.');return;}
-  const list=issues.filter(x=>f==='all'||(f==='done'?x.status==='done':x.status!=='done')).sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));
-  const rows=[['사이트','점검일','영역','위치','항목','구분','부적합 사유','처리 상태','발견일','해결일','해결 방법','해결 결과','처리 담당자'],...list.map(x=>{const i=insps.find(q=>q.id===x.inspId)||{};return[siteName(x.siteId),i.date||'',areaOf(x.area).name,x.loc||'',x.title||'',x.cat||'',x.note||'',ISTAT[x.status][0],(x.createdAt||'').slice(0,10),x.actionDate||'',x.action||'',x.result||'',x.handler||''];})];
-  const wb=X.utils.book_new(),t=X.utils.aoa_to_sheet(rows);t['!cols']=[20,12,16,16,30,8,34,10,12,12,34,30,12].map(w=>({wch:w}));X.utils.book_append_sheet(wb,t,'이슈');
+  const list=issues.filter(x=>f==='all'||(f==='done'?x.status==='done':x.status!=='done')).sort((a,b)=>custOf(a.siteId).localeCompare(custOf(b.siteId),'ko')||siteName(a.siteId).localeCompare(siteName(b.siteId),'ko')||(a.title||'').localeCompare(b.title||'','ko'));
+  const rows=[['고객','사이트','점검일','영역','위치','항목','구분','부적합 사유','처리 상태','발견일','해결일','해결 방법','해결 결과','처리 담당자'],...list.map(x=>{const i=insps.find(q=>q.id===x.inspId)||{};return[custOf(x.siteId),siteName(x.siteId),i.date||'',areaOf(x.area).name,x.loc||'',x.title||'',x.cat||'',x.note||'',ISTAT[x.status][0],(x.createdAt||'').slice(0,10),x.actionDate||'',x.action||'',x.result||'',x.handler||''];})];
+  const wb=X.utils.book_new(),t=X.utils.aoa_to_sheet(rows);t['!cols']=[20,20,12,16,16,30,8,34,10,12,12,34,30,12].map(w=>({wch:w}));X.utils.book_append_sheet(wb,t,'이슈');
   try{await downloads.save({filename:'이슈-목록-'+({open:'미완료',all:'전체',done:'완료'}[f]||'')+'-'+today()+'.xlsx',data:new Blob([X.write(wb,{bookType:'xlsx',type:'array'})],{type:XLSX_MIME})});}catch(e){if(!e||e.code!=='declined')alert2('파일 저장 실패: '+(e.message||e.code));}}
 let issueDraft=null;
 function vIssue(app){
@@ -2045,15 +2335,25 @@ function vIssue(app){
 }
 
 /* ---------- 리포트 ---------- */
+const custOf=sid=>{const st=sites.find(x=>x.id===sid)||{},k=clients.find(c=>c.id===st.clientId);return (k&&k.name)||st.client||'(고객 미지정)';};
 function vReports(app){
-  const list=visInsps();
-  app.append(listView({key:'reports',rows:list,ph:'사이트·점검자 검색',empty:'리포트가 없습니다.',
-    text:i=>[siteName(i.siteId),TYPES[i.type],i.engineer&&i.engineer.name,i.date].join(' '),on:i=>go('report',{id:i.id}),
-    filters:[{label:'사이트',get:i=>siteName(i.siteId)},{label:'상태',get:i=>i.status==='submitted'?'제출':'작성중'}],
-    cols:[{h:'점검일',c:'nw',f:i=>i.date},{h:'사이트',f:i=>siteName(i.siteId)},{h:'유형',f:i=>TYPES[i.type]},{h:'점검자',f:i=>i.engineer&&i.engineer.name},
+  const adm=roleKey!=='engineer',list=visInsps().filter(i=>!adm||i.status==='submitted').sort((a,b)=>custOf(a.siteId).localeCompare(custOf(b.siteId),'ko')||(b.date||'').localeCompare(a.date||''));
+  if(adm)app.append(h('div',{class:'note',style:'margin-bottom:10px'},'제출된 리포트마다 [보기]와 [출력]이 있습니다. 출력은 Word·Excel·PDF 중 골라 바로 내려받아 전달할 수 있습니다.'));
+  app.append(listView({key:'reports',rows:list,ph:'고객·사이트·점검자 검색',empty:'리포트가 없습니다.',
+    text:i=>[custOf(i.siteId),siteName(i.siteId),TYPES[i.type],i.engineer&&i.engineer.name,i.date].join(' '),on:i=>go('report',{id:i.id}),
+    filters:[{label:'고객',get:i=>custOf(i.siteId)},{label:'사이트',get:i=>siteName(i.siteId)},...(adm?[]:[{label:'상태',get:i=>i.status==='submitted'?'제출':'작성중'}])],
+    cols:[{h:'고객',f:i=>custOf(i.siteId)},{h:'사이트',f:i=>siteName(i.siteId)},{h:'점검일',c:'nw',f:i=>i.date},{h:'유형',f:i=>TYPES[i.type]},{h:'점검자',f:i=>i.engineer&&i.engineer.name},
       {h:'결과',c:'nw',f:i=>{const n=cnt(i);return '○'+n.ok+'  X'+n.ng+'  －'+n.na;}},
-      {h:'상태',f:i=>h('span',{class:'pill '+(i.status==='submitted'?'ok':'warn')},i.status==='submitted'?'제출':'작성중')},
-      {h:'고객 확인',f:i=>i.status!=='submitted'?'':i.confirm?h('span',{class:'pill ok'},'확인 '+i.confirm.at):h('span',{class:'pill warn'},'확인 대기')}]}));
+      ...(adm?[]:[{h:'상태',f:i=>h('span',{class:'pill '+(i.status==='submitted'?'ok':'warn')},i.status==='submitted'?'제출':'작성중')}]),
+      {h:'고객 확인',f:i=>i.status!=='submitted'?'':i.confirm?h('span',{class:'pill ok'},'확인 '+i.confirm.at):h('span',{class:'pill warn'},'확인 대기')},
+      {h:'',c:'nw',f:i=>rowActs(i)}]}));
+}
+function rowActs(i){
+  const box=h('span',{class:'row',style:'gap:4px;flex-wrap:nowrap;justify-content:flex-end'}),stop=e=>e.stopPropagation();
+  const base=()=>{box.replaceChildren(h('button',{onclick:e=>{stop(e);go('report',{id:i.id});}},'보기'),
+    i.status==='submitted'&&downloads?h('button',{class:'pri',onclick:e=>{stop(e);pick();}},'출력'):null);};
+  const pick=()=>{box.replaceChildren(...DLF.map(([k,l])=>h('button',{onclick:async e=>{stop(e);const m=model(i),f={docx:downloadDocx,xlsx:downloadReportXlsx,pdf:downloadReportPdf}[k];box.replaceChildren(h('span',{class:'muted sm'},l+' 생성 중…'));try{await f(i,m);}catch(x){}base();}},l)),h('button',{onclick:e=>{stop(e);base();}},'×'));};
+  base();return box;
 }
 const ovrOf=(m,no)=>{const as=m.areas.filter(a=>a.no===no);if(!as.length)return null;const o=as.some(a=>a.overall==='ng')?'ng':as.some(a=>a.overall==='ok')?'ok':as.every(a=>a.overall==='na')?'na':'';return{overall:o};};
 const gpsText=i=>(i.locs&&i.locs.length)?i.locs.length+'개 위치 (아래 위치별 결과 참조)':(i.gps||'-');
@@ -2108,12 +2408,69 @@ function confirmCard(i){
         if(seal.url&&seal.url!==me.seal){const {id:kid,...kb}=me;kb.seal=seal.url;kb.updatedAt=cf.ts;await db.collection('clients').doc(me.id).set(kb);}
         go('report',{id:i.id});}catch(e){alert2('저장 실패: '+(e.code||e.message));}}},'최종 확인')));
 }
+const DLF=[['docx','Word'],['xlsx','Excel'],['pdf','PDF']];
+const dlFmt=()=>{const f=lsGet('rpt_fmt');return DLF.some(x=>x[0]===f)?f:'docx';};
+const dlLabel=()=>(DLF.find(x=>x[0]===dlFmt())||DLF[0])[1]+' 다운로드';
+const dlBusy=t=>{const b=$('#dl');if(!b)return;b.disabled=!!t;b.textContent=t||dlLabel();};
+function dlGroup(i,m){
+  const sg=h('div',{class:'segs',role:'group','aria-label':'다운로드 형식'}),btn=h('button',{class:'pri',id:'dl'},dlLabel());
+  const draw=()=>{const f=dlFmt();sg.replaceChildren(...DLF.map(([k,l])=>h('button',{class:k===f?'on':'','aria-pressed':String(k===f),onclick:()=>{lsSet('rpt_fmt',k);draw();dlBusy('');}},l)));};
+  btn.addEventListener('click',()=>({docx:downloadDocx,xlsx:downloadReportXlsx,pdf:downloadReportPdf}[dlFmt()])(i,m));draw();
+  return h('div',{class:'row',style:'gap:8px;align-items:center'},sg,btn);
+}
+const rptName=(i,m,ext)=>'점검보고서_'+(m.site.name||'현장').replace(/[\\/:*?"<>|]/g,'')+'_'+TYPES[i.type].slice(0,4)+'_'+i.date+'.'+ext;
+const RLAB={ok:'적합',ng:'부적합',na:'해당없음'};
+async function downloadReportXlsx(i,m){
+  const X=window.XLSX;if(!X){alert2('엑셀 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.');return;}
+  dlBusy('엑셀 생성 중…');
+  try{
+    const e=i.engineer||{},wb=X.utils.book_new(),ws=(rows,w)=>{const t=X.utils.aoa_to_sheet(rows);t['!cols']=w.map(x=>({wch:x}));return t;};
+    const fixedName=r=>r.r==='ng'&&r.fixed?'부적합(조치완료)':(RLAB[r.r]||'');
+    const sum=[['정보통신설비 '+TYPES[i.type]+' 결과 보고서'],[FORMNO[i.type]+' 기준 · 정보통신공사업법 제37조의2·3'],[],
+      ['상호(명칭)',m.site.name||''],['점검일',i.date||''],['현장주소',m.site.address||''],['관리주체',(m.site.client||'')+(m.site.mgr?' / '+m.site.mgr:'')],
+      ['점검자',(e.name||'')+(e.grade?' ('+e.grade+')':'')],['소속',e.org||''],['GPS',gpsText(i)||''],[i.type==='perf'?'입회자':'제출일',i.type==='perf'?(i.witness||''):((i.submittedAt||'').slice(0,10))],[],
+      ['점검 결과 요약'],['적합','부적합','(조치완료)','해당없음'],[m.c.ok,m.c.ng,m.c.fixed,m.c.na]];
+    if(i.summary)sum.push([],['종합 의견'],[i.summary]);
+    if(m.locs.length){sum.push([],['점검 위치별 결과'],['위치','GPS','영역','적합','부적합','해당없음','상태','위치 의견']);m.locs.forEach(l=>sum.push([l.name,(l.gpsNow?l.gpsNow+' (현장 기록)':l.gps)||'-',l.n,l.ok,l.ng,l.na,l.done?'완료':'미완료',l.summary||'']));}
+    X.utils.book_append_sheet(wb,ws(sum,[18,26,12,12,12,12,12,40]),'요약');
+    const rows=[['영역코드','영역','점검 위치','구분','점검내용','결과','비고','조치사항']];
+    m.areas.forEach(a=>a.rows.forEach(r=>rows.push([a.code,a.name,a.locName||'',r.cat||'',r.t,fixedName(r),r.note||'',r.act||''])));
+    X.utils.book_append_sheet(wb,ws(rows,[10,24,18,10,56,14,36,30]),'점검표');
+    if(m.iss.length){const ir=[['영역','항목','부적합 사유','조치 상태','해결일','해결 방법','결과','담당자']];
+      m.iss.forEach(x=>ir.push([ai(x),x.title||'',x.note||'',(ISTAT[x.status]||[''])[0],x.actionDate||'',x.action||'',x.result||'',x.handler||'']));
+      X.utils.book_append_sheet(wb,ws(ir,[24,36,36,12,12,30,20,14]),'이슈 조치');}
+    const sel=new Set(i.areas||[]),fac=Object.entries(m.site.fac||{}).filter(([no,rs])=>sel.has(+no)&&rs.length);
+    if(fac.length){const fr=[['영역','설비명','규격','수량','제조사','설치위치','연도']];fac.forEach(([no,rs])=>rs.forEach(r=>fr.push([areaOf(+no).name,r.n||'',r.m||'',r.q||'',r.k||'',r.l||'',r.y||''])));
+      X.utils.book_append_sheet(wb,ws(fr,[24,22,18,8,14,20,10]),'설비 구성');}
+    const ph=[];m.areas.forEach(a=>a.rows.forEach(r=>(r.photos||[]).forEach(()=>ph.push((a.locName?a.locName+' / ':'')+a.name+' / '+r.t+(r.r==='ng'?' (부적합)':'')))));m.iss.forEach(x=>(x.evid||[]).forEach(()=>ph.push('조치 증빙 / '+x.title)));
+    if(ph.length)X.utils.book_append_sheet(wb,ws([['번호','사진 설명 (사진 이미지는 Word·PDF 보고서에 포함)'],...ph.map((t,k)=>[k+1,t])],[8,80]),'사진 목록');
+    await downloads.save({filename:rptName(i,m,'xlsx'),data:new Blob([X.write(wb,{bookType:'xlsx',type:'array'})],{type:XLSX_MIME})});
+  }catch(er){if(!er||er.code!=='declined')alert2('엑셀 저장 실패: '+(er.message||er.code));}
+  dlBusy('');
+}
+function loadScript(src,test){return new Promise((ok,no)=>{if(test())return ok();const e=document.createElement('script');e.src=src;e.onload=ok;e.onerror=()=>no(new Error('PDF 라이브러리를 불러오지 못했습니다'));document.head.append(e);});}
+async function downloadReportPdf(i,m){
+  dlBusy('PDF 생성 중…');let wrap=null;
+  try{
+    await loadScript('https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js',()=>!!window.html2pdf);
+    const ids=[];m.areas.forEach(a=>a.rows.forEach(r=>(r.photos||[]).forEach(x=>ids.push(x))));m.iss.forEach(x=>(x.evid||[]).forEach(y=>ids.push(y)));
+    if(window.photoUrl)await Promise.all(ids.map(id=>photoUrl(id).catch(()=>0)));
+    const R=reportHtml(i,m);wrap=h('div',{class:'pdfwrap'},R);document.body.append(wrap);
+    await Promise.all([...wrap.querySelectorAll('img')].map(im=>im.complete?0:new Promise(r=>{im.onload=im.onerror=r;})));
+    const blob=await window.html2pdf().set({margin:[10,10,12,10],image:{type:'jpeg',quality:.92},html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff'},
+      jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy'],avoid:['tr','figure','h3','h4']}}).from(R).outputPdf('blob');
+    await downloads.save({filename:rptName(i,m,'pdf'),data:blob});
+  }catch(er){
+    if(er&&er.code==='declined'){}else{alert2('PDF를 만들지 못해 인쇄 화면으로 대신합니다. 인쇄 창에서 대상을 "PDF로 저장"으로 선택하세요. ('+(er.message||er)+')');setTimeout(()=>window.print(),300);}
+  }
+  if(wrap)wrap.remove();dlBusy('');
+}
 function vReport(app){
   const i=insps.find(x=>x.id===route.id)||(cur&&cur.id===route.id?cur:null);if(!i){go('reports');return;}
   const m=model(i);
   app.append(h('div',{class:'row',style:'margin-bottom:10px'},h('button',{onclick:()=>go('reports')},'← 목록'),h('div',{class:'grow muted'},i.status==='submitted'?'제출 완료':'작성 중 초안'),
-    ROLE.admin&&i.status==='submitted'?h('button',{onclick:async()=>{cur=clone(i);cur.status='draft';delete cur.submittedAt;dirty=true;await flush();sheet={mode:'areas',area:null,idx:-1};go('sheet');}},'수정(재개)'):null,
-    downloads?h('button',{class:'pri',id:'dl',onclick:()=>downloadDocx(i,m)},'Word(.docx) 다운로드'):null));
+    false?h('button',{onclick:async()=>{cur=clone(i);cur.status='draft';delete cur.submittedAt;dirty=true;await flush();sheet={mode:'areas',area:null,idx:-1};go('sheet');}},'수정(재개)'):null,
+    downloads?dlGroup(i,m):null));
   {const cc=confirmCard(i);if(cc)app.append(cc);}
   app.append(reportHtml(i,m));
 }
@@ -2232,7 +2589,7 @@ function reportHtml(i,m){
 async function loadImg(id){const res=await fetch(window.photoUrl?await photoUrl(id):blobUrl(id));const buf=await res.arrayBuffer();const url=URL.createObjectURL(new Blob([buf]));
   const d=await new Promise(ok=>{const im=new Image();im.onload=()=>ok([im.naturalWidth,im.naturalHeight]);im.onerror=()=>ok([4,3]);im.src=url;});URL.revokeObjectURL(url);return{buf,w:d[0],h:d[1]};}
 async function downloadDocx(i,m){
-  const btn=$('#dl');btn.disabled=true;btn.textContent='문서 생성 중…';
+  dlBusy('문서 생성 중…');
   try{
     if(!window.docx)throw new Error('문서 라이브러리를 불러오지 못했습니다');
     const D=window.docx,F='맑은 고딕',e=i.engineer||{};
@@ -2282,7 +2639,7 @@ async function downloadDocx(i,m){
     const blob=await D.Packer.toBlob(doc);
     await downloads.save({filename:'점검보고서_'+(m.site.name||'현장').replace(/[\\/:*?"<>|]/g,'')+'_'+TYPES[i.type].slice(0,4)+'_'+i.date+'.docx',data:blob});
   }catch(err){if(!err||err.code!=='declined')alert2('문서 생성 실패: '+(err.message||err.code));}
-  btn.disabled=false;btn.textContent='Word(.docx) 다운로드';
+  dlBusy('');
 }
 init();
 </script>
